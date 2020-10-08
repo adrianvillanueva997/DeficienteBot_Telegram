@@ -58,7 +58,7 @@ jobs:
             cd DeficienteBot_Telegram
             docker-compose down
             docker image rm telegram_deficiente_bot
-            git pull origin master
+            git pull
             docker build -t telegram_deficiente_bot .
             docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
