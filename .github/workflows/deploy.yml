@@ -47,3 +47,18 @@ jobs:
         uses: github/codeql-action/autobuild@v1
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
+      - name: Remote deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.KEY }}
+          username: ${{ secrets.USERNAME }}
+          script: |
+            cd DeficienteBot_Telegram
+            docker-compose down
+            docker image rm telegram_deficiente_bot
+            git pull origin master
+            docker build -t telegram_deficiente_bot .
+            docker rmi $(docker images -f "dangling=true" -q)
+            docker-compose up -d
