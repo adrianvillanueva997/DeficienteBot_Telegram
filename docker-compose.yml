@@ -1,9 +1,11 @@
 version: '3'
 services:
   bot:
-    image: deficiente_bot
+    image: telegram_deficiente_bot
     container_name: telegram_deficiente_bot
     restart: unless-stopped
+    networks:
+      - bots
 networks:
   bots:
     external: true
