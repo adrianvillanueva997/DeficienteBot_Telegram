@@ -38,22 +38,6 @@ jobs:
       - run: git checkout HEAD^2
         if: ${{ github.event_name == 'pull_request' }}
       # Initializes the CodeQL tools for scanning.
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-          # ESLint and Prettier must be in `package.json`
-      - name: Install Node.js dependencies
-        run: npm install eslint prettier
-      - name: Init eslint
-        run: eslint --init
-      - name: Run linters
-        uses: wearerequired/lint-action@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          # Enable linters
-          eslint: true
-          prettier: true
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:
