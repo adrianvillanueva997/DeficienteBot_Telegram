@@ -32,7 +32,7 @@ bot.on('message', (msg) => {
     if (msg.from.id == 300949) {
         const random_number = getRandomInt(0, 1000);
         console.log(random_number)
-        if (random_number > 322 && random_number < 400) {
+        if (random_number > 322 && random_number < 420) {
             bot.sendMessage(chatId, 'Deficiente', {reply_to_message_id: msg.message_id});
         }
     }
