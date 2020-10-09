@@ -3,6 +3,11 @@ services:
   bot:
     image: telegram_deficiente_bot
     container_name: telegram_deficiente_bot
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    environment:
+      - TZ=Europe/Madrid
     restart: unless-stopped
     networks:
       - bots
