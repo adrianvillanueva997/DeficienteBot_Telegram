@@ -90,3 +90,39 @@ cron.schedule("0 0 1 * *", () => {
             break;
     }
 })
+// cumpleaños javi
+cron.schedule("0 0 30 1 *", () => {
+    bot.sendMessage(-1001063900471, "@lilnarwhal Deficiente")
+})
+
+cron.schedule("0 0 7 2 *", () => {
+    bot.sendMessage(-1001063900471, "@joseawe Deficiente")
+})
+
+cron.schedule("0 0 26 2 *", () => {
+    bot.sendMessage(-1001063900471, "@thedrdvd Deficiente")
+})
+
+cron.schedule("0 0 4 5 *", () => {
+    bot.sendMessage(-1001063900471, "@r3dmsr Deficiente")
+})
+
+cron.schedule("0 0 9 5 *", () => {
+    bot.sendMessage(-1001063900471, "@thexiao77 Deficiente")
+})
+
+cron.schedule("0 0 8 7 *", () => {
+    bot.sendMessage(-1001063900471, "@sanz97xx Deficiente")
+})
+
+cron.schedule("0 0 2 8 *", () => {
+    bot.sendMessage(-1001063900471, "@sauturn Deficiente")
+})
+
+cron.schedule("0 0 7 10 *", () => {
+    bot.sendMessage(-1001063900471, "@txc450 Deficiente")
+})
+
+cron.schedule("0 0 16 10 *", () => {
+    bot.sendMessage(-1001063900471, "@DarkTrainer Deficiente")
+})
