@@ -18,9 +18,11 @@ bot.on('message', (msg) => {
     const pattern_1 = new RegExp("(?<!\\S)(\:v)(?!\\S)")
     const pattern_2 = new RegExp("\\b\\w*uwu|w*owo|(:v)|(:3)|(v:)\\w*\\b")
     const pattern_3 = new RegExp("\\b\\w*dvd\\w*\\b")
+    const pattern_4 = new RegExp("\\b\\w*cbt\\w*\\b")
     const dospuntosuve = pattern_1.exec(lower_message)
     const palabrasconcretas = pattern_2.exec(lower_message)
     const javi = pattern_3.exec(lower_message)
+    const cbt = pattern_4.exec(lower_message)
     if (javi != null && dospuntosuve != null || javi != null && palabrasconcretas != null) {
         bot.sendMessage(chatId, '@Dvdgg deficiente y pasate a Windows 10', {reply_to_message_id: msg.message_id});
     } else if (dospuntosuve != null || palabrasconcretas != null) {
@@ -28,6 +30,13 @@ bot.on('message', (msg) => {
 
     } else if (javi != null) {
         bot.sendMessage(chatId, '@Dvdgg formatea y pasate a Windows 10', {reply_to_message_id: msg.message_id});
+    } else if (cbt != null) {
+        bot.sendMessage(chatId, 'Cock and ball torture (CBT) is a sexual activity involving application of ' +
+            'pain or constriction to the male genitals. This may involve directly painful activities, such as wax play, ' +
+            'genital spanking, squeezing, ball-busting, genital flogging, urethral play, tickle torture, erotic electrostimulation or even ' +
+            'kicking. The recipient of such activities may receive direct physical pleasure via masochism, ' +
+            'or emotional pleasure through erotic humiliation, or knowledge that the play is pleasing to a sadistic dominant. ' +
+            'Many of these practices carry significant health risks.', {reply_to_message_id: msg.message_id});
     }
     if (msg.from.id == 300949) {
         const random_number = getRandomInt(0, 1000);
