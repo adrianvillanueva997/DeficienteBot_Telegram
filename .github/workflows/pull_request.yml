@@ -3,10 +3,11 @@
 #
 # You may wish to alter this file to override the set of languages analyzed,
 # or to provide custom queries or build logic.
-name: "Deployment"
+name: "Pull request check"
 
 on:
-  push:
+  pull_request:
+    # The branches below must be a subset of the branches above
     branches: [ main ]
 
 jobs:
@@ -44,18 +45,3 @@ jobs:
         uses: github/codeql-action/autobuild@v1
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
-      - name: Remote deployment
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.KEY }}
-          username: ${{ secrets.USERNAME }}
-          script: |
-            cd DeficienteBot_Telegram
-            docker-compose down
-            docker image rm telegram_deficiente_bot
-            git pull
-            docker build -t telegram_deficiente_bot .
-            docker rmi $(docker images -f "dangling=true" -q)
-            docker-compose up -d

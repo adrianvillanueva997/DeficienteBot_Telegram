@@ -12,6 +12,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="JupyterTrust" id="56e173de-de92-489d-bb5a-c587b99d5642" />
   <component name="ProjectId" id="1ibNnIeglqDu0jXyPWmH8zTTNDj" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -23,7 +24,7 @@
     <property name="add_unversioned_files" value="$PROJECT_DIR$/package.json" />
     <property name="javascript.nodejs.core.library.configured.version" value="14.13.1" />
     <property name="javascript.nodejs.core.library.typings.version" value="14.11.8" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../UkranianMemeTelegramBot" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -34,7 +35,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Node.js.index.js">
+  <component name="RunManager" selected="npm.build">
     <configuration name="index.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/index.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -60,7 +61,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Node.js.index.js" />
         <item itemvalue="npm.start" />
         <item itemvalue="npm.build" />
       </list>
@@ -79,6 +79,8 @@
       <workItem from="1602442215110" duration="17000" />
       <workItem from="1602869036795" duration="302000" />
       <workItem from="1603047762662" duration="735000" />
+      <workItem from="1603099886045" duration="192000" />
+      <workItem from="1603365583967" duration="22000" />
     </task>
     <servers />
   </component>
@@ -90,25 +92,25 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2613" y="308" width="530" height="497" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1602179211225" />
-    <state x="2663" y="316" width="430" height="481" key="FileChooserDialogImpl" timestamp="1602442232419">
+    <state x="2663" y="316" width="430" height="481" key="FileChooserDialogImpl" timestamp="1603365604884">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2663" y="316" width="430" height="481" key="FileChooserDialogImpl/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1602442232419" />
-    <state width="1899" height="270" key="GridCell.Tab.0.bottom" timestamp="1602237194099">
+    <state x="2663" y="316" width="430" height="481" key="FileChooserDialogImpl/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1603365604884" />
+    <state width="1899" height="270" key="GridCell.Tab.0.bottom" timestamp="1603100079433">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="270" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1602237194099" />
-    <state width="1899" height="270" key="GridCell.Tab.0.center" timestamp="1602237194099">
+    <state width="1899" height="270" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1603100079433" />
+    <state width="1899" height="270" key="GridCell.Tab.0.center" timestamp="1603100079433">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="270" key="GridCell.Tab.0.center/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1602237194099" />
-    <state width="1899" height="270" key="GridCell.Tab.0.left" timestamp="1602237194098">
+    <state width="1899" height="270" key="GridCell.Tab.0.center/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1603100079433" />
+    <state width="1899" height="270" key="GridCell.Tab.0.left" timestamp="1603100079433">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="270" key="GridCell.Tab.0.left/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1602237194098" />
-    <state width="1899" height="270" key="GridCell.Tab.0.right" timestamp="1602237194099">
+    <state width="1899" height="270" key="GridCell.Tab.0.left/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1603100079432" />
+    <state width="1899" height="270" key="GridCell.Tab.0.right" timestamp="1603100079433">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="270" key="GridCell.Tab.0.right/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1602237194099" />
+    <state width="1899" height="270" key="GridCell.Tab.0.right/1920.0.1920.1080/0.33.1920.1047@1920.0.1920.1080" timestamp="1603100079433" />
   </component>
 </project>
