@@ -28,8 +28,6 @@ bot.on('message', (msg) => {
     } else if (dospuntosuve != null || palabrasconcretas != null) {
         bot.sendMessage(chatId, 'Deficiente', {reply_to_message_id: msg.message_id});
 
-    } else if (javi != null) {
-        bot.sendMessage(chatId, '@Dvdgg formatea y pasate a Windows 10', {reply_to_message_id: msg.message_id});
     } else if (cbt != null) {
         bot.sendMessage(chatId, 'Cock and ball torture (CBT) is a sexual activity involving application of ' +
             'pain or constriction to the male genitals. This may involve directly painful activities, such as wax play, ' +
