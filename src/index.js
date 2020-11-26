@@ -99,37 +99,41 @@ cron.schedule("0 0 1 * *", () => {
 })
 // cumpleaños javi
 cron.schedule("0 0 30 1 *", () => {
-    bot.sendMessage(-1001063900471, "@lilnarwhal Deficiente")
+    bot.sendMessage(-1001063900471, "@lilnarwhal Deficientes felicidades")
 })
 
 cron.schedule("0 0 7 2 *", () => {
-    bot.sendMessage(-1001063900471, "@joseawe Deficiente")
+    bot.sendMessage(-1001063900471, "@joseawe Deficientes felicidades")
 })
 
 cron.schedule("0 0 26 2 *", () => {
-    bot.sendMessage(-1001063900471, "@thedrdvd Deficiente")
+    bot.sendMessage(-1001063900471, "@thedrdvd Deficientes felicidades")
 })
 
 cron.schedule("0 0 4 5 *", () => {
-    bot.sendMessage(-1001063900471, "@r3dmsr Deficiente")
+    bot.sendMessage(-1001063900471, "@r3dmsr Deficientes felicidades")
 })
 
 cron.schedule("0 0 9 5 *", () => {
-    bot.sendMessage(-1001063900471, "@thexiao77 Deficiente")
+    bot.sendMessage(-1001063900471, "@thexiao77 Deficientes felicidades")
 })
 
 cron.schedule("0 0 8 7 *", () => {
-    bot.sendMessage(-1001063900471, "@sanz97xx Deficiente")
+    bot.sendMessage(-1001063900471, "@sanz97xx Deficientes felicidades")
 })
 
 cron.schedule("0 0 2 8 *", () => {
-    bot.sendMessage(-1001063900471, "@sauturn Deficiente")
+    bot.sendMessage(-1001063900471, "@sauturn Deficientes felicidades")
 })
 
 cron.schedule("0 0 7 10 *", () => {
-    bot.sendMessage(-1001063900471, "@txc450 Deficiente")
+    bot.sendMessage(-1001063900471, "@txc450 Deficientes felicidades")
 })
 
 cron.schedule("0 0 16 10 *", () => {
-    bot.sendMessage(-1001063900471, "@DarkTrainer Deficiente")
+    bot.sendMessage(-1001063900471, "@DarkTrainer Deficientes felicidades")
+})
+
+cron.schedule("0 0 29 11 *", () => {
+    bot.sendMessage(-1001063900471, "@dvdgg Deficientes felicidades")
 })
