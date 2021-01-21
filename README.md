@@ -1,4 +1,4 @@
-[![Deployment Actions Status](https://github.com/adrianvillanueva997/DeficienteBot_Telegram/workflows/Deployment/badge.svg)](https://github.com/adrianvillanueva997/DeficienteBot_Telegram/actions)
+![Build Docker image](https://github.com/adrianvillanueva997/DeficienteBot_Telegram/workflows/Build%20Docker%20image/badge.svg)
 # DeficienteBot_Telegram
 Private telegram index made in NodeJS that calls idiot to someone who sends a message with certain content.
 # Deployment
