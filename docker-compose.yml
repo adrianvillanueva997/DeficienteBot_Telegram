@@ -1,14 +1,18 @@
 version: '3'
 services:
   bot:
-    image: telegram_deficiente_bot
-    container_name: telegram_deficiente_bot
+    image: adrianvillanueva997/telegrambot_deficiente
+    container_name: telegrambot_deficiente
+    restart: unless-stopped
+    env_file:
+      - .env
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     environment:
       - TZ=Europe/Madrid
-    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - bots
 networks:
