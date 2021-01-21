@@ -17,7 +17,6 @@ FROM base as dist
 WORKDIR /app
 COPY package.json ./
 COPY .babelrc ./
-COPY .env .
 RUN npm install
 COPY --from=build-env /build/dist ./dist
 CMD [ "npm", "start" ]
