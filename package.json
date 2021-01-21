@@ -13,7 +13,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "node-cron": "^2.0.3",
-    "node-telegram-bot-api": "^0.50.0"
+    "node-telegram-bot-api": "^0.51.0"
   },
   "devDependencies": {
     "@babel/cli": "7.12.8",
