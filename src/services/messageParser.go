@@ -8,20 +8,20 @@ import (
 
 const expr = "\\W*((?i)%s(?-i))\\W*"
 
-
 func badwords() (list []string) {
 	x := []string{"uwu", "owo", ":v", ":3", "ewe", "iwi", "awa"}
 	list = x
 	return list
 }
 
-func comboCheck(message string) (int) {
+func comboCheck(message string) int {
 	badWordsList := badwords()
 	comboCount := 0
 	for i := 0; i < len(badWordsList); i++ {
 		match, _ := regexp.MatchString(fmt.Sprintf(expr, badWordsList[i]), message)
 		if match {
 			comboCount += 1
+		}
 	}
 	return comboCount
 }
