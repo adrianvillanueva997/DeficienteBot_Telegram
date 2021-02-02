@@ -17,18 +17,11 @@ func badwords() (list []string) {
 
 func comboCheck(message string) (int) {
 	badWordsList := badwords()
-	combo := false
 	comboCount := 0
 	for i := 0; i < len(badWordsList); i++ {
 		match, _ := regexp.MatchString(fmt.Sprintf(expr, badWordsList[i]), message)
 		if match {
-			combo = true
-		} else {
-			combo = false
-		}
-		if combo {
 			comboCount += 1
-		}
 	}
 	return comboCount
 }
