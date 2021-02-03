@@ -31,13 +31,18 @@ func main() {
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 		msg.ReplyToMessageID = update.Message.MessageID
+		messageText := strings.ToLower(update.Message.Text)
 		// Bad words check like uwu/owo/:v/:3
-		badWords := services.Message(strings.ToLower(update.Message.Text))
+		badWords := services.Message(strings.ToLower(messageText))
 		if badWords != nil {
 			msg.Text = *badWords
 			_, _ = bot.Send(msg)
 		}
 		//Copypasta checks go here
-
+		copyPasta := services.PastaText(messageText)
+		if copyPasta != nil {
+			msg.Text = *copyPasta
+			_, _ = bot.Send(msg)
+		}
 	}
 }

@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -10,10 +9,8 @@ import (
 
 const expr = "\\W*((?i)%s(?-i))\\W*"
 
-func badwords() (list []string) {
-	x := []string{"uwu", "owo", ":v", ":3", "ewe", "iwi", "awa", "x3"}
-	list = x
-	return list
+func badwords() []string {
+	return []string{"uwu", "owo", ":v", ":3", "ewe", "iwi", "awa", "x3"}
 }
 
 func comboCheck(message string) int {
@@ -34,7 +31,6 @@ func Message(message string) *string {
 	comboCount := comboCheck(message)
 	var messageToSend string
 	if comboCount > 0 {
-		log.Println(comboCount)
 		if comboCount > 1 {
 			messageToSend = fmt.Sprintf("Deficiente x%s", strconv.Itoa(comboCount))
 			if comboCount >= 5 {
@@ -52,8 +48,6 @@ func Message(message string) *string {
 			if comboCount >= 25 {
 				messageToSend = fmt.Sprintf("Te voy a meter un escopetazo en los cojones x%s", strconv.Itoa(comboCount))
 			}
-
-
 			return &messageToSend
 		}
 		messageToSend = "Deficiente"
