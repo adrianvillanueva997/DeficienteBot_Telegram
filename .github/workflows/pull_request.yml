@@ -25,16 +25,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          # We must fetch at least the immediate parents so that if this is
-          # a pull request then we can checkout the head.
+          # Must fetch at least the immediate parents so that if this is
+          # a pull request then we can checkout the head of the pull request.
+          # Only include this option if you are running this workflow on pull requests.
           fetch-depth: 2
-      # If this run was triggered by a pull request event, then checkout
+
+      # If this run was triggered by a pull request event then checkout
       # the head of the pull request instead of the merge commit.
+      # Only include this step if you are running this workflow on pull requests.
+      - run: git checkout HEAD^2
+        if: ${{ github.event_name == 'pull_request' }}
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:
           languages: ${{ matrix.language }}
-
       - name: Autobuild
         uses: github/codeql-action/autobuild@v1
       - name: Perform CodeQL Analysis
@@ -45,4 +49,4 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build
-        run: docker build -t test .
+        run: docker build -t bot .
