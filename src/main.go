@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"adrianvillanueva997/deficienteBot/src/services"
@@ -28,21 +29,30 @@ func main() {
 		if update.Message == nil {
 			continue
 		}
-		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
+		log.Printf("[%s] %s", strconv.Itoa(update.Message.From.ID), update.Message.Text)
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 		msg.ReplyToMessageID = update.Message.MessageID
 		messageText := strings.ToLower(update.Message.Text)
 		// Bad words check like uwu/owo/:v/:3
 		badWords := services.Message(strings.ToLower(messageText))
+
 		if badWords != nil {
 			msg.Text = *badWords
 			_, _ = bot.Send(msg)
 		}
-		//Copypasta checks go here
+		// Copypasta checks go here
 		copyPasta := services.PastaText(messageText)
 		if copyPasta != nil {
 			msg.Text = *copyPasta
 			_, _ = bot.Send(msg)
+		}
+		// Javi checks go here
+		if update.Message.Chat.ID == 300949 {
+			javi, deficiente := services.CheckJavi()
+			if javi {
+				msg.Text = *deficiente
+				_, _ = bot.Send(msg)
+			}
 		}
 	}
 }
