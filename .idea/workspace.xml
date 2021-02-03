@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2bee5c1-c9e9-4747-b5d1-cdad0e4f6c95" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/pull_request.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/pull_request.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +60,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Node.js.index.js">
+  <component name="RunManager" selected="Go Build.go build adrianvillanueva997/deficienteBot/src">
     <configuration name="go build adrianvillanueva997/deficienteBot/src" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="DeficienteBot_Telegram" />
       <working_directory value="$PROJECT_DIR$" />

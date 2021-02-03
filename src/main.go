@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"strconv"
 	"strings"
 
 	"adrianvillanueva997/deficienteBot/src/routines"
@@ -43,7 +42,6 @@ func main() {
 		if update.Message == nil {
 			continue
 		}
-		log.Printf("[%s] %s", strconv.Itoa(update.Message.From.ID), update.Message.Text)
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 		msg.ReplyToMessageID = update.Message.MessageID
 		messageText := strings.ToLower(update.Message.Text)
