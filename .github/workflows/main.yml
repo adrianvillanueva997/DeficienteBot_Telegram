@@ -16,7 +16,7 @@ jobs:
         language: [ 'go' ]
         # Learn more...
     container:
-      image: go
+      image: golang
     steps:
       - uses: actions/checkout@v1
       - name: Install & Tests
