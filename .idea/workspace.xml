@@ -46,8 +46,8 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="14.13.1" />
-    <property name="javascript.nodejs.core.library.typings.version" value="14.11.8" />
+    <property name="javascript.nodejs.core.library.configured.version" value="15.8.0" />
+    <property name="javascript.nodejs.core.library.typings.version" value="14.14.22" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preference.GoLinterConfigurable" />
@@ -60,7 +60,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build adrianvillanueva997/deficienteBot/src">
+  <component name="RunManager" selected="Node.js.index.js">
     <configuration name="go build adrianvillanueva997/deficienteBot/src" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="DeficienteBot_Telegram" />
       <working_directory value="$PROJECT_DIR$" />
@@ -93,11 +93,6 @@
       <envs />
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Go Build.go build adrianvillanueva997/deficienteBot/src" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -114,6 +109,7 @@
       <workItem from="1603047762662" duration="735000" />
       <workItem from="1603099886045" duration="192000" />
       <workItem from="1603365583967" duration="22000" />
+      <workItem from="1612358527052" duration="9000" />
     </task>
     <servers />
   </component>
