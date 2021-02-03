@@ -13,7 +13,7 @@ import (
 
 func main() {
 	_ = godotenv.Load()
-	bot, err := tgbotapi.NewBotAPI(os.Getenv("botkey"))
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("key"))
 	if err != nil {
 		log.Panic(err.Error())
 	}
