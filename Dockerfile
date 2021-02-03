@@ -1,22 +1,16 @@
 # Multistage docker image building
 # build-env -> dist
 
-FROM node:14.9-alpine as base
-# Build container
-FROM base as build-env
-RUN apk --no-cache update && apk add python make g++ && rm -rf
+FROM golang:1.15-alpine as build-env
+RUN apk add --no-cache gcc libc-dev
 WORKDIR /build
-COPY package.json .
-COPY .babelrc .
-RUN npm install
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
 COPY . .
-RUN npm run build
-
-# Production container (Dist)
-FROM base as dist
+RUN go build -o app ./src
+# Executable stage
+FROM alpine:latest
 WORKDIR /app
-COPY package.json ./
-COPY .babelrc ./
-RUN npm install --production
-COPY --from=build-env /build/dist ./dist
-CMD [ "npm", "start" ]
+COPY --from=build-env /build/app .
+ENTRYPOINT ./app
