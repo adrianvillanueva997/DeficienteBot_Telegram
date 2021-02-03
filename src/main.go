@@ -6,9 +6,11 @@ import (
 	"strconv"
 	"strings"
 
+	"adrianvillanueva997/deficienteBot/src/routines"
 	"adrianvillanueva997/deficienteBot/src/services"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron/v3"
 )
 
 func main() {
@@ -23,8 +25,20 @@ func main() {
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
-
 	updates, _ := bot.GetUpdatesChan(u)
+
+	// Routines startup goes here
+	job := cron.New()
+	_, err = job.AddFunc("00 0 * * *", func() {
+		event := routines.CheckEvents()
+		if event != nil {
+			message := tgbotapi.NewMessage(-1001063900471, *event)
+			_, _ = bot.Send(message)
+		}
+	})
+	if err != nil {
+		log.Println(err.Error())
+	}
 	for update := range updates {
 		if update.Message == nil {
 			continue
@@ -35,7 +49,6 @@ func main() {
 		messageText := strings.ToLower(update.Message.Text)
 		// Bad words check like uwu/owo/:v/:3
 		badWords := services.Message(strings.ToLower(messageText))
-
 		if badWords != nil {
 			msg.Text = *badWords
 			_, _ = bot.Send(msg)
