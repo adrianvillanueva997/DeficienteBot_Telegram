@@ -43,6 +43,17 @@ func Message(message string) *string {
 			if comboCount >= 10 {
 				messageToSend = fmt.Sprintf("Subnormal x%s", strconv.Itoa(comboCount))
 			}
+			if comboCount >= 15 {
+				messageToSend = fmt.Sprintf("Mongolo x%s", strconv.Itoa(comboCount))
+			}
+			if comboCount >= 20 {
+				messageToSend = fmt.Sprintf("Me cago en tu puta madre x%s", strconv.Itoa(comboCount))
+			}
+			if comboCount >= 25 {
+				messageToSend = fmt.Sprintf("Te voy a meter un escopetazo en los cojones x%s", strconv.Itoa(comboCount))
+			}
+
+
 			return &messageToSend
 		}
 		messageToSend = "Deficiente"
