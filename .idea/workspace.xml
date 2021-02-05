@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2bee5c1-c9e9-4747-b5d1-cdad0e4f6c95" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/pull_request.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/pull_request.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routines/specialEvents.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/routines/specialEvents.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/badWords.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/badWords.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/javi.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/javi.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +53,7 @@
     <property name="javascript.nodejs.core.library.typings.version" value="14.14.22" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preference.GoLinterConfigurable" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -60,7 +64,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Node.js.index.js">
+  <component name="RunManager" selected="Go Build.go build adrianvillanueva997/deficienteBot/src">
     <configuration name="go build adrianvillanueva997/deficienteBot/src" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="DeficienteBot_Telegram" />
       <working_directory value="$PROJECT_DIR$" />

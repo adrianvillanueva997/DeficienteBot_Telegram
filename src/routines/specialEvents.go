@@ -35,14 +35,12 @@ func CheckEvents() *string {
 			return &message
 		}
 	case 3:
-		switch day {
-		case 1:
+		if day == 1 {
 			message = "Chavalotes ya es Marzo"
 			return &message
 		}
 	case 4:
-		switch day {
-		case 1:
+		if day == 1 {
 			message = "En Abril aguas mil"
 			return &message
 		}
@@ -59,8 +57,7 @@ func CheckEvents() *string {
 			return &message
 		}
 	case 6:
-		switch day {
-		case 1:
+		if day == 1 {
 			message = "Junio, empieza el veranito"
 			return &message
 		}
@@ -83,8 +80,7 @@ func CheckEvents() *string {
 			return &message
 		}
 	case 9:
-		switch day {
-		case 1:
+		if day == 1 {
 			message = "Septiembre, fin de las vacaciones"
 			return &message
 		}

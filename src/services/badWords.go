@@ -21,7 +21,7 @@ func comboCheck(message string) int {
 		for i := 0; i < len(badWordsList); i++ {
 			match, _ := regexp.MatchString(fmt.Sprintf(expr, badWordsList[i]), tokens[j])
 			if match {
-				comboCount += 1
+				comboCount++
 			}
 		}
 	}

@@ -3,7 +3,7 @@ package services
 import "math/rand"
 
 func randomNumber(min int, max int) int {
-	return (rand.Intn(max - min)) + min
+	return min + (rand.Intn(max - min))
 }
 
 func CheckJavi() (bool, *string) {
