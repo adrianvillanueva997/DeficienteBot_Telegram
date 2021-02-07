@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b2bee5c1-c9e9-4747-b5d1-cdad0e4f6c95" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/dependabot.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/dependabot.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="b2bee5c1-c9e9-4747-b5d1-cdad0e4f6c95" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,7 +46,7 @@
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="15.8.0" />
     <property name="javascript.nodejs.core.library.typings.version" value="14.14.25" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../discordbot-hazzikostas" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preference.GoLinterConfigurable" />
@@ -113,7 +109,7 @@
       <workItem from="1603099886045" duration="192000" />
       <workItem from="1603365583967" duration="22000" />
       <workItem from="1612358527052" duration="9000" />
-      <workItem from="1612728078957" duration="57000" />
+      <workItem from="1612728078957" duration="196000" />
     </task>
     <servers />
   </component>
