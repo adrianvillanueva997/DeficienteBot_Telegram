@@ -1,10 +1,12 @@
 package routines
 
-import "time"
+import (
+	"time"
+)
 
-func getCurrentDaynMonth() (int, time.Month) {
+func getCurrentDaynMonth() (int, int) {
 	t := time.Now()
-	month := t.Month() // type time.Month
+	month := int(t.Month()) // type time.Month
 	day := t.Day()
 	return day, month
 }
