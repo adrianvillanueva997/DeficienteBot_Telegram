@@ -32,6 +32,9 @@ func CheckEvents() *string {
 		case 7:
 			message = "Felicidades @Josewe"
 			return &message
+		case 14:
+			message = "Sam va lentin"
+			return &message
 		case 26:
 			message = "Felicidades @thedrdvd"
 			return &message
