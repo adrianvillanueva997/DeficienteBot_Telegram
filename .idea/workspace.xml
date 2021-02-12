@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b2bee5c1-c9e9-4747-b5d1-cdad0e4f6c95" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routines/specialEvents.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/routines/specialEvents.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,8 +48,8 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="15.8.0" />
-    <property name="javascript.nodejs.core.library.typings.version" value="14.14.25" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../discordbot-hazzikostas" />
+    <property name="javascript.nodejs.core.library.typings.version" value="14.14.26" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preference.GoLinterConfigurable" />
@@ -62,7 +62,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build adrianvillanueva997/deficienteBot/src">
+  <component name="RunManager" selected="Node.js.index.js">
     <configuration name="go build adrianvillanueva997/deficienteBot/src" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="DeficienteBot_Telegram" />
       <working_directory value="$PROJECT_DIR$" />
@@ -114,6 +114,7 @@
       <workItem from="1612358527052" duration="9000" />
       <workItem from="1612728078957" duration="196000" />
       <workItem from="1612728732441" duration="23000" />
+      <workItem from="1613088737387" duration="44000" />
     </task>
     <servers />
   </component>

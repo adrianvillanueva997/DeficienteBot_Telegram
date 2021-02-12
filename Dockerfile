@@ -13,4 +13,6 @@ RUN go build -o app ./src
 FROM alpine:latest
 WORKDIR /app
 COPY --from=build-env /build/app .
+RUN adduser -D appuser
+USER appuser
 ENTRYPOINT ./app
