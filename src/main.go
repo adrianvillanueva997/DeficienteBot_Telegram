@@ -28,7 +28,7 @@ func main() {
 
 	// Routines startup goes here
 	job := cron.New()
-	_, err = job.AddFunc("01 23 * * *", func() {
+	_, err = job.AddFunc("00 0 * * *", func() {
 		event := routines.CheckEvents()
 		if event != nil {
 			message := tgbotapi.NewMessage(-1001063900471, *event)
