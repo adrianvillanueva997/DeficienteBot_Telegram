@@ -10,7 +10,7 @@ import (
 const expr = "\\W*((?i)%s(?-i))\\W*"
 
 func badwords() []string {
-	return []string{"uwu", "owo", ":v", ":3", "ewe", "iwi", "awa", "x3"}
+	return []string{"uwu", "owo", ":v"}
 }
 
 func comboCheck(message string) int {
