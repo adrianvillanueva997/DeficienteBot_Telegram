@@ -10,7 +10,7 @@ RUN go mod download
 COPY . .
 RUN go build -o app ./src
 # Executable stage
-FROM alpine:latest
+FROM alpine:3.13.2
 WORKDIR /app
 COPY --from=build-env /build/app .
 RUN adduser -D appuser
