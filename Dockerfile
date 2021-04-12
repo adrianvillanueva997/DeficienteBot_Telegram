@@ -2,14 +2,16 @@
 # build-env -> dist
 
 FROM golang:1.16.3-alpine as build-env
-RUN apk add --no-cache gcc libc-dev
+RUN apk add --no-cache make
 WORKDIR /build
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
 COPY . .
-RUN go build -o app ./src
+RUN make build
+
 # Executable stage
+
 FROM alpine:3.13.4
 WORKDIR /app
 COPY --from=build-env /build/app .
