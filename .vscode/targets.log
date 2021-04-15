@@ -1,0 +1,354 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+ 
+# GNU Make 4.3
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Fri Apr 16 01:05:44 2021
+
+# Variables
+
+# environment
+NO_AT_BRIDGE = 1
+# environment
+GTK_RC_FILES = /etc/gtk/gtkrc:/home/xiao/.gtkrc:/home/xiao/.config/gtkrc
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-716a5ec5-2e3e-4384-ae89-28c36b3a0030.sock
+# environment
+LC_NAME = es_ES.UTF-8
+# environment
+LC_NUMERIC = es_ES.UTF-8
+# environment
+VSCODE_CWD = /home/xiao
+# environment
+LESS_TERMCAP_me = 
+# environment
+NVM_DIR = /home/xiao/.nvm
+# environment
+LC_ADDRESS = es_ES.UTF-8
+# default
+MAKE_COMMAND := make
+# environment
+GOPATH = /home/xiao/go
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+PWD = /home/xiao/proyectos/bots/DeficienteBot_Telegram
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+LSCOLORS = Gxfxcxdxbxegedabagacad
+# environment
+MAIL = /var/spool/mail/xiao
+# environment
+OLDPWD = /home/xiao
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+VSCODE_LOG_STACK = false
+# automatic
+%F = $(notdir $%)
+# environment
+NVM_INC = /home/xiao/.nvm/versions/node/v14.15.4/include/node
+# environment
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
+# environment
+LANG = en_US.UTF-8
+# environment
+XAUTHORITY = /home/xiao/.Xauthority
+# default
+.LOADED := 
+# environment
+LESS_TERMCAP_md = 
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# makefile
+MAKEFLAGS = pqrR
+# environment
+LESS_TERMCAP_so = 
+# makefile
+CURDIR := /home/xiao/proyectos/bots/DeficienteBot_Telegram
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+ZSH_TMUX_TERM = screen
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+LESS_TERMCAP_ue = 
+# environment
+PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
+# environment
+MFLAGS = -pqrR
+# default
+.SHELLFLAGS := -c
+# environment
+NVM_BIN = /home/xiao/.nvm/versions/node/v14.15.4/bin
+# environment
+_ZSH_TMUX_FIXED_CONFIG = /home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/tmux/tmux.extra.conf
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+ 
+# environment
+P9K_SSH = 0
+# environment
+XCURSOR_THEME = McMojave-cursors
+# environment
+XDG_SESSION_DESKTOP = KDE
+# environment
+ 
+VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=8115643f-d4ef-4ad4-8737-2a8f7f479dee&iid=8115643f-d4ef-4ad4-8737-2a8f7f479dee&sid=8115643f-d4ef-4ad4-8737-2a8f7f479dee","uploadToServer":true}
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST := Makefile
+# automatic
+@F = $(notdir $@)
+# environment
+ZSH = /home/xiao/.oh-my-zsh
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+VSCODE_PID = 12610
+# environment
+XDG_SESSION_TYPE = x11
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+SESSION_MANAGER = local/xiao-laptop:@/tmp/.ICE-unix/1047,unix/xiao-laptop:/tmp/.ICE-unix/1047
+# automatic
+*F = $(notdir $*)
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+BREAKPAD_DUMP_LOCATION = /home/xiao/.config/Code/exthost Crash Reports
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# makefile
+SHELL = /bin/sh
+# environment
+LESS_TERMCAP_us = 
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 0
+# environment
+GCC_COLORS = error=;:warning=;:note=;:caret=;:locus=;;:quote=;
+# environment
+MAKELEVEL := 0
+# environment
+ZSH_TMUX_CONFIG = /home/xiao/.tmux.conf
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+PATH = /home/xiao/.nvm/versions/node/v14.15.4/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/lib:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/git:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/docker:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/docker-compose:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/npm:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/nvm:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/pip:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/golang:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/node:/home/xiao/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/tmux:/home/xiao/.antigen/bundles/zsh-users/zsh-completions:/home/xiao/.antigen/bundles/zsh-users/zsh-autosuggestions:/home/xiao/.antigen/bundles/zsh-users/zsh-syntax-highlighting:/home/xiao/.antigen/bundles/zpm-zsh/clipboard:/home/xiao/.antigen/bundles/zpm-zsh/clipboard/functions:/home/xiao/.antigen/bundles/zpm-zsh/material-colors:/home/xiao/.antigen/bundles/romkatv/powerlevel10k:/home/xiao/go/bin
+# environment
+LESS_TERMCAP_se = 
+# default
+MAKEFILES := 
+# environment
+LC_MONETARY = es_ES.UTF-8
+# environment
+MOTD_SHOWN = pam
+# automatic
+^F = $(notdir $^)
+# environment
+LC_TIME = es_ES.UTF-8
+# environment
+LESS_TERMCAP_mb = 
+# environment
+VSCODE_LOG_NATIVE = false
+# environment
+LC_TELEPHONE = es_ES.UTF-8
+# automatic
+?F = $(notdir $?)
+# environment
+KDE_APPLICATIONS_AS_SCOPE = 1
+# environment
+XDG_SEAT = seat0
+# environment
+XDG_CURRENT_DESKTOP = KDE
+# environment
+LS_COLORS = no=00:fi=00:rs=0:di=01;34:ln=target:mh=00:pi=40;33:so=35:do=35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=30;41;01:sg=30;43;01:ca=30;41;01:tw=30;42;01:ow=30;46;01:st=30;44;01:*.tar=32:*.tgz=32:*.arc=32:*.arj=32:*.taz=32:*.lha=32:*.lz4=32:*.lzh=32:*.lzma=32:*.tlz=32:*.txz=32:*.tzo=32:*.t7z=32:*.zip=32:*.z=32:*.Z=32:*.dz=32:*.gz=32:*.lrz=32:*.lz=32:*.lzo=32:*.xz=32:*.zst=32:*.tzst=32:*.bz2=32:*.bz=32:*.tbz=32:*.tbz2=32:*.tz=32:*.ear=32:*.sar=32:*.rar=32:*.alz=32:*.ace=32:*.zoo=32:*.cpio=32:*.7z=32:*.rz=32:*.cab=32:*.wim=32:*.swm=32:*.dwm=32:*.esd=32:*.apk=32:*.gem=32:*.xpi=32:*.crx=32:*.aac=36:*.au=36:*.flac=36:*.m4a=36:*.mid=36:*.midi=36:*.mka=36:*.mp3=36:*.mpc=36:*.ogg=36:*.ra=36:*.wav=36:*.oga=36:*.opus=36:*.spx=36:*.xspf=36:*.pdf=31:*.djvu=31:*.epub=31:*.fb2=31:*.mobi=31:*.cfg=36:*.cnf=36:*.conf=36:*.ini=36:*Gemfile=4;35:*Rakefile=4;35:*Makefile=4;35:*Cargo.toml=4;33:*Vagrantfile=4;34:*.sql=34:*.db=35:*.sqlite3=35:*.sqlite=35:*.sqlite-wal=35:*.doc=36:*.docx=36:*.odt=36:*.asc=31:*.enc=31:*.gpg=31:*.signature=31:*.sig=31:*.p12=31:*.pem=31:*.pgp=31:*.asc=31:*.enc=31:*.sig=31:*.p7s=31:*.ttf=33:*.woff=33:*.woff2=33:*.afm=33:*.fon=33:*.fnt=33:*.pfb=33:*.pfm=33:*.otf=33:*.eot=33:*.jpg=35:*.jpeg=35:*.gif=35:*.webp=35:*.wma=35:*.bmp=35:*.pbm=35:*.pgm=35:*.ppm=35:*.tga=35:*.xbm=35:*.xpm=35:*.tif=35:*.tiff=35:*.png=35:*.svg=35:*.svgz=35:*.mng=35:*.pcx=35:*.ico=35:*.eps=35:*.apk=33:*.deb=33:*.rpm=33:*.jad=33:*.jar=33:*.war=33:*.cab=33:*.pak=33:*.pk3=33:*.vdf=33:*.vpk=33:*.bsp=33:*.dmg=33:*.msi=33:*.appimages=33:*.c=34:*.h=34:*.hpp=34:*.cc=34:*.cpp=34:*.cs=32:*.go=34:*.rs=33:*.java=31:*.pas=35:*.py=34:*.ipynb=34:*.rb=31:*.erb=31:*.gemspec=31:*.ru=31:*.lua=35:*.xlt=32:*.groovy=36:*.dsl=36:*.scala=31:*.toml=34:*.yml=35:*.yaml=35:*.xml=35:*.md=31:*.markdown=31:*.tex=35:*.latex=35:*.pl=33:*.hs=34:*.lhs=34:*.map=36:*.vim=32:*.sty=4;32:*.dll=34:*.class=34:*.node=34:*.pyc=34:*.so=34:*.pyo=34:*.kml=35:*.kmz=35:*.log=2;37:*.zwc=2;37:*.lock=2;37:*.old=2;37:*.o=2;37:*.tmp=2;37:*.out=2;37:*.bak=2;37:*.swp=2;37:*.cache=2;37:*.part=2;37:*.aux=2;37:*.lof=2;37:*.lol=2;37:*.lot=2;37:*.toc=2;37:*.bbl=2;37:*.blg=2;37:*.incomplete=2;37:*.temp=2;37:*.o=2;37:*.cache=2;37:*.aux=2;37:*.dist=2;37:*.zcompdump=2;37:*.viminfo=2;37:*.Xauthority=2;37:*.ICEauthority=2;37:*~=2;37:*#=2;37:*.dmg=31:*.iso=31:*.bin=31:*.nrg=31:*.qcow=31:*.sparseimage=31:*.toast=31:*.vcd=31:*.vmdk=31:*.ppt=33:*.pptx=33:*.odp=33:*.gdslides=33:*.xinitrc=34:*.xbindkeysrc=34:*.Xresources=34:*.profile=33:*.bashrc=33:*.bash_profile=33:*.bashrc.aliases=33:*.bash_logout=33:*.bashrc=33:*.bashrc=33:*.zprofile=33:*.zshrc=33:*zshrc=33:*.zshrc.local=33:*.vimrc=32:*vimrc=32:*.inputrc=32:*inputrc=32:*.npmrc=32:*.git-credentials=32:*.curlrc=32:*.myclirc=32:*.tldrrc=32:*.nanorc=32:*nanorc=32:*.wget-hst=32:*.wget-hsts=32:*.yarnrc=32:*wgetrc=32:*.face.icon=32:*.bookmarks=32:*.bash_aliases=32:*.gitignore=32:*.pythonrc=32:*.pythonstartup=32:*.dircolors=32:*.nrmrc=32:*sudoers=32:ex=33;01:*.cmd=33:*.exe=33:*.com=33:*.btm=33:*.bat=33:*.sh=33:*.bash=33:*.csh=33:*.zsh=33:*.zsh-theme=33:*.fish=33:*.xlsx=34:*.xls=34:*.ods=34:*.csv=34:*.tsv=34:*.mov=34:*.movie=34:*.mpg=34:*.mpeg=34:*.m2v=34:*.mkv=34:*.webm=34:*.ogm=34:*.mp4=34:*.m4v=34:*.mp4v=34:*.vob=34:*.qt=34:*.nuv=34:*.wmv=34:*.asf=34:*.rm=34:*.rmvb=34:*.avi=34:*.flv=34:*.gl=34:*.dl=34:*.xcf=34:*.xwd=34:*.yuv=34:*.emf=34:*.ogv=34:*.ogx=34:*.3g2=34:*.3gp=34:*.3gp2=34:*.3gpp=34:*.torrent=32:*.txt=0:*.bash_history=2;37:*.python_history=2;37:*.zsh_history=2;37:*.node_repl_history=2;37:*.mysql_history=2;37:*.zsh_history=2;37:*.autoenv_authorized=2;37:*.directory=34:*.desktop=34:*fstab=36:*group=36:*group-=36:*passwd=36:*passwd-=36:*shadow=36:*shadow-=36:*hosts=36:*hostname=36:*shells=36:*environment=32:*profile=32:*-release=32:*_release=32:*rc.local=33:*inittab=33:*.pacnew=2;37:*.pacsave=2;37:*.diff=30;41:*.patch=30;41:*config=30;41:*sample=30;41:*HEAD=30;41:*description=30;41:*LICENSE=4;33:*README=4;33:*README.md=4;31:*.php=34:*.html=34:*.xhtml=34:*.htm=34:*.haml=34:*.slim=34:*.jade=34:*.pug=34:*.hjs=34:*.njk=34:*.css=32:*.sss=32:*.less=32:*.scss=32 
+:*.sass=32:*.stylus=32:*.js=33:*.jsx=33:*.ts=33:*.tsx=33:*.coffee=33:*.vue=33:*.d.ts=2;33:*.flow=2;33:*.cson=34:*.json=34:*package.json=4;35:*bower.json=4;35:*tsconfig.json=4;34:*tsconfig.*.json=4;34:*jsdoc.json=4;34:*.eslintrc=4;34:*.eslintrc.js=4;34:*.eslintrc.json=4;34:*babelrc=4;34:*babel.js=4;34:*babelrc.js=4;34:*babel.json=4;34:*babelrc.json=4;34:*babel.json=4;34:*babel.*.js=4;34:*rollup.*.json=4;34:*rollup.*.js=4;34:*package-lock.json=2;35:*known_hosts=36:*config=36:*authorized_keys=36:*.allow=32:*.deny=31:*id_dsa=31:*id_rsa=31:*id_ecdsa=31:*id_ed25519=31:*.sublime-workspace=34:*.sublime-project=34:*.service=34:*@.service=34:*.socket=34:*.swap=34:*.device=34:*.mount=34:*.automount=34:*.target=34:*.path=34:*.timer=34:*.snapshot=34:*.slice=34:*.code-workspace=34:*launch.json=34:
+# automatic
++F = $(notdir $+)
+# environment
+XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
+# environment
+LESS = -R
+ 
+# environment
+DESKTOP_SESSION = plasma
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = KDE
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+GREP_COLORS = :mt=;:ms=;;:mc=;:sl=:cx=:fn=;;:ln=32:bn=32:se=;;
+# environment
+LOGNAME = xiao
+# environment
+XDG_VTNR = 1
+# makefile
+.DEFAULT_GOAL := run
+# environment
+DISPLAY = :0
+# environment
+GTK_MODULES = canberra-gtk-module
+# environment
+USER = xiao
+# default
+MAKE_VERSION := 4.3
+# environment
+KDE_SESSION_UID = 1000
+# environment
+LC_MEASUREMENT = es_ES.UTF-8
+# environment
+PAGER = less
+# environment
+VSCODE_NODE_CACHED_DATA_DIR = /home/xiao/.config/Code/CachedData/3c4e3df9e89829dce27b7b5c24508306b151f30d
+# environment
+_ = /usr/bin/make
+# environment
+LC_PAPER = es_ES.UTF-8
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+NVM_CD_FLAGS = -q
+# environment
+GOMODCACHE = /home/xiao/go/pkg/mod
+# environment
+XDG_SESSION_CLASS = user
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# environment
+GTK2_RC_FILES = /etc/gtk-2.0/gtkrc:/home/xiao/.gtkrc-2.0:/home/xiao/.config/gtkrc-2.0
+# environment
+HOME = /home/xiao
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-ce2fee86-1.55.2-main.sock
+# environment
+XDG_SESSION_ID = 2
+# environment
+XCURSOR_SIZE = 24
+# environment
+GOPROXY = https://proxy.golang.org,direct
+# default
+.RECIPEPREFIX := 
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# environment
+QT_AUTO_SCREEN_SCALE_FACTOR = 0
+# environment
+KDE_SESSION_VERSION = 5
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink guile load
+# environment
+KDE_FULL_SESSION = true
+# environment
+LC_IDENTIFICATION = es_ES.UTF-8
+# variable set hash-table stats:
+# Load=125/1024=12%, Rehash=0, Collisions=15/155=10%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 2049, inode 10620362): 16 files, no impossibilities.
+
+# 16 files, no impossibilities in 1 directories.
+ 
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+run-dev:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 5):
+	gow run ./src/main.go
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2021-04-13 20:56:02.344537428
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+run:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 2):
+	go run ./src/main.go
+
+build:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 8):
+	go build -o app ./src
+
+docker-build:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 11):
+	docker build -t deficentebottelegram .
+
+# files hash-table stats:
+# Load=8/1024=1%, Rehash=0, Collisions=0/18=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 25 / storage = 209 B / avg = 8 B
+# current buf: size = 8162 B / used = 209 B / count = 25 / avg = 8 B
+
+# strcache performance: lookups = 33 / hit rate = 24%
+ 
+# hash-table stats:
+# Load=25/8192=0%, Rehash=0, Collisions=0/33=0%
+# Finished Make data base on Fri Apr 16 01:05:44 2021
+
+ 

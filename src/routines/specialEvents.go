@@ -1,18 +1,20 @@
 package routines
 
 import (
+	"log"
 	"time"
 )
 
-func getCurrentDaynMonth() (int, int) {
+func getCurrentDaynMonth() (int, int, int) {
 	t := time.Now()
 	month := int(t.Month()) // type time.Month
 	day := t.Day()
-	return day, month
+	weekday := int(t.Weekday())
+	return day, month, weekday
 }
 
 func CheckEvents() *string {
-	day, month := getCurrentDaynMonth()
+	day, month, weekday := getCurrentDaynMonth()
 	var message string
 	switch month {
 	case 1:
@@ -122,6 +124,11 @@ func CheckEvents() *string {
 			message = "Feliz navidad!"
 			return &message
 		}
+	}
+	log.Println(message, weekday)
+	if weekday == 4 {
+		message = "Feliz jueves!"
+		return &message
 	}
 	return nil
 }
