@@ -60,7 +60,7 @@ func main() {
 			_, _ = bot.Send(msg)
 		}
 		// Javi checks go here
-		if update.Message.Chat.ID == 300949 {
+		if update.Message.Chat.ID == 447988998 {
 			javi, deficiente := services.CheckJavi()
 			if javi {
 				msg.Text = *deficiente

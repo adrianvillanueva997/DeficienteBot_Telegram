@@ -1,5 +1,5 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/xiao/proyectos/bots/DeficienteBot_Telegram'
+make.exe --dry-run --always-make --keep-going --print-directory
+make: Entering directory 'e:/test/DeficienteBot_Telegram'
 go run ./src/main.go
-make: Leaving directory '/home/xiao/proyectos/bots/DeficienteBot_Telegram'
+make: Leaving directory 'e:/test/DeficienteBot_Telegram'
  

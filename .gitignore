@@ -120,5 +120,6 @@ node_modules
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 **/.history
+.vscode/
 
 # End of https://www.gitignore.io/api/visualstudiocode
