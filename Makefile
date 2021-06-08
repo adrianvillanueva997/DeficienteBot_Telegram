@@ -15,4 +15,4 @@ fmt:
 sec:
 	gosec ./...
 docker-lint:
-	hadolint Dockerfile
+	hadolint --ignore DL3018 Dockerfile
