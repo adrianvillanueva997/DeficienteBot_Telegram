@@ -11,28 +11,28 @@ jobs:
     container: golang:alpine
     steps:
       - run: |
-          apk add --no-cache make=4.3r-0
+          apk add --no-cache make
           make fmt
   gosec:
     runs-on: ubuntu-latest
     container: securego/gosec:latest
     steps:
       - run: |
-          apk add --no-cache make=4.3r-0
+          apk add --no-cache make
           make sec
   golangci-lint:
     runs-on: ubuntu-latest
     container: golangci/golangci-lint:latest-alpine
     steps:
       - run: |
-          apk add --no-cache make=4.3r-0
+          apk add --no-cache make
           make lint
   docker-lint:
     runs-on: ubuntu-latest
     container: hadolint/hadolint:latest-alpine
     steps:
       - run: |
-          apk add --no-cache make=4.3r-0
+          apk add --no-cache make
           make docker-lint
   security-check:
     runs-on: ubuntu-latest
