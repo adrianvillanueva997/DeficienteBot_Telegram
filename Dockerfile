@@ -2,7 +2,7 @@
 # build-env -> dist
 
 FROM golang:1.16.4-alpine as build-env
-RUN apk add --no-cache make
+RUN apk add --no-cache make=4.3-r0
 WORKDIR /build
 COPY go.mod .
 COPY go.sum .
@@ -17,4 +17,4 @@ WORKDIR /app
 COPY --from=build-env /build/app .
 RUN adduser -D appuser
 USER appuser
-ENTRYPOINT ./app
+ENTRYPOINT ["./app"]

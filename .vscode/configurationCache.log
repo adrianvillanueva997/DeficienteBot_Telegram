@@ -1,1 +1,1 @@
-{"buildTargets":["build","docker-build","run","run-dev"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
+{"buildTargets":["build","docker-build","fmt","install","lint","run","run-dev","sec"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

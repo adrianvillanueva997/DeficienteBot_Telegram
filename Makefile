@@ -10,5 +10,9 @@ docker-build:
 	docker build -t deficentebottelegram .
 lint:
 	golangci-lint run src/
+fmt:
+	go fmt ./...
 sec:
 	gosec ./...
+docker-lint:
+	hadolint Dockerfile

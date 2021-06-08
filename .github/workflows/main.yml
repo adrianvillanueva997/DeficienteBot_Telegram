@@ -6,14 +6,42 @@ on:
       - main
 
 jobs:
-  ci:
+  lint:
+    runs-on: ubuntu-latest
+    container: golang:alpine
+    steps:
+      - run: |
+          apk add --no-cache make=4.3r-0
+          make fmt
+  gosec:
+    runs-on: ubuntu-latest
+    container: securego/gosec:latest
+    steps:
+      - run: |
+          apk add --no-cache make=4.3r-0
+          make sec
+  golangci-lint:
+    runs-on: ubuntu-latest
+    container: golangci/golangci-lint:latest-alpine
+    steps:
+      - run: |
+          apk add --no-cache make=4.3r-0
+          make lint
+  docker-lint:
+    runs-on: ubuntu-latest
+    container: hadolint/hadolint:latest-alpine
+    steps:
+      - run: |
+          apk add --no-cache make=4.3r-0
+          make docker-lint
+  security-check:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         # Override automatic language detection by changing the below list
         # Supported options are ['csharp', 'cpp', 'go', 'java', 'javascript', 'python']
-        language: [ 'go' ]
+        language: ["go"]
         # Learn more...
     container:
       image: golang
@@ -43,9 +71,9 @@ jobs:
         uses: github/codeql-action/autobuild@v1
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
-  cd:
+  build-docker:
     runs-on: ubuntu-latest
-    needs: ci
+    needs: [security-check, lint, gosec, golangci-lint, docker-lint]
     steps:
       - name: Set up CD
         uses: actions/checkout@v2.3.4
