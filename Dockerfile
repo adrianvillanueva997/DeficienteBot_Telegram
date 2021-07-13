@@ -1,7 +1,7 @@
 # Multistage docker image building
 # build-env -> dist
 
-FROM golang:1.16.5-alpine as build-env
+FROM golang:1.17beta1-alpine as build-env
 RUN apk add --no-cache make
 WORKDIR /build
 COPY go.mod .
