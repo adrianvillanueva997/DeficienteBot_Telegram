@@ -5,12 +5,12 @@ services:
     container_name: telegram_deficiente
     restart: unless-stopped
     env_file:
-        - .env
+      - .env
     volumes:
-        - "/etc/timezone:/etc/timezone:ro"
-        - "/etc/localtime:/etc/localtime:ro"
+      - '/etc/timezone:/etc/timezone:ro'
+      - '/etc/localtime:/etc/localtime:ro'
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
+      - 'com.centurylinklabs.watchtower.enable=true'
     networks:
       - bots
 networks:
