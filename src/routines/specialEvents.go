@@ -20,7 +20,7 @@ func CheckEvents() *string {
 	case 1:
 		switch day {
 		case 1:
-			message = "Feliz año nuevo!"
+			message = "Felis año nuevo"
 			return &message
 		case 30:
 			message = "Felicidades @LilNarwhal"
@@ -82,8 +82,8 @@ func CheckEvents() *string {
 		case 1:
 			message = "Agosto, a seguir muriendo de calor"
 			return &message
-		case 8:
-			message = "Felicidades @Sauturn"
+		case 2:
+			message = "Felicidades al más guapo de Asturies @Sauturn"
 			return &message
 		}
 	case 9:
@@ -94,11 +94,15 @@ func CheckEvents() *string {
 	case 10:
 		switch day {
 		case 1:
-			message = "Ya es Octubre"
+			message = "💀 SpookTober 💀"
 			return &message
-		case 10:
+		case 5:
+			message = "Felicidades al segundo más guapo de Asturies, @davasjoe"
+		case 7:
 			message = "Felicidades @txc450"
 			return &message
+		case 8:
+			message = "Felicidades @Naruto"
 		case 12:
 			message = "🇪🇸 Feliz dia de Españita 🇪🇸"
 			return &message
@@ -109,7 +113,7 @@ func CheckEvents() *string {
 	case 11:
 		switch day {
 		case 1:
-			message = "Ya es Noviembre!"
+			message = "Queda inaugurada la temporada de No Fap November ⛔💦"
 			return &message
 		case 20:
 			message = "https://www.youtube.com/watch?v=RS_4HosMJuE"
@@ -118,7 +122,7 @@ func CheckEvents() *string {
 	case 12:
 		switch day {
 		case 1:
-			message = "Feliz mes de Diciembre!"
+			message = "Se viene la Navidad, a coger kilos de más! Felis Diciembre!"
 			return &message
 		case 25:
 			message = "Feliz navidad!"
