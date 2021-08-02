@@ -1,7 +1,6 @@
 package routines
 
 import (
-	"log"
 	"time"
 )
 
@@ -42,14 +41,23 @@ func CheckEvents() *string {
 			return &message
 		}
 	case 3:
-		if day == 1 {
+		switch day {
+		case 1:
 			message = "Chavalotes ya es Marzo"
+			return &message
+		case 8:
+			message = "Felicidades mujeres"
 			return &message
 		}
 	case 4:
-		if day == 1 {
+		switch day {
+		case 1:
 			message = "En Abril aguas mil"
 			return &message
+		case 20:
+			message = "Felicidades porreros"
+			return &message
+
 		}
 	case 5:
 		switch day {
@@ -87,8 +95,12 @@ func CheckEvents() *string {
 			return &message
 		}
 	case 9:
-		if day == 1 {
+		switch day {
+		case 1:
 			message = "Septiembre, fin de las vacaciones"
+			return &message
+		case 11:
+			message = "Felicidades Torres Gemelas!"
 			return &message
 		}
 	case 10:
@@ -113,10 +125,10 @@ func CheckEvents() *string {
 	case 11:
 		switch day {
 		case 1:
-			message = "Queda inaugurada la temporada de No Fap November ⛔💦"
+			message = "⛔💦 Queda inaugurada la temporada de No Fap November ⛔💦"
 			return &message
 		case 20:
-			message = "https://www.youtube.com/watch?v=RS_4HosMJuE"
+			message = "https://www.youtube.com/watch?v=zI5q9x0CtME"
 			return &message
 		}
 	case 12:
@@ -129,7 +141,7 @@ func CheckEvents() *string {
 			return &message
 		}
 	}
-	log.Println(message, weekday)
+	//log.Println(message, weekday)
 	if weekday == 4 {
 		message = "Feliz jueves!"
 		return &message
