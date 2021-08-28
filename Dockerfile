@@ -12,7 +12,7 @@ RUN make build
 
 # Executable stage
 
-FROM alpine:3.14.1
+FROM alpine:3.14.2
 WORKDIR /app
 COPY --from=build-env /build/app .
 RUN adduser -D appuser
