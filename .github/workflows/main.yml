@@ -118,7 +118,7 @@ jobs:
           push: true
           tags: |
             ${{ steps.meta.outputs.tags }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/adrianvillanueva997/deficientebot_telegram:latest
           labels: ${{ steps.meta.outputs.labels }}
           #tags: |
           #  adrianvillanueva997/telegrambot_deficiente:${{ github.sha }}
