@@ -16,3 +16,5 @@ sec:
 	gosec ./...
 docker-lint:
 	hadolint --ignore DL3018 Dockerfile
+gokart:
+	gokart scan ./... -v
