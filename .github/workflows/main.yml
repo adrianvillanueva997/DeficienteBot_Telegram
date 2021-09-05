@@ -26,7 +26,6 @@ jobs:
       - run: |
           apk add --no-cache make
           go install github.com/praetorian-inc/gokart@latest
-          go mod donwload
           make gokart
   gosec:
     runs-on: ubuntu-latest
