@@ -120,6 +120,7 @@ jobs:
             ${{ steps.meta.outputs.tags }}
             ${{ env.REGISTRY }}/adrianvillanueva997/deficientebot_telegram:latest
           labels: ${{ steps.meta.outputs.labels }}
+
           #tags: |
           #  adrianvillanueva997/telegrambot_deficiente:${{ github.sha }}
           #  adrianvillanueva997/telegrambot_deficiente:latest
