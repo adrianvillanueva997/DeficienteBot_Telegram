@@ -20,6 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
       - run: |
+          apk add --no-cache make
           go install github.com/praetorian-inc/gokart@latest
           make gokart
   gosec:
@@ -85,7 +86,7 @@ jobs:
         uses: github/codeql-action/analyze@v1
   build-docker:
     runs-on: ubuntu-latest
-    needs: [security-check, lint, gosec, golangci-lint, docker-lint]
+    needs: [security-check, lint, gosec, golangci-lint, docker-lint, gokart]
     steps:
       - name: Set up CD
         uses: actions/checkout@v2.3.4
