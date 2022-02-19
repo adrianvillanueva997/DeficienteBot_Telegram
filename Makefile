@@ -8,7 +8,7 @@ install:
 	go mod download
 docker-build:
 	docker build -t deficentebottelegram .
-lint:
+golancilint:
 	golangci-lint run src/
 fmt:
 	go fmt ./...
@@ -18,3 +18,5 @@ docker-lint:
 	hadolint --ignore DL3018 Dockerfile
 gokart:
 	gokart scan ./... -v
+
+lint: golangcilint fmt sec docker-lint gokart
