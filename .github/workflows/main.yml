@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@v2.4.0
       - run: |
           apk add --no-cache make
-          make golangcilint
+          make golancilint
   docker-lint:
     runs-on: ubuntu-latest
     container: hadolint/hadolint:latest-alpine
