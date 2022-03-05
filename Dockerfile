@@ -2,7 +2,7 @@
 # build-env -> dist
 
 FROM golang:1.17.7-alpine as build-env
-RUN apk add --no-cache make
+RUN apk add --no-cache make git
 WORKDIR /build
 COPY go.mod .
 COPY go.sum .
