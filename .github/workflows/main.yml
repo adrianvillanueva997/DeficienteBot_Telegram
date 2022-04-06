@@ -18,15 +18,6 @@ jobs:
       - run: |
           apk add --no-cache make
           make fmt
-  gokart:
-    runs-on: ubuntu-latest
-    container: golang:alpine
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          apk add --no-cache make
-          go install github.com/praetorian-inc/gokart@latest
-          make gokart
   gosec:
     runs-on: ubuntu-latest
     container: securego/gosec:latest
@@ -90,7 +81,7 @@ jobs:
         uses: github/codeql-action/analyze@v1
   build-docker:
     runs-on: ubuntu-latest
-    needs: [security-check, lint, gosec, golangci-lint, docker-lint, gokart]
+    needs: [security-check, lint, gosec, golangci-lint, docker-lint]
     steps:
       - name: Set up CD
         uses: actions/checkout@v3
