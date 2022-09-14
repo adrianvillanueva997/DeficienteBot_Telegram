@@ -102,6 +102,9 @@ func CheckEvents() *string {
 		case 11:
 			message = "Felicidades Torres Gemelas!"
 			return &message
+		case 15:
+			message = "Feliciades @CecilioGil"
+			return &message
 		}
 	case 10:
 		switch day {
@@ -140,11 +143,14 @@ func CheckEvents() *string {
 			message = "Feliz navidad!"
 			return &message
 		}
+	default:
+		return nil
 	}
 	//log.Println(message, weekday)
 	if weekday == 4 {
 		message = "Feliz jueves!"
 		return &message
 	}
+
 	return nil
 }
