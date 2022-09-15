@@ -37,6 +37,9 @@ func main() {
 			_, _ = bot.Send(message)
 		}
 	})
+	if err != nil {
+		log.Println((err.Error()))
+	}
 
 	// Happy thursday goes here
 	_, err = thursday.AddFunc("0 0 * * 4", func() {
