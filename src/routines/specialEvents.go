@@ -13,7 +13,7 @@ func getCurrentDaynMonth() (int, int, int) {
 }
 
 func CheckEvents() *string {
-	day, month, weekday := getCurrentDaynMonth()
+	day, month, _ := getCurrentDaynMonth()
 	var message string
 	switch month {
 	case 1:
@@ -131,13 +131,13 @@ func CheckEvents() *string {
 			message = "⛔💦 Queda inaugurada la temporada de No Fap November ⛔💦"
 			return &message
 		case 20:
-			message = "https://www.youtube.com/watch?v=zI5q9x0CtME"
+			message = "Franco ha muerto"
 			return &message
 		}
 	case 12:
 		switch day {
 		case 1:
-			message = "Se viene la Navidad, a coger kilos de más! Felis Diciembre!"
+			message = "Se viene la Navidad, a coger kilos de más! Feliz Diciembre!"
 			return &message
 		case 25:
 			message = "Feliz navidad!"
@@ -146,11 +146,13 @@ func CheckEvents() *string {
 	default:
 		return nil
 	}
-	//log.Println(message, weekday)
-	if weekday == 4 {
-		message = "Feliz jueves!"
-		return &message
-	}
 
 	return nil
+}
+
+func HappyThursday() *string {
+	var message string
+	message = "Feliz jueves!"
+	return &message
+
 }

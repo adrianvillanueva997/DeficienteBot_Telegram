@@ -27,16 +27,26 @@ func main() {
 	u.Timeout = 60
 	updates, _ := bot.GetUpdatesChan(u)
 
-	// Routines startup goes here
-	job := cron.New()
-	_, err = job.AddFunc("00 0 * * *", func() {
+	// Birthdays go here
+	events := cron.New()
+	thursday := cron.New()
+	_, err = events.AddFunc("00 0 * * *", func() {
 		event := routines.CheckEvents()
 		if event != nil {
 			message := tgbotapi.NewMessage(-1001063900471, *event)
 			_, _ = bot.Send(message)
 		}
 	})
-	go job.Start()
+
+	// Happy thursday goes here
+	_, err = thursday.AddFunc("0 0 * * 4", func() {
+		thursday_message := routines.HappyThursday()
+		message := tgbotapi.NewMessage(-1001063900471, *thursday_message)
+		_, _ = bot.Send(message)
+	})
+
+	go events.Start()
+	go thursday.Start()
 	if err != nil {
 		log.Println(err.Error())
 	}
