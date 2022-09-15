@@ -8,7 +8,7 @@ import (
 func pastawords() []string {
 	return []string{"cbt", "lentejas", "pan", "colegas", "amiga",
 		"gimnasio", "paseo", "conciencia", "paraguaya",
-		"paja", "cuerpazo", "halloween", "niño", "game"}
+		"paja", "cuerpazo", "halloween", "niño"}
 }
 func pastaCheck(message string) []string {
 	copyPastaList := pastawords()
@@ -55,8 +55,6 @@ func PastaText(receivedMessage string) *string {
 			message = "Qué es Jalogüin?"
 		case "niño":
 			message = "Le cojes y les dices escúchame tío, que yo no soy un niño, tío, yo no soy un niño, tío, yo no estoy pa que me hagan perder el tiempo. ¿Me entiendes? Que es lo que me hace perder tu gente. Ya está primo, que si eres tan bravo tío, cuando quieras quedas conmigo, hermano. Y yo sí sé como funcionan hermano. Aquí hay walthers, hay 38s, hermano, hay 9mm, hay lo que quieras, compadre. Yo no sé qué tú te estás pensando que es esto, compadre, THIS IS THE JUNGLE, NIGGA. Escúchame, es que, es que ya me está tocando la polla, tío, estás tonterías, de tu coro de niños pequeños, tío, que escúchame, que venga, primo, que venga aquí a la calle Aguilón nº9, primo. Que venga ya tu colega si es tan bravo, que ayer me tuvo ahí esperando, compadre, hasta la 1 y media de la noche, hermano, y no vino ni Dios. ¿Qué pasa con tu rollo, sois tan bravos, primo? Pues si sois tan bravos, vente, vente de verdad, hermano. Estuve ayer con mi colega, primo y es que menos mal que no te encontré, chivato de mierda, porque estuve con mi colega dando vueltas por ahí con el coche, con la pistola, maricón. ¿Tú con quién te piensas que estás hablando, pipudo? ¿Eh? Ts. Y es que has tenido hasta suerte, maricón, te ha venido hasta bien, el que no vinieras, porque es que te hubiera metido un tiro en la rodilla, payaso, que eres un payaso."
-		case "game":
-			message = "Estaba el otro día ahí parao en frente del GAME mirando el wasap cuando de repente me topo con un chaval y una mozaaaaaaaaa que iban a comprar pops para sus chabolas. Entonces pasa mi colega Josemi y les dice 'Chachos, que eso es pa sonyers, comprasus unas amiibos'. El pavo sale to flameao de la tienda y le suelta una frase en otaku, algo de un meao en el xindeiru, y intenta darle de ostias. Pobre chaval. No sabe que Josemi es de la Huesca profunda, y cuando las devuelve, las devuelve. Le arreó con el puño que parecía un palo vareando un olivo, mientras la chavala le gritaba algo de una vaca. Juasjuasjuas putos otacos, le dejamos ahí tendío en el suelo porque esto es territorio de Nintendo y nos fuimos a jugar al pokemon go al grito de HEIL FURUKAWA."
 		default:
 			return nil
 		}
