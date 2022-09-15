@@ -6,7 +6,9 @@ import (
 )
 
 func pastawords() []string {
-	return []string{"cbt", "lentejas", "pan", "colegas", "amiga", "gimnasio"}
+	return []string{"cbt", "lentejas", "pan", "colegas", "amiga",
+		"gimnasio", "paseo", "conciencia", "paraguaya",
+		"paja", "cuerpazo", "halloween", "niño", "game"}
 }
 func pastaCheck(message string) []string {
 	copyPastaList := pastawords()
