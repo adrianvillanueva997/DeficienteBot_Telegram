@@ -67,7 +67,7 @@ func main() {
 			url := services.Update_vx_twitter(update.Message.Text)
 			if url != nil {
 				config := tgbotapi.NewDeleteMessage(update.Message.Chat.ID, update.Message.MessageID)
-				bot.DeleteMessage(config)
+				_, _ = bot.DeleteMessage(config)
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, *url)
 				_, _ = bot.Send(msg)
 			}
