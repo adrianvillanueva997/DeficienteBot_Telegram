@@ -69,7 +69,7 @@ func main() {
 				config := tgbotapi.NewDeleteMessage(update.Message.Chat.ID, update.Message.MessageID)
 				bot.DeleteMessage(config)
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, *url)
-				bot.Send(msg)
+				_, _ = bot.Send(msg)
 			}
 		}
 
