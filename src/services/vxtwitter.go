@@ -21,6 +21,9 @@ func update_url(url string) string {
 }
 
 func Update_vx_twitter(url string) *string {
+	if strings.Contains(url, "vxtwitter") {
+		return nil
+	}
 	if strings.Contains(url, "twitter") {
 		url = update_url(url)
 		fmt.Println(url)
