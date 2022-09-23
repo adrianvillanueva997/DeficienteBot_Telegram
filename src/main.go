@@ -69,7 +69,7 @@ func main() {
 			if url != nil {
 				config := tgbotapi.NewDeleteMessage(update.Message.Chat.ID, update.Message.MessageID)
 				_, _ = bot.DeleteMessage(config)
-				message := fmt.Sprintf("(@%v) \n %v", update.Message.Chat.UserName, *url)
+				message := fmt.Sprintf("(@%v) \n %v", update.Message.From.UserName, *url)
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 				_, _ = bot.Send(msg)
 			}
