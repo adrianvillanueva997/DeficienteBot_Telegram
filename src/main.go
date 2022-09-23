@@ -57,9 +57,22 @@ func main() {
 		if update.Message == nil {
 			continue
 		}
+		//tgbotapi.NewDeleteMessage(update.Message.Chat.ID, update.Message.MessageID)
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 		msg.ReplyToMessageID = update.Message.MessageID
 		messageText := strings.ToLower(update.Message.Text)
+
+		// twitter to vxtwitter goes here
+		if services.Is_url(update.Message.Text) {
+			url := services.Update_vx_twitter(update.Message.Text)
+			if url != nil {
+				config := tgbotapi.NewDeleteMessage(update.Message.Chat.ID, update.Message.MessageID)
+				bot.DeleteMessage(config)
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, *url)
+				bot.Send(msg)
+			}
+		}
+
 		// Bad words check like uwu/owo/:v/:3
 		badWords := services.Message(strings.ToLower(messageText))
 		if badWords != nil {

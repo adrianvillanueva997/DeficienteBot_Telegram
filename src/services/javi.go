@@ -15,10 +15,10 @@ func randomNumber(max int64) (*big.Int, error) {
 }
 
 func CheckJavi() (bool, *string) {
-	number, err := randomNumber(100)
+	number, err := randomNumber(50)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	tmp := "Deficiente"
-	return number.Cmp(big.NewInt(int64(69))) == 1, &tmp // cmp values: -1 if x<y | 0 if x==y | +1 if x>y
+	return number.Cmp(big.NewInt(int64(25))) == 1, &tmp // cmp values: -1 if x<y | 0 if x==y | +1 if x>y
 }
