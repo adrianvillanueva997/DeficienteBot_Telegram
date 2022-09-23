@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"net/url"
 	"strings"
 )
@@ -10,7 +9,6 @@ func Is_url(_url string) bool {
 	_, err := url.ParseRequestURI(_url)
 	if err != nil {
 		return false
-
 	}
 	return true
 }
@@ -26,7 +24,6 @@ func Update_vx_twitter(url string) *string {
 	}
 	if strings.Contains(url, "twitter") {
 		url = update_url(url)
-		fmt.Println(url)
 		return &url
 	}
 	return nil
