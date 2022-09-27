@@ -1,8 +1,8 @@
 # Multistage docker image building
 # build-env -> dist
 
-FROM golang:1.19.1-alpine as build-env
-RUN apk add --no-cache make git
+FROM golang:1.19.1-bullseye as build-env
+RUN apt-get update && apt-get install make git
 WORKDIR /build
 COPY go.mod .
 COPY go.sum .
@@ -11,10 +11,9 @@ COPY . .
 RUN make build
 
 # Executable stage
-
-FROM alpine:3.16.2
+FROM debian:10.13-slim
 WORKDIR /app
+RUN adduser --disabled-password appuser
 COPY --from=build-env /build/app .
-RUN adduser -D appuser
 USER appuser
 ENTRYPOINT ["./app"]
