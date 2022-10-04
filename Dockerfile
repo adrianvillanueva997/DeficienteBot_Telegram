@@ -11,7 +11,7 @@ COPY . .
 RUN make build
 
 # Executable stage
-FROM debian:10.13-slim
+FROM debian:10.1-slim
 WORKDIR /app
 RUN adduser --disabled-password appuser
 COPY --from=build-env /build/app .

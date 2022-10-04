@@ -113,6 +113,7 @@ func CheckEvents() *string {
 			return &message
 		case 5:
 			message = "Felicidades al segundo más guapo de Asturies, @davasjoe"
+			return &message
 		case 7:
 			message = "Felicidades @txc450"
 			return &message
@@ -146,7 +147,6 @@ func CheckEvents() *string {
 	default:
 		return nil
 	}
-
 	return nil
 }
 
