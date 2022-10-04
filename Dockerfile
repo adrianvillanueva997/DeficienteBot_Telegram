@@ -1,7 +1,7 @@
 # Multistage docker image building
 # build-env -> dist
 
-FROM golang:1.19.1-bullseye as build-env
+FROM golang:1.19.2-bullseye as build-env
 RUN apt-get update && apt-get install -y make git
 WORKDIR /build
 COPY go.mod .
