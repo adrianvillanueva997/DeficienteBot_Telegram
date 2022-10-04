@@ -2,7 +2,7 @@
 # build-env -> dist
 
 FROM golang:1.19.1-bullseye as build-env
-RUN apt-get update && apt-get install make git
+RUN apt-get update && apt-get install -y make git
 WORKDIR /build
 COPY go.mod .
 COPY go.sum .
