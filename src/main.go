@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"adrianvillanueva997/deficienteBot/src/metrics"
 	"adrianvillanueva997/deficienteBot/src/routines"
 	"adrianvillanueva997/deficienteBot/src/services"
 
@@ -31,6 +32,7 @@ func main() {
 	// Birthdays go here
 	events := cron.New()
 	thursday := cron.New()
+	go metrics.Metrics()
 	_, err = events.AddFunc("00 0 * * *", func() {
 		event := routines.CheckEvents()
 		if event != nil {

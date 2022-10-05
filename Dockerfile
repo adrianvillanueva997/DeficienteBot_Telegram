@@ -23,4 +23,5 @@ WORKDIR /app
 RUN adduser --disabled-password appuser
 COPY --from=build-env /build/app .
 USER appuser
+EXPOSE 2112
 ENTRYPOINT ["./app"]
