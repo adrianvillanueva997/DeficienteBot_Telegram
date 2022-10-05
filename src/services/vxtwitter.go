@@ -22,7 +22,7 @@ func Update_vx_twitter(url string) *string {
 	if strings.Contains(url, "vxtwitter") {
 		return nil
 	}
-	if strings.Contains(url, "twitter") {
+	if strings.Contains(url, "twitter") && strings.Contains(url, "status") {
 		url = update_url(url)
 		return &url
 	}
