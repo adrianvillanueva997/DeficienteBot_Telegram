@@ -55,6 +55,8 @@ func CheckEvents() *string {
 			message = "Hasta el 40 Mayo no te quites el sayo"
 		case 4:
 			message = "Felicidades @r3dmsr"
+		case 6:
+			message = "Felicidades @DoctorMckay"
 		case 9:
 			message = "Felicidades @thexiao77"
 		}
