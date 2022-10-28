@@ -15,7 +15,7 @@ func randomNumber(max int64) (*big.Int, error) {
 }
 
 func CheckJavi() (bool, *string) {
-	number, err := randomNumber(50)
+	number, err := randomNumber(40)
 	if err != nil {
 		log.Fatalln(err)
 	}
