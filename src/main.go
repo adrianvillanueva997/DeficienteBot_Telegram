@@ -77,6 +77,13 @@ func main() {
 			}
 		}
 
+		// Numerical checks go here
+		funnyNumbers := services.NumberText(messageText)
+		if funnyNumbers != nil {
+			msg.Text = *funnyNumbers
+			_, _ = bot.Send(msg)
+		}
+
 		// Bad words check like uwu/owo/:v/:3
 		badWords := services.Message(strings.ToLower(messageText))
 		if badWords != nil {
