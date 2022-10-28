@@ -6,6 +6,7 @@ require (
 	github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible
 	github.com/joho/godotenv v1.4.0
 	github.com/robfig/cron/v3 v3.0.1
+	golang.org/x/exp v0.0.0-20221026153819-32f3d567a233
 )
 
 require (
