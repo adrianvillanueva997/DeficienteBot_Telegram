@@ -1,5 +1,5 @@
-use regex::Regex;
-
+use lazy_static::lazy_static;
+use regex::RegexSet;
 #[derive(Debug)]
 pub struct Message {
     pub content: String,
@@ -19,9 +19,16 @@ impl Message {
         String::from("")
     }
 
-    pub fn defiente_checker(&self) {
-        let re = Regex::new(r"\\W*((?i)%s(?-i))\\W*").unwrap();
+    fn deficiente_regex(&self, text: &str) -> bool {
+        lazy_static! {
+            static ref RE: RegexSet = RegexSet::new(&[r"uwu", r":v"]).unwrap();
+        }
+        RE.is_match(text)
     }
-    /// Returns the deficiente of this [`Message`].
-    pub fn deficiente(&self) {}
+
+    pub fn deficiente(&self) -> bool {
+        let is_deficiente = self.deficiente_regex(&self.content);
+        println!("{is_deficiente}",);
+        is_deficiente
+    }
 }
