@@ -31,4 +31,14 @@ impl Message {
         println!("{is_deficiente}",);
         is_deficiente
     }
+    fn numerical_regex(&self, text: &str) -> bool {
+        lazy_static! {
+            static ref RE: RegexSet = RegexSet::new(&[r"69", r"420"]).unwrap();
+        }
+        RE.is_match(text)
+    }
+
+    pub fn numerical_checks(&self) -> bool {
+        self.numerical_regex(&self.content)
+    }
 }

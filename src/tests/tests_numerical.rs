@@ -6,38 +6,37 @@ pub mod tests {
     use crate::messages::telegram_message;
 
     #[test]
-    fn test_isdeficiente_1() {
+    fn test_numerical_1() {
         let message = telegram_message::Message {
-            content: String::from("hola chiquis uwu"),
+            content: String::from("hola chiquis 420"),
         };
-        let result = message.deficiente();
+        let result = message.numerical_checks();
         assert!(result);
     }
     #[test]
-
-    fn test_isdeficiente_2() {
+    fn test_numerical_2() {
         let message = telegram_message::Message {
-            content: String::from("hola amigos de youtube"),
+            content: String::from("akmfamfafd420asodaofoaf"),
         };
-        let result = message.deficiente();
-        assert!(!result);
+        let result = message.numerical_checks();
+        assert!(result);
     }
+
     #[test]
 
-    fn test_isdeficiente_3() {
+    fn test_numerical_3() {
         let message = telegram_message::Message {
-            content: String::from("hola amigos :v"),
+            content: String::from("i like 69"),
         };
-        let result = message.deficiente();
+        let result = message.numerical_checks();
         assert!(result);
     }
     #[test]
-
-    fn test_isdeficiente_4() {
+    fn test_numerical_4() {
         let message = telegram_message::Message {
-            content: String::from("hola uwuamigos"),
+            content: String::from("asfafssafa69afafnajsnfa"),
         };
-        let result = message.deficiente();
+        let result = message.numerical_checks();
         assert!(result);
     }
 }
