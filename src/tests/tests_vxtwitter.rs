@@ -3,11 +3,11 @@
 // fn main
 #[cfg(test)]
 pub mod tests {
-    use crate::messages::telegram_message;
+    use crate::checks::telegram_message;
 
     #[test]
     fn test_vxtwitter_1() {
-        let message = telegram_message::Message {
+        let message = telegram_message::Checkings {
             content: String::from("https://twitter.com/timClicks/status/1586130960151900160"),
         };
         let result = message.vx_twitter();
@@ -19,7 +19,7 @@ pub mod tests {
     /// Checks if a normal tweet user is ignored correctly.
     #[test]
     fn test_vxtwitter_2() {
-        let message = telegram_message::Message {
+        let message = telegram_message::Checkings {
             content: String::from("https://twitter.com/timClicks"),
         };
         let result = message.vx_twitter();

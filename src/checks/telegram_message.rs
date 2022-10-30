@@ -1,11 +1,14 @@
 use lazy_static::lazy_static;
 use regex::RegexSet;
 #[derive(Debug)]
-pub struct Message {
+pub struct Checkings {
     pub content: String,
 }
 
-impl Message {
+impl Checkings {
+    pub fn build(text: String) -> Checkings {
+        Checkings { content: text }
+    }
     /// Returns the is url of this [`Message`].
     fn is_url(&self) -> bool {
         self.content.contains("twitter") && self.content.contains("status")
@@ -21,7 +24,7 @@ impl Message {
 
     fn deficiente_regex(&self, text: &str) -> bool {
         lazy_static! {
-            static ref RE: RegexSet = RegexSet::new(&[r"uwu", r":v"]).unwrap();
+            static ref RE: RegexSet = RegexSet::new(&[r"uwu", r":v", r"owo"]).unwrap();
         }
         RE.is_match(text)
     }

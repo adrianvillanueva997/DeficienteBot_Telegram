@@ -3,11 +3,11 @@
 // fn main
 #[cfg(test)]
 pub mod tests {
-    use crate::messages::telegram_message;
+    use crate::checks::telegram_message;
 
     #[test]
     fn test_isdeficiente_1() {
-        let message = telegram_message::Message {
+        let message = telegram_message::Checkings {
             content: String::from("hola chiquis uwu"),
         };
         let result = message.deficiente();
@@ -16,7 +16,7 @@ pub mod tests {
     #[test]
 
     fn test_isdeficiente_2() {
-        let message = telegram_message::Message {
+        let message = telegram_message::Checkings {
             content: String::from("hola amigos de youtube"),
         };
         let result = message.deficiente();
@@ -25,7 +25,7 @@ pub mod tests {
     #[test]
 
     fn test_isdeficiente_3() {
-        let message = telegram_message::Message {
+        let message = telegram_message::Checkings {
             content: String::from("hola amigos :v"),
         };
         let result = message.deficiente();
@@ -34,7 +34,7 @@ pub mod tests {
     #[test]
 
     fn test_isdeficiente_4() {
-        let message = telegram_message::Message {
+        let message = telegram_message::Checkings {
             content: String::from("hola uwuamigos"),
         };
         let result = message.deficiente();
