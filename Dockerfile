@@ -12,8 +12,8 @@ RUN apt-get update && \
     apt-get install -y ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-COPY --from=build /app/target/release/deficiente_telegram .
+COPY --from=build /app/target/release/deficientebot_telegram .
 RUN adduser --disabled-password appuser
 USER appuser
 ENV RUST_LOG=info
-ENTRYPOINT [ "./deficiente_telegram" ]
+ENTRYPOINT [ "./deficientebot_telegram" ]
