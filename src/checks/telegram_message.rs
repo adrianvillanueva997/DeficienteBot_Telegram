@@ -22,17 +22,11 @@ impl Checkings {
         String::from("")
     }
 
-    fn deficiente_regex(&self, text: &str) -> bool {
+    pub fn deficiente(&self) -> bool {
         lazy_static! {
             static ref RE: RegexSet = RegexSet::new(&[r"uwu", r":v", r"owo"]).unwrap();
         }
-        RE.is_match(text)
-    }
-
-    pub fn deficiente(&self) -> bool {
-        let is_deficiente = self.deficiente_regex(&self.content);
-        println!("{is_deficiente}",);
-        is_deficiente
+        RE.is_match(&self.content)
     }
     fn numerical_regex(&self, text: &str) -> bool {
         lazy_static! {

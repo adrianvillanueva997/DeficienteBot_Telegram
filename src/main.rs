@@ -1,18 +1,17 @@
 use frankenstein::AsyncTelegramApi;
 use frankenstein::GetUpdatesParams;
 use frankenstein::Message;
-use frankenstein::SendMessageParams;
 use frankenstein::{AsyncApi, UpdateContent};
 
-use log::debug;
-use log::error;
-use log::info;
+use log::{debug, error, info};
 
 use pretty_env_logger::env_logger;
 use std::env;
 
 use deficientebot_telegram::checks::telegram_message::Checkings;
-use deficientebot_telegram::typing_action;
+use deficientebot_telegram::{
+    delete_previous_message, send_message, send_reply_message, typing_action,
+};
 #[tokio::main]
 async fn main() {
     env_logger::init();
@@ -40,17 +39,34 @@ async fn main() {
                 }
             }
             Err(error) => {
-                info!("Failed to get updates: {:?}", error);
+                error!("Failed to get updates: {:?}", error);
             }
         }
     }
 }
 
 async fn process_message(message: Message, api: AsyncApi) {
-    let message = Box::new(message);
-    typing_action(&message, api).await;
-    let message_content = &message.text.unwrap();
+    let message_content = message.text.as_ref().unwrap();
     let checkings = Checkings::build(String::from(message_content));
 
-    if checkings.deficiente() {}
+    let vxtwitter_url = checkings.vx_twitter();
+    if !vxtwitter_url.is_empty() {
+        typing_action(&message, &api).await;
+        let username = String::from(message.from.as_ref().unwrap().username.as_ref().unwrap());
+        let space = String::from("\n");
+        let at = String::from("@");
+        let full_message = at + &username + &space + &vxtwitter_url;
+        send_message(&message, &api, &full_message).await;
+        delete_previous_message(&message, &api).await;
+    }
+
+    if checkings.deficiente() {
+        typing_action(&message, &api).await;
+        send_reply_message(&message, &api, "Deficiente").await;
+    }
+
+    if checkings.numerical_checks() {
+        typing_action(&message, &api).await;
+        send_reply_message(&message, &api, "> Nice").await;
+    }
 }
