@@ -8,6 +8,7 @@ use log::{debug, error, info};
 use pretty_env_logger::env_logger;
 use std::env;
 
+use deficientebot_telegram::checks::copypastas::copypasta;
 use deficientebot_telegram::checks::telegram_message::Checkings;
 use deficientebot_telegram::{
     delete_previous_message, send_message, send_reply_message, typing_action,
@@ -68,5 +69,12 @@ async fn process_message(message: Message, api: AsyncApi) {
     if checkings.numerical_checks() {
         typing_action(&message, &api).await;
         send_reply_message(&message, &api, "> Nice").await;
+    }
+    let lowercase_message = message_content.to_lowercase();
+    let copypasta_check = copypasta(&lowercase_message);
+    if !copypasta_check.is_empty() {
+        for copypasta in copypasta_check {
+            send_reply_message(&message, &api, copypasta).await;
+        }
     }
 }
