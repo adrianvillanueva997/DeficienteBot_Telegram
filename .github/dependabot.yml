@@ -21,4 +21,4 @@ updates:
     directory: "/"
     target-branch: "rust_conversion"
     schedule:
-      timezone: "daily"
+      interval: "daily"
