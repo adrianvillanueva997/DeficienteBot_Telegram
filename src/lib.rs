@@ -5,6 +5,7 @@ use frankenstein::{
 use log::error;
 
 pub mod checks;
+pub mod routines;
 mod tests;
 
 pub async fn typing_action(message: &Message, api: &AsyncApi) {
