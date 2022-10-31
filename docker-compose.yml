@@ -4,6 +4,8 @@ services:
     image: adrianvillanueva997/telegrambot_deficiente
     container_name: telegram_deficiente
     restart: unless-stopped
+    ports:
+      - 2112
     env_file:
       - .env
     volumes:
