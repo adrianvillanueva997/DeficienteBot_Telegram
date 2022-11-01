@@ -1,0 +1,17 @@
+[package]
+name = "deficientebot_telegram"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.22"
+frankenstein = { version = "0.20", default-features = true, features = ["async-http-client"] }
+futures = "0.3.25"
+lazy_static = "1.0.0"
+log = "0.4.17"
+pretty_env_logger = "0.4.0"
+regex = "1.6.0"
+tokio = {version = "1.21.2", features = ["full"]}
+tokio_schedule = "0.3.0"

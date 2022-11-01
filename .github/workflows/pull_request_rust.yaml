@@ -1,17 +1,13 @@
-name: Build Docker image
+name: Cargo Build & Test
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
   CARGO_TERM_COLOR: always
 
 jobs:
-  clippy:
+  run_clippy:
     name: Run clippy
     runs-on: ubuntu-22.04
     steps:
@@ -35,9 +31,15 @@ jobs:
           - stable
           - beta
           - nightly
-  build-docker:
-    runs-on: ubuntu-latest
-    needs: [clippy, docker_lint, build_and_test]
+    steps:
+      - uses: actions/checkout@v3
+      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      - run: cargo build
+      - run: cargo test --verbose
+  build_docker_image:
+    name: Build docker image
+    runs-on: ubuntu-22.04
+    needs: [build_and_test, run_clippy, docker_lint]
     strategy:
       matrix:
         architectures:
@@ -49,25 +51,10 @@ jobs:
         uses: docker/setup-qemu-action@v2.1.0
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2.2.1
-      - name: Docker login
-        uses: docker/login-action@v2.1.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.PACKAGES_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@57396166ad8aefe6098280995947635806a0e6ea
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build and push
+      - name: Build
         uses: docker/build-push-action@v3.2.0
         with:
           context: .
           file: ./Dockerfile
           platforms: ${{ matrix.architectures }}
-          push: true
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ env.REGISTRY }}/adrianvillanueva997/deficientebot_telegram:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          push: false

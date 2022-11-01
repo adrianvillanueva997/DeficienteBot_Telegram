@@ -1,27 +1,20 @@
 # Multistage docker image building
-# build-env -> dist
+# build -> prod
 
-FROM golang:1.19.2-bullseye as build-env
-RUN apt-get update && \
-    apt-get install -y make git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+FROM rust:1.64-slim-bullseye as build
 WORKDIR /build
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
 COPY . .
-RUN make build
+RUN cargo build --release
 
-# Executable stage
-FROM debian:11.5-slim
-RUN apt-get update && \
-    apt-get install -y ca-certificates && \ 
+FROM debian:11.5-slim as prod
+RUN apt-get update  && \
+    apt-get install -y ca-certificates httpie --no-install-recommends && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/* /var/tmp/*
 WORKDIR /app
+COPY --from=build /build/target/release/deficientebot_telegram .
 RUN adduser --disabled-password appuser
-COPY --from=build-env /build/app .
 USER appuser
-EXPOSE 2112
-ENTRYPOINT ["./app"]
+ENV RUST_LOG=info
+ENTRYPOINT [ "./deficientebot_telegram" ]

@@ -17,3 +17,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+  - package-ecosystem: "cargo"
+    directory: "/"
+    target-branch: "rust_conversion"
+    schedule:
+      interval: "daily"
