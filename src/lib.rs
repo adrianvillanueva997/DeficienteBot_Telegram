@@ -6,8 +6,10 @@ use frankenstein::{
     SendMessageParams,
 };
 use log::{error, info};
+use routines::birthdays::special_event;
 use tokio::spawn;
 use tokio_schedule::{every, Job};
+
 pub mod checks;
 pub mod routines;
 mod tests;
@@ -57,7 +59,7 @@ pub async fn happy_thursday_routine() {
     info!("Setting up thursday routine");
     let thursday_routine = every(1)
         .week()
-        .on(Weekday::Tue)
+        .on(Weekday::Thu)
         .at(00, 00, 00)
         .perform(|| async {
             info!("Running task");
@@ -81,18 +83,17 @@ pub async fn special_events() {
     info!("Setting up special events routine");
     let every_day_routine = every(1).day().at(00, 00, 00).perform(|| async {
         info!("Running task");
-        let telegram_url = format!(
-            "https://api.telegram.org/bot{}/sendMessage",
-            env::var("telegram_bot").expect("Environment key not found")
-        );
-        let _ = Command::new("http")
-            .args([
-                "POST",
-                &telegram_url,
-                "chat_id=-281597102",
-                "text=Feliz jueves!",
-            ])
-            .spawn();
+        let event = special_event();
+        if !event.is_empty() {
+            let telegram_url = format!(
+                "https://api.telegram.org/bot{}/sendMessage",
+                env::var("telegram_bot").expect("Environment key not found")
+            );
+            let message = format!("text={}", event);
+            let _ = Command::new("http")
+                .args(["POST", &telegram_url, "chat_id=-281597102", &message])
+                .spawn();
+        }
     });
     spawn(every_day_routine);
 }
