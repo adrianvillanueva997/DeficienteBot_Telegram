@@ -1,4 +1,4 @@
 docker-lint:
-	hadolint --ignore DL3018 Dockerfile
+	hadolint --ignore DL3008 Dockerfile
 
 lint:  docker-lint
