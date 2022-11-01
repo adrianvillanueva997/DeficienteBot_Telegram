@@ -8,9 +8,17 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  CARGO_TERM_COLOR: always
 
 jobs:
-  docker-lint:
+  clippy:
+    name: Run clippy
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      - run: cargo clippy
+  docker_lint:
     runs-on: ubuntu-latest
     container: hadolint/hadolint:latest-alpine
     steps:
@@ -18,9 +26,22 @@ jobs:
       - run: |
           apk add --no-cache make
           make docker-lint
+  build_and_test:
+    name: Run tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        toolchain:
+          - stable
+          - beta
+          - nightly
   build-docker:
     runs-on: ubuntu-latest
-    needs: [docker-lint]
+    needs: [clippy, docker_lint, build_and_test]
+    strategy:
+      matrix:
+        architectures:
+          - linux/amd64
     steps:
       - name: Set up CD
         uses: actions/checkout@v3
@@ -44,13 +65,9 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.architectures }}
           push: true
           tags: |
             ${{ steps.meta.outputs.tags }}
             ${{ env.REGISTRY }}/adrianvillanueva997/deficientebot_telegram:latest
           labels: ${{ steps.meta.outputs.labels }}
-
-          #tags: |
-          #  adrianvillanueva997/telegrambot_deficiente:${{ github.sha }}
-          #  adrianvillanueva997/telegrambot_deficiente:latest

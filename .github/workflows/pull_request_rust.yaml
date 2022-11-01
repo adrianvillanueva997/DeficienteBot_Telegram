@@ -44,7 +44,6 @@ jobs:
       matrix:
         architectures:
           - linux/amd64
-          # - linux/arm64
     steps:
       - name: Set up CD
         uses: actions/checkout@v3
