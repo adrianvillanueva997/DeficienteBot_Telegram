@@ -71,7 +71,7 @@ pub async fn happy_thursday_routine() {
                 .args([
                     "POST",
                     &telegram_url,
-                    "chat_id=-281597102",
+                    "chat_id=-1001063900471",
                     "text=Feliz jueves!",
                 ])
                 .spawn();
@@ -91,7 +91,7 @@ pub async fn special_events() {
             );
             let message = format!("text={}", event);
             let _ = Command::new("http")
-                .args(["POST", &telegram_url, "chat_id=-281597102", &message])
+                .args(["POST", &telegram_url, "chat_id=-1001063900471", &message])
                 .spawn();
         }
     });
