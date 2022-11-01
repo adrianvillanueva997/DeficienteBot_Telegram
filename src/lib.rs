@@ -25,6 +25,7 @@ pub async fn typing_action(message: &Message, api: &AsyncApi) {
 }
 
 pub async fn send_reply_message(message: &Message, api: &AsyncApi, message_content: &str) {
+    typing_action(message, api).await;
     let send_message_params = SendMessageParams::builder()
         .chat_id(message.chat.id)
         .text(message_content)
@@ -46,6 +47,7 @@ pub async fn delete_previous_message(message: &Message, api: &AsyncApi) {
 }
 
 pub async fn send_message(message: &Message, api: &AsyncApi, message_content: &str) {
+    typing_action(message, api).await;
     let send_message_params = SendMessageParams::builder()
         .chat_id(message.chat.id)
         .text(message_content)

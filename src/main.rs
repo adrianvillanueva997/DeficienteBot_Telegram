@@ -12,7 +12,7 @@ use deficientebot_telegram::checks::copypastas::copypasta;
 use deficientebot_telegram::checks::telegram_message::Checkings;
 use deficientebot_telegram::{
     delete_previous_message, happy_thursday_routine, send_message, send_reply_message,
-    special_events, typing_action,
+    special_events,
 };
 #[tokio::main]
 async fn main() {
@@ -56,7 +56,6 @@ async fn process_message(message: Message, api: AsyncApi) {
 
     let vxtwitter_url = checkings.vx_twitter();
     if !vxtwitter_url.is_empty() {
-        typing_action(&message, &api).await;
         let username = String::from(message.from.as_ref().unwrap().username.as_ref().unwrap());
         let space = String::from("\n");
         let at = String::from("@");
@@ -66,12 +65,10 @@ async fn process_message(message: Message, api: AsyncApi) {
     }
 
     if checkings.deficiente() {
-        typing_action(&message, &api).await;
         send_reply_message(&message, &api, "Deficiente").await;
     }
 
     if checkings.numerical_checks() {
-        typing_action(&message, &api).await;
         send_reply_message(&message, &api, "> Nice").await;
     }
     let lowercase_message = message_content.to_lowercase();
