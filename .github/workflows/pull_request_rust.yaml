@@ -33,6 +33,12 @@ jobs:
     name: Build docker image
     runs-on: ubuntu-22.04
     needs: [build_and_test, run_clippy]
+    strategy:
+      matrix:
+        architectures:
+          - linux/amd64
+          - linux/arm64
+
     steps:
       - name: Set up CD
         uses: actions/checkout@v3
@@ -45,5 +51,5 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64
+          platforms: ${{matrix.architectures}}
           push: false
