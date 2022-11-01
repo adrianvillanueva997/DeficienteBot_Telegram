@@ -27,7 +27,7 @@ pub fn special_event() -> &'static str {
         },
         5 => match day {
             1 => "Mayo",
-            4 => "Felicidades @r3dmsr",
+            4 => "Felicidades @REDMSR",
             6 => "Felicidades @DoctorMckay",
             9 => "Felicidades @thexiao77",
             _ => "",
