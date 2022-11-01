@@ -11,7 +11,8 @@ use std::env;
 use deficientebot_telegram::checks::copypastas::copypasta;
 use deficientebot_telegram::checks::telegram_message::Checkings;
 use deficientebot_telegram::{
-    delete_previous_message, send_message, send_reply_message, typing_action,
+    delete_previous_message, happy_thursday_routine, send_message, send_reply_message,
+    special_events, typing_action,
 };
 #[tokio::main]
 async fn main() {
@@ -21,6 +22,9 @@ async fn main() {
     let update_params_builder = GetUpdatesParams::builder();
     let mut update_params = update_params_builder.clone().build();
     info!("Bot logged in");
+
+    happy_thursday_routine().await;
+    special_events().await;
     loop {
         let result = api.get_updates(&update_params).await;
         debug!("result: {:?}", result);

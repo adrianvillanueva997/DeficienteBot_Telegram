@@ -1,9 +1,13 @@
+use std::{env, process::Command};
+
+use chrono::Weekday;
 use frankenstein::{
     AsyncApi, AsyncTelegramApi, ChatAction, DeleteMessageParams, Message, SendChatActionParams,
     SendMessageParams,
 };
-use log::error;
-
+use log::{error, info};
+use tokio::spawn;
+use tokio_schedule::{every, Job};
 pub mod checks;
 pub mod routines;
 mod tests;
@@ -47,4 +51,48 @@ pub async fn send_message(message: &Message, api: &AsyncApi, message_content: &s
     if let Err(err) = api.send_message(&send_message_params).await {
         error!("Failed to delete message: {:?}", err);
     }
+}
+
+pub async fn happy_thursday_routine() {
+    info!("Setting up thursday routine");
+    let thursday_routine = every(1)
+        .week()
+        .on(Weekday::Tue)
+        .at(00, 00, 00)
+        .perform(|| async {
+            info!("Running task");
+            let telegram_url = format!(
+                "https://api.telegram.org/bot{}/sendMessage",
+                env::var("telegram_bot").expect("Environment key not found")
+            );
+            let _ = Command::new("http")
+                .args([
+                    "POST",
+                    &telegram_url,
+                    "chat_id=-281597102",
+                    "text=Feliz jueves!",
+                ])
+                .spawn();
+        });
+    spawn(thursday_routine);
+}
+
+pub async fn special_events() {
+    info!("Setting up special events routine");
+    let every_day_routine = every(1).day().at(00, 00, 00).perform(|| async {
+        info!("Running task");
+        let telegram_url = format!(
+            "https://api.telegram.org/bot{}/sendMessage",
+            env::var("telegram_bot").expect("Environment key not found")
+        );
+        let _ = Command::new("http")
+            .args([
+                "POST",
+                &telegram_url,
+                "chat_id=-281597102",
+                "text=Feliz jueves!",
+            ])
+            .spawn();
+    });
+    spawn(every_day_routine);
 }
