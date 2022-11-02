@@ -51,31 +51,33 @@ async fn main() {
 }
 
 async fn process_message(message: Message, api: AsyncApi) {
-    let message_content = message.text.as_ref().unwrap();
-    let checkings = Checkings::build(String::from(message_content));
+    if message.text.is_some() {
+        let message_content = message.text.as_ref().unwrap();
+        let checkings = Checkings::build(String::from(message_content));
 
-    let vxtwitter_url = checkings.vx_twitter();
-    if !vxtwitter_url.is_empty() {
-        let username = String::from(message.from.as_ref().unwrap().username.as_ref().unwrap());
-        let space = String::from("\n");
-        let at = String::from("@");
-        let full_message = at + &username + &space + &vxtwitter_url;
-        send_message(&message, &api, &full_message).await;
-        delete_previous_message(&message, &api).await;
-    }
+        let vxtwitter_url = checkings.vx_twitter();
+        if !vxtwitter_url.is_empty() {
+            let username = String::from(message.from.as_ref().unwrap().username.as_ref().unwrap());
+            let space = String::from("\n");
+            let at = String::from("@");
+            let full_message = at + &username + &space + &vxtwitter_url;
+            send_message(&message, &api, &full_message).await;
+            delete_previous_message(&message, &api).await;
+        }
 
-    if checkings.deficiente() {
-        send_reply_message(&message, &api, "Deficiente").await;
-    }
+        if checkings.deficiente() {
+            send_reply_message(&message, &api, "Deficiente").await;
+        }
 
-    if checkings.numerical_checks() {
-        send_reply_message(&message, &api, "> Nice").await;
-    }
-    let lowercase_message = message_content.to_lowercase();
-    let copypasta_check = copypasta(&lowercase_message);
-    if !copypasta_check.is_empty() {
-        for copypasta in copypasta_check {
-            send_reply_message(&message, &api, copypasta).await;
+        if checkings.numerical_checks() {
+            send_reply_message(&message, &api, "> Nice").await;
+        }
+        let lowercase_message = message_content.to_lowercase();
+        let copypasta_check = copypasta(&lowercase_message);
+        if !copypasta_check.is_empty() {
+            for copypasta in copypasta_check {
+                send_reply_message(&message, &api, copypasta).await;
+            }
         }
     }
 }
