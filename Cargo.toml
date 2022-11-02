@@ -8,7 +8,6 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.22"
 frankenstein = { version = "0.20", default-features = true, features = ["async-http-client"] }
-futures = "0.3.25"
 lazy_static = "1.0.0"
 log = "0.4.17"
 pretty_env_logger = "0.4.0"

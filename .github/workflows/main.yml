@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
-      - run: cargo build
+      - run: cargo check
       - run: cargo test --verbose
   build-docker:
     runs-on: ubuntu-latest
