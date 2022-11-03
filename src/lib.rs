@@ -14,6 +14,8 @@ pub mod checks;
 pub mod routines;
 mod tests;
 
+const GROUP_ID: &str = "-1063900471";
+
 pub async fn typing_action(message: &Message, api: &AsyncApi) {
     let action_params = SendChatActionParams::builder()
         .action(ChatAction::Typing)
@@ -69,13 +71,9 @@ pub async fn happy_thursday_routine() {
                 "https://api.telegram.org/bot{}/sendMessage",
                 env::var("telegram_bot").expect("Environment key not found")
             );
+            let chat_id = format!("chat_id={}", GROUP_ID);
             let _ = Command::new("http")
-                .args([
-                    "POST",
-                    &telegram_url,
-                    "chat_id=-1001063900471",
-                    "text=Feliz jueves!",
-                ])
+                .args(["POST", &telegram_url, &chat_id, "text=Feliz jueves!"])
                 .spawn();
         });
     spawn(thursday_routine);
@@ -86,6 +84,7 @@ pub async fn special_events() {
     let every_day_routine = every(1).day().at(00, 00, 00).perform(|| async {
         info!("Running task");
         let event = special_event();
+        let chat_id = format!("chat_id={}", GROUP_ID);
         if !event.is_empty() {
             let telegram_url = format!(
                 "https://api.telegram.org/bot{}/sendMessage",
@@ -93,7 +92,7 @@ pub async fn special_events() {
             );
             let message = format!("text={}", event);
             let _ = Command::new("http")
-                .args(["POST", &telegram_url, "chat_id=-1001063900471", &message])
+                .args(["POST", &telegram_url, &chat_id, &message])
                 .spawn();
         }
     });

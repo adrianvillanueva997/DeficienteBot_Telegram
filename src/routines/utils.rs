@@ -1,5 +1,4 @@
 use chrono::Datelike;
-
 pub fn get_todays_date() -> (i32, u32, u32) {
     let current_date = chrono::Utc::now().date();
     (
