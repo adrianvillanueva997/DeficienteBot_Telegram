@@ -1,7 +1,7 @@
 # Multistage docker image building
 # build -> prod
 
-FROM rust:1.64-slim-bullseye as build
+FROM rust:1.65.0-slim-bullseye as build
 WORKDIR /build
 COPY . .
 RUN cargo build --release
