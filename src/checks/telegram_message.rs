@@ -24,13 +24,13 @@ impl Checkings {
 
     pub fn deficiente(&self) -> bool {
         lazy_static! {
-            static ref RE: RegexSet = RegexSet::new(&[r"uwu", r":v", r"owo"]).unwrap();
+            static ref RE: RegexSet = RegexSet::new([r"uwu", r":v", r"owo"]).unwrap();
         }
         RE.is_match(&self.content)
     }
     fn numerical_regex(&self, text: &str) -> bool {
         lazy_static! {
-            static ref RE: RegexSet = RegexSet::new(&[r"69", r"420"]).unwrap();
+            static ref RE: RegexSet = RegexSet::new([r"69", r"420"]).unwrap();
         }
         RE.is_match(text)
     }
