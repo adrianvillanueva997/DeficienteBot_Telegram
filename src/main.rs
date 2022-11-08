@@ -23,8 +23,8 @@ async fn main() {
     let mut update_params = update_params_builder.clone().build();
     info!("Bot logged in");
 
-    happy_thursday_routine().await;
-    special_events().await;
+    // happy_thursday_routine().await;
+    // special_events().await;
     loop {
         let result = api.get_updates(&update_params).await;
         debug!("result: {:?}", result);
