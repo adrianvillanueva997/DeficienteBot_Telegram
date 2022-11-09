@@ -25,10 +25,7 @@ async fn main() {
                 let at = String::from("@");
                 let full_message = at + &username + &space + &vxtwitter_url;
                 let _ = bot.delete_message(msg.chat.id, msg.id).await;
-                let _ = bot
-                    .send_message(msg.chat.id, full_message)
-                    .reply_to_message_id(msg.id)
-                    .await;
+                let _ = bot.send_message(msg.chat.id, full_message).await;
             }
 
             if checkings.deficiente() {
