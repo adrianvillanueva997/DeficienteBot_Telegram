@@ -8,7 +8,7 @@ RUN cargo build --release
 
 FROM debian:11.5-slim as prod
 RUN apt-get update  && \
-    apt-get install -y ca-certificates httpie --no-install-recommends && \
+    apt-get install -y ca-certificates --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* /var/tmp/*

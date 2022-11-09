@@ -1,20 +1,20 @@
-use std::{env, process::Command};
+use std::{thread, time::Duration};
 
-use chrono::Weekday;
 use frankenstein::{
     AsyncApi, AsyncTelegramApi, ChatAction, DeleteMessageParams, Message, SendChatActionParams,
     SendMessageParams,
 };
 use log::{error, info};
 use routines::birthdays::special_event;
-use tokio::spawn;
-use tokio_schedule::{every, Job};
 
+use crate::routines::utils::{calculate_next_midnight, is_thursday};
 pub mod checks;
 pub mod routines;
 mod tests;
 
 const GROUP_ID: &str = "-1063900471";
+
+// const DEV_GROUP_ID: &str = "-281597102";
 
 pub async fn typing_action(message: &Message, api: &AsyncApi) {
     let action_params = SendChatActionParams::builder()
@@ -59,42 +59,43 @@ pub async fn send_message(message: &Message, api: &AsyncApi, message_content: &s
     }
 }
 
-pub async fn happy_thursday_routine() {
-    info!("Setting up thursday routine");
-    let thursday_routine = every(1)
-        .week()
-        .on(Weekday::Thu)
-        .at(00, 00, 00)
-        .perform(|| async {
-            info!("Running task");
-            let telegram_url = format!(
-                "https://api.telegram.org/bot{}/sendMessage",
-                env::var("telegram_bot").expect("Environment key not found")
-            );
-            let chat_id = format!("chat_id={}", GROUP_ID);
-            let _ = Command::new("http")
-                .args(["POST", &telegram_url, &chat_id, "text=Feliz jueves!"])
-                .spawn();
-        });
-    spawn(thursday_routine);
+pub async fn send_message_to_group(api: AsyncApi, message_content: &str, group_id: &str) {
+    let send_message_params = SendMessageParams::builder()
+        .chat_id(String::from(group_id))
+        .text(message_content)
+        .build();
+    if let Err(err) = api.send_message(&send_message_params).await {
+        error!("Failed to send message: {:?}", err);
+    }
 }
 
-pub async fn special_events() {
-    info!("Setting up special events routine");
-    let every_day_routine = every(1).day().at(00, 00, 00).perform(|| async {
-        info!("Running task");
+pub async fn special_events(api: AsyncApi) {
+    info!("Starting thursday routine");
+    loop {
+        info!("Calculating next midnight");
+        let sleep_seconds = calculate_next_midnight();
+        thread::sleep(Duration::from_secs(sleep_seconds));
+        info!("Running special event routine");
         let event = special_event();
-        let chat_id = format!("chat_id={}", GROUP_ID);
         if !event.is_empty() {
-            let telegram_url = format!(
-                "https://api.telegram.org/bot{}/sendMessage",
-                env::var("telegram_bot").expect("Environment key not found")
-            );
-            let message = format!("text={}", event);
-            let _ = Command::new("http")
-                .args(["POST", &telegram_url, &chat_id, &message])
-                .spawn();
+            send_message_to_group(api.to_owned(), event, GROUP_ID).await;
         }
-    });
-    spawn(every_day_routine);
+    }
+}
+
+pub async fn happy_thursday_routine(api: AsyncApi) {
+    info!("Starting thursday routine");
+    let mut sent = false;
+    loop {
+        if is_thursday() && !sent {
+            info!("Running thursday routine");
+            send_message_to_group(api.to_owned(), "Feliz jueves!", GROUP_ID).await;
+            sent = true;
+        } else {
+            info!("Calculating next midnight");
+            let sleep_seconds = calculate_next_midnight();
+            thread::sleep(Duration::from_secs(sleep_seconds));
+            sent = false;
+        }
+    }
 }

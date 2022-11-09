@@ -1,2 +1,2 @@
 pub mod birthdays;
-mod utils;
+pub mod utils;
