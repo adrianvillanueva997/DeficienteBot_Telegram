@@ -1,82 +1,62 @@
-use frankenstein::AsyncTelegramApi;
-use frankenstein::GetUpdatesParams;
-use frankenstein::Message;
-use frankenstein::{AsyncApi, UpdateContent};
-
-use log::{debug, error, info};
-
-use pretty_env_logger::env_logger;
-use std::env;
-
-use deficientebot_telegram::checks::copypastas::copypasta;
-use deficientebot_telegram::checks::telegram_message::Checkings;
 use deficientebot_telegram::{
-    delete_previous_message, happy_thursday_routine, send_message, send_reply_message,
-    special_events,
+    checks::{copypastas::copypasta, telegram_message::Checkings},
+    happy_thursday_routine, special_events,
 };
+
+use teloxide::prelude::*;
+
 #[tokio::main]
 async fn main() {
-    env_logger::init();
-    let token = env::var("telegram_bot").expect("telegram_bot environment variable not found");
-    let api = AsyncApi::new(&token);
-    let update_params_builder = GetUpdatesParams::builder();
-    let mut update_params = update_params_builder.clone().build();
-    info!("Bot logged in");
-    let _ = tokio::spawn(happy_thursday_routine(api.to_owned()));
-    let _ = tokio::spawn(special_events(api.to_owned()));
-    loop {
-        let result = api.get_updates(&update_params).await;
-        debug!("result: {:?}", result);
-        match result {
-            Ok(response) => {
-                for update in response.result {
-                    if let UpdateContent::Message(message) = update.content {
-                        let api_clone = api.clone();
-                        tokio::spawn(async move {
-                            process_message(message, api_clone).await;
-                        });
-                        update_params = update_params_builder
-                            .clone()
-                            .offset(update.update_id + 1)
-                            .build();
-                    }
+    pretty_env_logger::init();
+    log::info!("Starting bot");
+    let bot = Bot::from_env();
+    log::info!("Bot logged in successfuly");
+    let _ = tokio::spawn(special_events(bot.to_owned()));
+    let _ = tokio::spawn(happy_thursday_routine(bot.to_owned()));
+    teloxide::repl(bot, |bot: Bot, msg: Message| async move {
+        let message = msg.text();
+        if let Some(message) = message {
+            let checkings = Checkings::build(String::from(message));
+            let vxtwitter_url = checkings.vx_twitter();
+            if !vxtwitter_url.is_empty() {
+                let username =
+                    String::from(msg.from().as_ref().unwrap().username.as_ref().unwrap());
+                let space = String::from("\n");
+                let at = String::from("@");
+                let full_message = at + &username + &space + &vxtwitter_url;
+                let _ = bot
+                    .send_message(msg.chat.id, full_message)
+                    .reply_to_message_id(msg.id)
+                    .await;
+            }
+
+            if checkings.deficiente() {
+                let _ = bot
+                    .send_message(msg.chat.id, "Deficiente")
+                    .reply_to_message_id(msg.id)
+                    .await;
+            }
+
+            if checkings.numerical_checks() {
+                let _ = bot
+                    .send_message(msg.chat.id, "> Nice")
+                    .reply_to_message_id(msg.id)
+                    .await;
+            }
+
+            let lowercase_message = message.to_lowercase();
+            let copypasta_check = copypasta(&lowercase_message);
+            if !copypasta_check.is_empty() {
+                for copypasta in copypasta_check {
+                    let _ = bot
+                        .send_message(msg.chat.id, copypasta)
+                        .reply_to_message_id(msg.id)
+                        .await;
                 }
             }
-            Err(error) => {
-                error!("Failed to get updates: {:?}", error);
-            }
-        }
-    }
-}
-
-async fn process_message(message: Message, api: AsyncApi) {
-    if message.text.is_some() {
-        let message_content = message.text.as_ref().unwrap();
-        let checkings = Checkings::build(String::from(message_content));
-
-        let vxtwitter_url = checkings.vx_twitter();
-        if !vxtwitter_url.is_empty() {
-            let username = String::from(message.from.as_ref().unwrap().username.as_ref().unwrap());
-            let space = String::from("\n");
-            let at = String::from("@");
-            let full_message = at + &username + &space + &vxtwitter_url;
-            send_message(&message, &api, &full_message).await;
-            delete_previous_message(&message, &api).await;
         }
 
-        if checkings.deficiente() {
-            send_reply_message(&message, &api, "Deficiente").await;
-        }
-
-        if checkings.numerical_checks() {
-            send_reply_message(&message, &api, "> Nice").await;
-        }
-        let lowercase_message = message_content.to_lowercase();
-        let copypasta_check = copypasta(&lowercase_message);
-        if !copypasta_check.is_empty() {
-            for copypasta in copypasta_check {
-                send_reply_message(&message, &api, copypasta).await;
-            }
-        }
-    }
+        Ok(())
+    })
+    .await;
 }
