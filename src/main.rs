@@ -22,8 +22,8 @@ async fn main() {
     let update_params_builder = GetUpdatesParams::builder();
     let mut update_params = update_params_builder.clone().build();
     info!("Bot logged in");
-    // let _ = tokio::spawn(happy_thursday_routine(api.to_owned()));
-    // let _ = tokio::spawn(special_events(api.to_owned()));
+    let _ = tokio::spawn(happy_thursday_routine(api.to_owned()));
+    let _ = tokio::spawn(special_events(api.to_owned()));
     loop {
         let result = api.get_updates(&update_params).await;
         debug!("result: {:?}", result);

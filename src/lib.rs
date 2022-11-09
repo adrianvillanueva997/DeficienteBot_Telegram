@@ -1,4 +1,4 @@
-use std::{thread, time::Duration};
+use std::time::Duration;
 
 use frankenstein::{
     AsyncApi, AsyncTelegramApi, ChatAction, DeleteMessageParams, Message, SendChatActionParams,
@@ -6,6 +6,7 @@ use frankenstein::{
 };
 use log::{error, info};
 use routines::birthdays::special_event;
+use tokio::time;
 
 use crate::routines::utils::{calculate_next_midnight, is_thursday};
 pub mod checks;
@@ -74,7 +75,7 @@ pub async fn special_events(api: AsyncApi) {
     loop {
         info!("Calculating next midnight");
         let sleep_seconds = calculate_next_midnight();
-        thread::sleep(Duration::from_secs(sleep_seconds));
+        time::sleep(Duration::from_secs(sleep_seconds)).await;
         info!("Running special event routine");
         let event = special_event();
         if !event.is_empty() {
@@ -94,7 +95,7 @@ pub async fn happy_thursday_routine(api: AsyncApi) {
         } else {
             info!("Calculating next midnight");
             let sleep_seconds = calculate_next_midnight();
-            thread::sleep(Duration::from_secs(sleep_seconds));
+            time::sleep(Duration::from_secs(sleep_seconds)).await;
             sent = false;
         }
     }
