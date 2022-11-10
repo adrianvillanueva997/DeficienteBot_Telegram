@@ -8,17 +8,33 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  CARGO_TERM_COLOR: always
 
 jobs:
-  clippy:
-    name: Run clippy
-    runs-on: ubuntu-22.04
+  lint:
+    runs-on: ubuntu-latest
+    container: golang:alpine
     steps:
       - uses: actions/checkout@v3
-      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
-      - run: cargo clippy
-  docker_lint:
+      - run: |
+          apk add --no-cache make
+          make fmt
+  gosec:
+    runs-on: ubuntu-latest
+    container: securego/gosec:latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          apk add --no-cache make
+          make sec
+  golangci-lint:
+    runs-on: ubuntu-latest
+    container: golangci/golangci-lint:latest-alpine
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          apk add --no-cache make
+          make golancilint
+  docker-lint:
     runs-on: ubuntu-latest
     container: hadolint/hadolint:latest-alpine
     steps:
@@ -26,27 +42,46 @@ jobs:
       - run: |
           apk add --no-cache make
           make docker-lint
-  build_and_test:
-    name: Run tests
-    runs-on: ubuntu-22.04
+  security-check:
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        toolchain:
-          - stable
-          - beta
-          - nightly
+        # Override automatic language detection by changing the below list
+        # Supported options are ['csharp', 'cpp', 'go', 'java', 'javascript', 'python']
+        language: ["go"]
+        # Learn more...
+    container:
+      image: golang
     steps:
       - uses: actions/checkout@v3
-      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
-      - run: cargo check
-      - run: cargo test --verbose
+      - name: Install & Tests
+        run: |
+          go mod download
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          # Must fetch at least the immediate parents so that if this is
+          # a pull request then we can checkout the head of the pull request.
+          # Only include this option if you are running this workflow on pull requests.
+          fetch-depth: 2
+
+      # If this run was triggered by a pull request event then checkout
+      # the head of the pull request instead of the merge commit.
+      # Only include this step if you are running this workflow on pull requests.
+      - run: git checkout HEAD^2
+        if: ${{ github.event_name == 'pull_request' }}
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
   build-docker:
     runs-on: ubuntu-latest
-    needs: [clippy, docker_lint, build_and_test]
-    strategy:
-      matrix:
-        architectures:
-          - linux/amd64
+    needs: [security-check, lint, gosec, golangci-lint, docker-lint]
     steps:
       - name: Set up CD
         uses: actions/checkout@v3
@@ -70,9 +105,13 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: ${{ matrix.architectures }}
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ steps.meta.outputs.tags }}
             ${{ env.REGISTRY }}/adrianvillanueva997/deficientebot_telegram:latest
           labels: ${{ steps.meta.outputs.labels }}
+
+          #tags: |
+          #  adrianvillanueva997/telegrambot_deficiente:${{ github.sha }}
+          #  adrianvillanueva997/telegrambot_deficiente:latest
