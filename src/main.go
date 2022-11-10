@@ -17,7 +17,7 @@ import (
 
 func main() {
 	_ = godotenv.Load()
-	bot, err := tgbotapi.NewBotAPI(os.Getenv("key"))
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("telegram_key"))
 	if err != nil {
 		log.Panic(err.Error())
 	}
