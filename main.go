@@ -91,9 +91,12 @@ func main() {
 
 		// Copypasta checks go here
 		copyPasta := services.PastaText(messageText)
-		if copyPasta != nil {
-			msg.Text = *copyPasta
-			_, _ = bot.Send(msg)
+		if len(copyPasta) != 0 {
+			for i := 0; i < len(copyPasta); i++ {
+				msg.Text = *copyPasta[i]
+				_, _ = bot.Send(msg)
+			}
+
 		}
 		// Javi checks go here
 		if update.Message.Chat.ID == 447988998 {
