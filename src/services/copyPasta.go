@@ -55,7 +55,7 @@ func PastaText(receivedMessage string) []*string {
 		case "prepucio":
 			copypastas = append(copypastas, stringToPointer("Intentaron circuncidarme, pero mi prepucio solo volvió a fortalecerse. Desde entonces, me han circuncidado cada 6 meses. Mi prepucio ahora es más fuerte que el acero. Siempre que estoy en peligro, lo coloco sobre mi cuerpo como una capa exterior. Es completamente a prueba de balas, ignífugo, impermeable y extremadamente liviano. Tengo planes de venderlo como un material muy raro y muy resistente y ganar millones. Los puentes se harán con vigas de prepucio y las unidades de policía usarán chalecos de prepucio. Viviré en mi casa de prepucio y me bañaré en mi riqueza. Soy el hombre prepucio."))
 		case "bicho":
-			copypastas = append(copypastas, stringToPointer("EL BICHO ⠀⠀⠀⠀⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⠂⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣦⠀ ⠀⠀⠀⠀⠀⠀⣴⣿⢿⣷⠒⠲⣾⣾⣿⣿ ⠀⠀⠀⠀⣴⣿⠟⠁⠀⢿⣿⠁⣿⣿⣿⠻⣿⣄⠀⠀⠀⠀ ⠀⠀⣠⡾⠟⠁⠀⠀⠀⢸⣿⣸⣿⣿⣿⣆⠙⢿⣷⡀⠀⠀ ⣰⡿⠋⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⠀⠀⠉⠻⣿⡀ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣆⠂⠀ ⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⡿⣿⣿⣿⣿⡄⠀⠀⠀⠀ ⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⠿⠟⠀⠀⠻⣿⣿⡇⠀⠀⠀⠀ ⠀⠀⠀⠀⠀⠀⢀⣾⡿⠃⠀⠀⠀⠀⠀⠘⢿⣿⡀⠀⠀⠀ ⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡀⠀⠀ ⠀⠀⠀⠀⢠⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣧⠀⠀ ⠀⠀⠀⢀⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣆⠀ ⠀⠀⠠⢾⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡤⠄¡SIIUUUUUUUUUUUUU"))
+			copypastas = append(copypastas, stringToPointer("SIIUUUUUUUUUUUUU"))
 		case "amogus":
 			copypastas = append(copypastas, stringToPointer("sus"))
 		case "china":
