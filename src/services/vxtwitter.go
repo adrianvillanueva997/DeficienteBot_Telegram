@@ -7,10 +7,7 @@ import (
 
 func Is_url(_url string) bool {
 	_, err := url.ParseRequestURI(_url)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func update_url(url string) string {

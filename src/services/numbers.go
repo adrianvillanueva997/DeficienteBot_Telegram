@@ -18,7 +18,7 @@ func numberCheck(message string) bool {
 	matches := (re.FindAllString(message, -1))
 	if len(matches) != 0 {
 		i := 0
-		for i < len(numbers) && match == false {
+		for i < len(numbers) && !match {
 			for j := 0; j < len(matches); j++ {
 				if slices.Contains(matches, numbers[i]) {
 					match = true

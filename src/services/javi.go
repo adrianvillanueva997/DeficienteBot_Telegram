@@ -20,5 +20,7 @@ func CheckJavi() (bool, *string) {
 		log.Fatalln(err)
 	}
 	tmp := "Deficiente"
-	return number.Cmp(big.NewInt(int64(25))) == 1, &tmp // cmp values: -1 if x<y | 0 if x==y | +1 if x>y
+	return number.Cmp(
+		big.NewInt(int64(25)),
+	) == 1, &tmp // cmp values: -1 if x<y | 0 if x==y | +1 if x>y
 }
