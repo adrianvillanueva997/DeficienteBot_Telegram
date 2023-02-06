@@ -28,7 +28,7 @@ func CheckEvents() *string {
 		case 1:
 			message = "Chavalotes que ya es febrero"
 		case 7:
-			message = "Felicidades @Josewe"
+			message = "Felicidades @Joseawe"
 		case 14:
 			message = "Sam va lentin"
 		case 26:
