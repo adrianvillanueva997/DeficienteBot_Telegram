@@ -1,7 +1,7 @@
 # Multistage docker image building
 # build-env -> dist
 
-FROM golang:1.20.0-bullseye as build-env
+FROM golang:1.20.1-bullseye as build-env
 RUN apt-get update && \
 	apt-get install -y make git && \
 	apt-get clean && \
