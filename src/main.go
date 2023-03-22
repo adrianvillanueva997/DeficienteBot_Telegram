@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"adrianvillanueva997/deficienteBot/src/metrics"
 	"adrianvillanueva997/deficienteBot/src/routines"
@@ -106,6 +107,14 @@ func main() {
 			javi, deficiente := services.CheckJavi()
 			if javi {
 				msg.Text = *deficiente
+				_, _ = bot.Send(msg)
+			}
+		}
+		weekday := time.Now().Weekday()
+		if int(weekday) == 4 {
+			textToCompare := "gracias asuka"
+			if messageText == textToCompare {
+				msg.Text = "De nada, mi amor"
 				_, _ = bot.Send(msg)
 			}
 		}
