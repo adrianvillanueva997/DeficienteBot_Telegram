@@ -114,7 +114,7 @@ func main() {
 		if int(weekday) == 4 {
 			textToCompare := "gracias asuka"
 			if messageText == textToCompare {
-				msg.Text = "De nada, mi amor"
+				msg.Text = "De nada maquina, que tengas un feliz jueves"
 				_, _ = bot.Send(msg)
 			}
 		}
