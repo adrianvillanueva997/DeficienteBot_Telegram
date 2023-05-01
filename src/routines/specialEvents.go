@@ -54,27 +54,29 @@ func CheckEvents() *string {
 		case 1:
 			message = "Hasta el 40 Mayo no te quites el sayo"
 		case 4:
-			message = "Felicidades @r3dmsr"
+			message = "Felicidades @r3dmsr y feliz dia de Star Wars"
 		case 6:
 			message = "Felicidades @DoctorMckay"
+		case 8:
+			message = "Feliz dia de Motorhead"
 		case 9:
 			message = "Felicidades @thexiao77"
 		}
 	case 6:
 		if day == 1 {
-			message = "Junio, empieza el veranito"
+			message = "Junio soleado y brillante, te pone de buen talante"
 		}
 	case 7:
 		switch day {
 		case 1:
-			message = "Julio, a morir de calor"
+			message = "Julio calorero, llena bodega y granero"
 		case 8:
 			message = "Felicidades @Sanz97xx"
 		}
 	case 8:
 		switch day {
 		case 1:
-			message = "Agosto, a seguir muriendo de calor"
+			message = "En agosto y en enero no tomes el sol sin sombrero"
 		case 2:
 			message = "Felicidades al más guapo de Asturies @Sauturn"
 		}
@@ -112,7 +114,7 @@ func CheckEvents() *string {
 	case 12:
 		switch day {
 		case 1:
-			message = "Se viene la Navidad, a coger kilos de más! Feliz Diciembre!"
+			message = "Cuando en diciembre veas nevar, ensancha el granero y el pajar"
 		case 25:
 			message = "Feliz navidad!"
 		}
