@@ -14,7 +14,7 @@ COPY . .
 RUN make build
 
 # Executable stage
-FROM debian:11.6-slim
+FROM debian:11.7-slim
 RUN apt-get update && \
 	apt-get install -y ca-certificates && \ 
 	apt-get clean && \
