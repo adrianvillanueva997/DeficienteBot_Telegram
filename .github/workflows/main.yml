@@ -49,7 +49,7 @@ jobs:
       matrix:
         # Override automatic language detection by changing the below list
         # Supported options are ['csharp', 'cpp', 'go', 'java', 'javascript', 'python']
-        language: ["go"]
+        language: ['go']
         # Learn more...
     container:
       image: golang
@@ -95,6 +95,11 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.PACKAGES_TOKEN }}
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
@@ -103,6 +108,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4.0.0
         with:
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
           context: .
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
