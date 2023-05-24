@@ -103,7 +103,7 @@ func main() {
 		}
 
 		if strings.Contains(messageText, "euskadi") {
-			msg.Text = "el ojo de \n que jocoso xd"
+			msg.Text = "el ojo de"
 			_, _ = bot.Send(msg)
 		}
 
