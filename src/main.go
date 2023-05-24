@@ -81,7 +81,7 @@ func main() {
 			}
 		}
 		// Bad words check like uwu/owo/:v/:3
-		badWords := services.Message(strings.ToLower(messageText))
+		badWords := services.Message(messageText)
 		if badWords != nil {
 			msg.Text = *badWords
 			_, _ = bot.Send(msg)
@@ -100,6 +100,11 @@ func main() {
 				msg.Text = *copyPasta[i]
 				_, _ = bot.Send(msg)
 			}
+		}
+
+		if strings.Contains(messageText, "euskadi") {
+			msg.Text = "el ojo de \n que jocoso xd"
+			_, _ = bot.Send(msg)
 		}
 
 		// Javi checks go here
