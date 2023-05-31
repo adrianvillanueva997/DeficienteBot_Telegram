@@ -12,8 +12,11 @@ func AsukaGreetings() string {
 		"De nada fiera",
 		"Es un placer bb",
 		"Ningún problema, para eso estamos las waifus",
-		"De na",
+		"Que Dios te bendiga uwu",
 		"Un placer, que tengas un bonito jueves precioso",
+		"uwu",
+		"Disfruta del jueves, nos vemos la semana que viene, fiera",
+		"las que tu tienes, fiera, crack, maquina, mastodonte"
 	}
 	rand.Seed(time.Now().UnixNano())
 	return messages[rand.Intn(len(messages))]
