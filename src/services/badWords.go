@@ -27,37 +27,27 @@ func comboCheck(message string) int {
 	}
 	return comboCount
 }
+
 func Message(message string) *string {
 	comboCount := comboCheck(message)
 	var messageToSend string
-	if comboCount > 0 {
-		if comboCount > 1 {
-			messageToSend = fmt.Sprintf("Deficiente x%s", strconv.Itoa(comboCount))
-			if comboCount >= 5 {
-				messageToSend = fmt.Sprintf("Gilipollas x%s", strconv.Itoa(comboCount))
-			}
-			if comboCount >= 10 {
-				messageToSend = fmt.Sprintf("Subnormal x%s", strconv.Itoa(comboCount))
-			}
-			if comboCount >= 15 {
-				messageToSend = fmt.Sprintf("Mongolo x%s", strconv.Itoa(comboCount))
-			}
-			if comboCount >= 20 {
-				messageToSend = fmt.Sprintf(
-					"Me cago en tu puta madre x%s",
-					strconv.Itoa(comboCount),
-				)
-			}
-			if comboCount >= 25 {
-				messageToSend = fmt.Sprintf(
-					"Te voy a meter un escopetazo en los cojones x%s",
-					strconv.Itoa(comboCount),
-				)
-			}
-			return &messageToSend
-		}
-		messageToSend = "Deficiente"
-		return &messageToSend
+
+	switch {
+	case comboCount > 25:
+		messageToSend = fmt.Sprintf("Te voy a meter un escopetazo en los cojones x%s", strconv.Itoa(comboCount))
+	case comboCount > 20:
+		messageToSend = fmt.Sprintf("Me cago en tu puta madre x%s", strconv.Itoa(comboCount))
+	case comboCount > 15:
+		messageToSend = fmt.Sprintf("Mongolo x%s", strconv.Itoa(comboCount))
+	case comboCount > 10:
+		messageToSend = fmt.Sprintf("Subnormal x%s", strconv.Itoa(comboCount))
+	case comboCount >= 5:
+		messageToSend = fmt.Sprintf("Gilipollas x%s", strconv.Itoa(comboCount))
+	case comboCount > 0:
+		messageToSend = fmt.Sprintf("Deficiente x%s", strconv.Itoa(comboCount))
+	default:
+		return nil
 	}
-	return nil
+
+	return &messageToSend
 }
