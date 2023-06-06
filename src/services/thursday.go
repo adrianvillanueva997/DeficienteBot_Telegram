@@ -16,7 +16,7 @@ func AsukaGreetings() string {
 		"Un placer, que tengas un bonito jueves precioso",
 		"uwu",
 		"Disfruta del jueves, nos vemos la semana que viene, fiera",
-		"las que tu tienes, fiera, crack, maquina, mastodonte"
+		"las que tu tienes, fiera, crack, maquina, mastodonte",
 	}
 	rand.Seed(time.Now().UnixNano())
 	return messages[rand.Intn(len(messages))]
