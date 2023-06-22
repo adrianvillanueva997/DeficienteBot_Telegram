@@ -16,7 +16,7 @@ func update_url(url string) string {
 }
 
 func Update_vx_twitter(url string) *string {
-	if strings.Contains(url, "vxtwitter") {
+	if strings.Contains(url, "vxtwitter") || strings.Contains(url, "fxtwitter") {
 		return nil
 	}
 	if strings.Contains(url, "twitter") && strings.Contains(url, "status") {
