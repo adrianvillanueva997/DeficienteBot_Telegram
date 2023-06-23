@@ -16,8 +16,6 @@ FROM alpine:3.18.2
 RUN apk update && \
 	apk add --no-cache ca-certificates ffmpeg
 WORKDIR /app
-RUN adduser -D -s /bin/sh appuser
 COPY --from=build-env /build/app .
-USER appuser
 EXPOSE 2112
 ENTRYPOINT ["./app"]
