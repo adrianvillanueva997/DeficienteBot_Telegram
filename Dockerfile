@@ -1,7 +1,7 @@
 # Multistage docker image building
 # build-env -> dist
 
-FROM golang:1.16.5-alpine AS build-env
+FROM golang:1.20.5-alpine AS build-env
 RUN apk update && \
 	apk add --no-cache make git
 WORKDIR /build
@@ -12,7 +12,7 @@ COPY . .
 RUN make build
 
 # Executable stage
-FROM alpine:3.14
+FROM alpine:3.18.2
 RUN apk update && \
 	apk add --no-cache ca-certificates ffmpeg
 WORKDIR /app
