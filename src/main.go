@@ -47,8 +47,8 @@ func main() {
 
 	// Happy thursday goes here
 	_, err = thursday.AddFunc("0 0 * * 4", func() {
-		thursday_message := routines.HappyThursday()
-		message := tgbotapi.NewMessage(-1001063900471, *thursday_message)
+		HappyThursday := routines.HappyThursday()
+		message := tgbotapi.NewMessage(-1001063900471, *HappyThursday)
 		_, _ = bot.Send(message)
 	})
 
@@ -76,6 +76,7 @@ func main() {
 					update.Message.Chat.ID,
 					update.Message.MessageID,
 				)
+				_, _ = bot.Send(tgbotapi.NewChatAction(update.Message.Chat.ID, "writing"))
 				_, _ = bot.DeleteMessage(config)
 				message := fmt.Sprintf("(@%v) \n %v", update.Message.From.UserName, *url)
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
@@ -102,11 +103,13 @@ func main() {
 		badWords := services.Message(messageText)
 		if badWords != nil {
 			msg.Text = *badWords
+			_, _ = bot.Send(tgbotapi.NewChatAction(update.Message.Chat.ID, "writing"))
 			_, _ = bot.Send(msg)
 		}
 		// Numerical checks go here
 		funnyNumbers := services.NumberText(messageText)
 		if funnyNumbers != nil {
+			_, _ = bot.Send(tgbotapi.NewChatAction(update.Message.Chat.ID, "writing"))
 			msg.Text = *funnyNumbers
 			_, _ = bot.Send(msg)
 		}
@@ -114,6 +117,7 @@ func main() {
 		// Copypasta checks go here
 		copyPasta := services.PastaText(messageText)
 		if len(copyPasta) != 0 {
+			_, _ = bot.Send(tgbotapi.NewChatAction(update.Message.Chat.ID, "writing"))
 			for i := 0; i < len(copyPasta); i++ {
 				msg.Text = *copyPasta[i]
 				_, _ = bot.Send(msg)
@@ -121,22 +125,16 @@ func main() {
 		}
 
 		if strings.Contains(messageText, "euskadi") {
+			_, _ = bot.Send(tgbotapi.NewChatAction(update.Message.Chat.ID, "writing"))
 			msg.Text = "el ojo de"
 			_, _ = bot.Send(msg)
 		}
 
-		// Javi checks go here
-		if update.Message.Chat.ID == 447988998 {
-			javi, deficiente := services.CheckJavi()
-			if javi {
-				msg.Text = *deficiente
-				_, _ = bot.Send(msg)
-			}
-		}
 		weekday := time.Now().Weekday()
 		if int(weekday) == 4 {
 			textToCompare := "gracias asuka"
 			if messageText == textToCompare {
+				_, _ = bot.Send(tgbotapi.NewChatAction(update.Message.Chat.ID, "writing"))
 				msg.Text = services.AsukaGreetings()
 				_, _ = bot.Send(msg)
 			}
