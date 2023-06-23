@@ -123,3 +123,5 @@ node_modules
 .vscode/
 
 # End of https://www.gitignore.io/api/visualstudiocode
+output.mp4
+output.webm
