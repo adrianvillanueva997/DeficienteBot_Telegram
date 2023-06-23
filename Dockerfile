@@ -1,7 +1,7 @@
 # Multistage docker image building
 # build-env -> dist
 
-FROM golang:1.20.5-bullseye as build-env
+FROM golang:1.20.5-bullseye AS build-env
 RUN apt-get update && \
 	apt-get install -y make git && \
 	apt-get clean && \
@@ -16,7 +16,7 @@ RUN make build
 # Executable stage
 FROM debian:12.0-slim
 RUN apt-get update && \
-	apt-get install -y ca-certificates && ffmpeg \
+	apt-get install --no-install-recommends -y ca-certificates ffmpeg \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 WORKDIR /app
