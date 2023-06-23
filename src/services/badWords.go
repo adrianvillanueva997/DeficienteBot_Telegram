@@ -44,7 +44,7 @@ func Message(message string) *string {
 	case comboCount >= 5:
 		messageToSend = fmt.Sprintf("Gilipollas x%s", strconv.Itoa(comboCount))
 	case comboCount > 0:
-		messageToSend = fmt.Sprintf("Deficiente x%s", strconv.Itoa(comboCount))
+		messageToSend = fmt.Sprintf("Deficiente", strconv.Itoa(comboCount))
 	default:
 		return nil
 	}

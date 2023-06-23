@@ -69,7 +69,9 @@ func main() {
 		// twitter to vxtwitter goes here
 		if services.Is_url(update.Message.Text) {
 			url := services.Update_vx_twitter(update.Message.Text)
+			twitter := false
 			if url != nil {
+				twitter = true
 				config := tgbotapi.NewDeleteMessage(
 					update.Message.Chat.ID,
 					update.Message.MessageID,
@@ -79,7 +81,15 @@ func main() {
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 				_, _ = bot.Send(msg)
 			}
+			if twitter == false {
+				if services.CheckWebm(update.Message.Text) {
+					services.Downloadwebm(update.Message.Text)
+					services.ConvertWebMToMP4("output.webm", "output.mp4")
+					bot.Send(tgbotapi.NewVideoUpload(update.Message.Chat.ID, "output.mp4"))
+				}
+			}
 		}
+
 		// Bad words check like uwu/owo/:v/:3
 		badWords := services.Message(messageText)
 		if badWords != nil {
