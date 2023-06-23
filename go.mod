@@ -9,8 +9,6 @@ require (
 	golang.org/x/exp v0.0.0-20221026153819-32f3d567a233
 )
 
-require github.com/google/go-cmp v0.5.8 // indirect
-
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
