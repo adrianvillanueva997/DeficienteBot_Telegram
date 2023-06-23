@@ -15,8 +15,14 @@ RUN make build
 
 # Executable stage
 FROM debian:12.0-slim
+RUN echo deb http://www.deb-multimedia.org testing main non-free \
+	>>/etc/apt/sources.list
 RUN apt-get update && \
-	apt-get install -y ca-certificates ffmpeg \
+	apt-get install --no-install-recommends -y deb-multimedia-keyring && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+	apt-get install --no-install-recommends -y ca-certificates ffmpeg \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 WORKDIR /app
