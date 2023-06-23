@@ -84,11 +84,15 @@ func main() {
 			if !twitter {
 				if services.CheckWebm(update.Message.Text) {
 					services.Downloadwebm(update.Message.Text)
-					err = services.ConvertWebMToMP4("output.webm", "output.mp4")
+					output := "output.mp4"
+					input := "output.webm"
+					err = services.ConvertWebMToMP4(input, output)
 					if err != nil {
 						log.Println(err.Error())
 					}
-					_, _ = bot.Send(tgbotapi.NewVideoUpload(update.Message.Chat.ID, "output.mp4"))
+					_, _ = bot.Send(tgbotapi.NewVideoUpload(update.Message.Chat.ID, output))
+					_ = os.Remove(output)
+					_ = os.Remove(input)
 				}
 			}
 		}
