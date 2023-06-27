@@ -83,8 +83,8 @@ func main() {
 				_, _ = bot.Send(msg)
 			}
 			if !twitter {
-				_, _ = bot.Send(tgbotapi.NewChatAction(update.Message.Chat.ID, "upload_video"))
 				if services.CheckWebm(update.Message.Text) {
+					_, _ = bot.Send(tgbotapi.NewChatAction(update.Message.Chat.ID, "upload_video"))
 					services.Downloadwebm(update.Message.Text)
 					output := "output.mp4"
 					input := "output.webm"
