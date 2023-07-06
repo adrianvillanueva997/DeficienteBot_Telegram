@@ -3,7 +3,6 @@ package services
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -34,17 +33,17 @@ func Message(message string) *string {
 
 	switch {
 	case comboCount > 25:
-		messageToSend = fmt.Sprintf("Te voy a meter un escopetazo en los cojones x%s", strconv.Itoa(comboCount))
+		messageToSend = fmt.Sprintf("Te voy a meter un escopetazo en los cojones")
 	case comboCount > 20:
-		messageToSend = fmt.Sprintf("Me cago en tu puta madre x%s", strconv.Itoa(comboCount))
+		messageToSend = fmt.Sprintf("Me cago en tu puta madre")
 	case comboCount > 15:
-		messageToSend = fmt.Sprintf("Mongolo x%s", strconv.Itoa(comboCount))
+		messageToSend = fmt.Sprintf("Mongolo")
 	case comboCount > 10:
-		messageToSend = fmt.Sprintf("Subnormal x%s", strconv.Itoa(comboCount))
+		messageToSend = fmt.Sprintf("Subnormal")
 	case comboCount >= 5:
-		messageToSend = fmt.Sprintf("Gilipollas x%s", strconv.Itoa(comboCount))
+		messageToSend = fmt.Sprintf("Gilipollas")
 	case comboCount > 0:
-		messageToSend = fmt.Sprintf("Deficiente", strconv.Itoa(comboCount))
+		messageToSend = fmt.Sprintf("Deficiente")
 	default:
 		return nil
 	}
