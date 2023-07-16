@@ -1,10 +1,10 @@
 version: "3.0"
 services:
   web:
-    image: ghcr.io/adrianvillanueva997/rust-webhook-test:latest
+    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:latest
     networks:
       - proxy
-    container_name: webhook-test
+    container_name: deficiente-test
     restart: unless-stopped
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
@@ -12,15 +12,15 @@ services:
     labels:
       - com.ouroboros.enable=true
       - "traefik.enable=true"
-      - "traefik.http.middlewares.webhook-redirect-websecure.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.webhook-redirect-websecure.redirectscheme.permanent=true"
-      - "traefik.http.routers.webhook-web.middlewares=webhook-redirect-websecure"
-      - traefik.http.routers.webhook-web.rule=Host(`webhook.thexiao77.com`)
-      - traefik.http.routers.webhook-web.entrypoints=http
-      - traefik.http.routers.webhook-websecure.rule=Host(`webhook.thexiao77.com`)
-      - traefik.http.routers.webhook-websecure.tls.certresolver=le
-      - traefik.http.routers.webhook-websecure.tls=true
-      - traefik.http.routers.webhook-websecure.entrypoints=https
+      - "traefik.http.middlewares.deficiente-redirect-websecure.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.deficiente-redirect-websecure.redirectscheme.permanent=true"
+      - "traefik.http.routers.deficiente-web.middlewares=deficiente-redirect-websecure"
+      - traefik.http.routers.deficiente-web.rule=Host(`deficiente.thexiao77.com`)
+      - traefik.http.routers.deficiente-web.entrypoints=http
+      - traefik.http.routers.deficiente-websecure.rule=Host(`deficiente.thexiao77.com`)
+      - traefik.http.routers.deficiente-websecure.tls.certresolver=le
+      - traefik.http.routers.deficiente-websecure.tls=true
+      - traefik.http.routers.deficiente-websecure.entrypoints=https
       - "traefik.docker.network=proxy"
     env_file:
       - .env
