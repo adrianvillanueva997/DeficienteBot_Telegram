@@ -1,20 +1,29 @@
-version: "3"
+version: "3.0"
 services:
-  bot:
-    image: adrianvillanueva997/telegrambot_deficiente
-    container_name: telegram_deficiente
+  web:
+    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:latest
+    networks:
+      - proxy
+    container_name: deficiente-test
     restart: unless-stopped
-    ports:
-      - 2112
-    env_file:
-      - .env
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    networks:
-      - bots
+      - com.ouroboros.enable=true
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.deficiente-redirect-websecure.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.deficiente-redirect-websecure.redirectscheme.permanent=true"
+      - "traefik.http.routers.deficiente-web.middlewares=deficiente-redirect-websecure"
+      - traefik.http.routers.deficiente-web.rule=Host(`deficiente.thexiao77.com`)
+      - traefik.http.routers.deficiente-web.entrypoints=http
+      - traefik.http.routers.deficiente-websecure.rule=Host(`deficiente.thexiao77.com`)
+      - traefik.http.routers.deficiente-websecure.tls.certresolver=le
+      - traefik.http.routers.deficiente-websecure.tls=true
+      - traefik.http.routers.deficiente-websecure.entrypoints=https
+      - "traefik.docker.network=proxy"
+    env_file:
+      - .env
 networks:
-  bots:
+  proxy:
     external: true

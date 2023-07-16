@@ -1,21 +1,30 @@
-# Multistage docker image building
-# build-env -> dist
-
-FROM golang:1.20.6-alpine AS build-env
-RUN apk update && \
-	apk add --no-cache make git
+FROM rust:1.71.0-slim-bullseye AS build
 WORKDIR /build
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
+RUN apt-get update && \
+    apt-get install -y apt-utils pkg-config libssl-dev --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/* /var/tmp/*
 COPY . .
-RUN make build
+RUN cargo build --release
 
-# Executable stage
-FROM alpine:3.18.2
-RUN apk update && \
-	apk add --no-cache ca-certificates ffmpeg
+FROM ubuntu:22.04 AS prod
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list
+RUN apt-get update && \
+    apt-get install -y apt-utils ca-certificates pkg-config libssl-dev libssl1.1 ffmpeg --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/* /var/tmp/*
 WORKDIR /app
-COPY --from=build-env /build/app .
-EXPOSE 2112
-ENTRYPOINT ["./app"]
+COPY --from=build /build/target/release/deficiente_telegram_bot .
+RUN adduser --disabled-password appuser
+USER appuser
+ENV RUST_LOG=debug
+EXPOSE 80
+
+USER root
+RUN chown -R appuser:appuser /app
+USER appuser
+
+ENTRYPOINT [ "./deficiente_telegram_bot" ]
