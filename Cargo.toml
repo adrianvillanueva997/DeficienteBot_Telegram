@@ -1,0 +1,29 @@
+[package]
+name = "webhookstuff"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+path = "src/main.rs"
+name = "webhookstuff"
+
+
+[dependencies]
+axum = "0.6.18"
+chrono = "0.4.26"
+lazy_static = "1.4.0"
+log = "0.4.19"
+pretty_env_logger = "0.5.0"
+rand = "0.8.5"
+rayon = "1.7.0"
+regex = "1.8.4"
+reqwest = "0.11.18"
+teloxide = { version = "0.12", features = ["macros", "webhooks-axum"] }
+tokio = { version = "1.8", features = ["rt-multi-thread", "macros", "process"] }
+tokio-stream = "0.1.14"
+url = "2.4.0"
