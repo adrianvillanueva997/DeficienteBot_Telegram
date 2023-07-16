@@ -67,7 +67,7 @@ async fn process_text_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn s
 
         if thursday::is_thursday().await && thursday::check_asuka(&message).await {
             actions.push(
-                bot.send_message(msg.chat.id, &thursday::random_message().await)
+                bot.send_message(msg.chat.id, thursday::random_message().await)
                     .reply_to_message_id(msg.id),
             );
         }

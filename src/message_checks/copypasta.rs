@@ -1,6 +1,6 @@
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 
-static WORDS: &'static [&str] = &[
+const WORDS: [&str; 27] = [
     "cbt",
     "lentejas",
     "colegas",

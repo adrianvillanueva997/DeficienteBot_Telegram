@@ -1,0 +1,25 @@
+name: run clippy
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+
+jobs:
+  run-clippy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architectures:
+          - linux/amd64
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Run clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings

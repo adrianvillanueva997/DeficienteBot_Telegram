@@ -1,7 +1,7 @@
 use chrono::Datelike;
 use rand::Rng;
 
-static THURSDAY_GREETINGS: &'static [&str] = &[
+const THURSDAY_GREETINGS: [&str; 10] = [
     "De nada maquina, que tengas un feliz jueves",
     "De nada mi amor",
     "De nada fiera",
