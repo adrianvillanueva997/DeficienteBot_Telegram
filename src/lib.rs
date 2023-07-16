@@ -12,6 +12,15 @@ use tokio::time::sleep;
 
 mod message_checks;
 
+/// Bot logic goes here.
+///
+/// # Panics
+///
+/// Panics if the bot fails to run.
+///
+/// # Errors
+///
+/// This function will return an error if the bot fails to run.
 async fn process_text_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn std::error::Error>> {
     if let Some(text) = msg.text() {
         let message = text.to_lowercase();
@@ -87,6 +96,7 @@ async fn process_text_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn s
     Ok(())
 }
 
+/// Parse messages from the bot.
 pub async fn parse_messages(bot: Bot, listener: impl UpdateListener<Err = Infallible> + Send) {
     teloxide::repl_with_listener(
         bot,

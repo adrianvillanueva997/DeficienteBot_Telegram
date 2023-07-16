@@ -14,6 +14,7 @@ const THURSDAY_GREETINGS: [&str; 10] = [
     "las que tu tienes, fiera, crack, maquina, mastodonte",
 ];
 
+/// Check if today is Thursday.
 pub async fn is_thursday() -> bool {
     let now = chrono::offset::Local::now();
     if now.date_naive().weekday() == chrono::Weekday::Thu {
@@ -22,10 +23,12 @@ pub async fn is_thursday() -> bool {
     false
 }
 
+/// Check if the message contains "gracias asuka".
 pub async fn check_asuka(message: &str) -> bool {
     message.contains("gracias asuka")
 }
 
+/// Return a random message from the THURSDAY_GREETINGS array.
 pub async fn random_message() -> String {
     let rng = rand::thread_rng().gen_range(0..THURSDAY_GREETINGS.len());
     THURSDAY_GREETINGS[rng].to_string()

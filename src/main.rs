@@ -3,8 +3,11 @@ use std::{env, str::FromStr};
 use teloxide::{update_listeners::webhooks, Bot};
 use url::Url;
 
-// use crate::routines::{birthdays::birthday_routine, thursday::happy_thursday_routine};
-
+/// Main function.
+///
+/// # Panics
+///
+/// Panics if the url and bot token are not set.
 #[tokio::main]
 async fn main() {
     pretty_env_logger::init();

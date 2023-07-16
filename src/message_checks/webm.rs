@@ -5,6 +5,7 @@ use tokio_stream::StreamExt;
 const WEBM: &str = "file.webm";
 pub const MP4: &str = "file.mp4";
 
+/// Checks if the message contains a valid url.
 pub async fn check_url_status_code(url: &str) -> Option<u16> {
     let request = reqwest::get(url).await;
     let response = match request {
@@ -15,6 +16,11 @@ pub async fn check_url_status_code(url: &str) -> Option<u16> {
     Some(status_code)
 }
 
+/// Downloads a webm from a url.
+///
+/// # Panics
+///
+/// Panics if the file can't be created or if the file can't be written to.
 pub async fn download_webm(url: &str) {
     let request = reqwest::get(url);
     let response = match request.await {
@@ -31,10 +37,16 @@ pub async fn download_webm(url: &str) {
     }
 }
 
+/// Checks if the url ends with .webm.
 pub fn url_is_webm(url: &str) -> bool {
     url.ends_with(".webm")
 }
 
+/// Converts a webm to mp4.
+///
+/// # Panics
+///
+/// Panics if the command fails to execute.
 pub async fn convert_webm_to_mp4() {
     Command::new("ffmpeg")
         .arg("-i")
@@ -44,18 +56,30 @@ pub async fn convert_webm_to_mp4() {
         .expect("Failed to execute FFmpeg command");
 }
 
+/// Deletes the webm file.
+///
+/// # Panics
+///
+/// Panics if the file can't be deleted.
 pub async fn delete_webm() {
     std::fs::remove_file(WEBM).expect("Failed to delete webm");
 }
 
+/// Deletes the mp4 file.
+///
+/// # Panics
+///
+/// Panics if the file can't be deleted.
 pub async fn delete_mp4() {
     std::fs::remove_file(MP4).expect("Failed to delete mp4");
 }
 
+/// Checks if the webm file exists.
 pub async fn webm_exists() -> bool {
     std::path::Path::new(WEBM).exists()
 }
 
+/// Checks if the mp4 file exists.
 pub async fn mp4_exists() -> bool {
     std::path::Path::new(MP4).exists()
 }

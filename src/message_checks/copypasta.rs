@@ -30,6 +30,7 @@ const WORDS: [&str; 27] = [
     "abogado",
 ];
 
+/// Find matching words in a string.
 pub async fn find_matching_words(sentence: &str) -> Vec<String> {
     let mut matching_words = Vec::new();
     let splitted_sentence = sentence.split_whitespace().collect::<Vec<_>>();
@@ -44,6 +45,7 @@ pub async fn find_matching_words(sentence: &str) -> Vec<String> {
     matching_words
 }
 
+/// Find copypastas in a string.
 pub async fn find_copypasta(input: &str) -> Vec<String> {
     let words = find_matching_words(input).await;
     words
@@ -52,6 +54,7 @@ pub async fn find_copypasta(input: &str) -> Vec<String> {
         .collect()
 }
 
+/// Return the copypasta for a given word.
 fn copypastas(word: &str) -> &str {
     match word {
         "cbt" => "Cock and ball torture (CBT), penis torture or dick torture is a sexual activity involving application of pain or constriction to the penis or testicles. This may involve directly painful activities, such as genital piercing, wax play, genital spanking, squeezing, ball-busting, genital flogging, urethral play, tickle torture, erotic electrostimulation, kneeing or kicking.",
