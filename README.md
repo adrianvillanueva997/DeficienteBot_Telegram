@@ -2,8 +2,30 @@
 
 # DeficienteBot_Telegram
 
-Private telegram index made in Golang that calls idiot to someone who sends a message with certain content.
+Private telegram bot made in rust that calls idiot to someone who sends a message with certain content to a group chat. Also it sends copypastas when certain words are detected and it converts webm videos to mp4.
 
 # Deployment
 
-Use Dockerfile and docker-compose files to build the project, just remember to add a .env file with your telegram bot key
+Create a webhook using the software of your choice, for local development i use ngrok. Export the telegram key in an environment variable like this:
+
+```bash
+export TELOXIDE_TOKEN=yourtoken
+export url=yoururl
+```
+
+Then run the bot with cargo:
+
+```bash
+cargo run
+```
+
+In the docker-compose file you have my personal configuration, you can use it as a guide to deploy it in your own server. I am using a reverse proxy to redirect the traffic to the bot, you can use nginx or apache for this. I am using traefik.
+
+# Toolset
+
+- [Rust](https://www.rust-lang.org/)
+- [ffmpeg](https://ffmpeg.org/)
+- [Docker](https://www.docker.com/) or [Podman](https://podman.io/)
+- [Traefik](https://traefik.io/)
+- [Telegram](https://telegram.org/)
+- [ngrok](https://ngrok.com/)

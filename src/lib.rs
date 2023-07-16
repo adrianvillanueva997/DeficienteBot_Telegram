@@ -29,8 +29,11 @@ async fn process_text_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn s
         if message_checks::url::is_url(&message) {
             let twitter = message_checks::twitter::update_vxtwitter(&message).await;
             if let Some(twitter) = twitter {
+                let message = msg.clone();
+                let user = message.from().as_ref().unwrap().username.as_ref().unwrap();
+                let tweet = format!("@{} \n{} ", user, twitter);
                 bot.delete_message(msg.chat.id, msg.id).await?;
-                actions.push(bot.send_message(msg.chat.id, twitter));
+                actions.push(bot.send_message(msg.chat.id, tweet));
             } else if message_checks::webm::url_is_webm(&message) {
                 if message_checks::webm::check_url_status_code(&message).await != Some(200) {
                     actions.push(
