@@ -1,14 +1,9 @@
 name: Build Docker image
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  CARGO_TERM_COLOR: always
 
 jobs:
   build-docker:
@@ -31,11 +26,6 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@818d4b7b91585d195f67373fd9cb0332e31a7175
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Build and push
         uses: docker/build-push-action@v4.1.1
         with:
@@ -45,7 +35,3 @@ jobs:
           file: ./Dockerfile
           platforms: ${{ matrix.architectures }}
           push: false
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ env.REGISTRY }}/adrianvillanueva997/deficientebot_telegram:latest
-          labels: ${{ steps.meta.outputs.labels }}
