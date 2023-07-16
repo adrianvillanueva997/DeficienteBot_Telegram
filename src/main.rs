@@ -17,5 +17,5 @@ async fn main() {
         .expect("Couldn't setup webhook");
     info!("Running on {} {}", url, addr);
 
-    webhookstuff::parse_messages(bot, listener).await;
+    deficiente_telegram_bot::parse_messages(bot, listener).await;
 }

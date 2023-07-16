@@ -293,6 +293,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "deficiente_telegram_bot"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "chrono",
+ "lazy_static",
+ "log",
+ "pretty_env_logger",
+ "rand",
+ "rayon",
+ "regex",
+ "reqwest",
+ "teloxide",
+ "tokio",
+ "tokio-stream",
+ "url",
+]
+
+[[package]]
 name = "derive_more"
 version = "0.99.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1867,25 +1886,6 @@ checksum = "9b85cbef8c220a6abc02aefd892dfc0fc23afb1c6a426316ec33253a3877249b"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "webhookstuff"
-version = "0.1.0"
-dependencies = [
- "axum",
- "chrono",
- "lazy_static",
- "log",
- "pretty_env_logger",
- "rand",
- "rayon",
- "regex",
- "reqwest",
- "teloxide",
- "tokio",
- "tokio-stream",
- "url",
 ]
 
 [[package]]

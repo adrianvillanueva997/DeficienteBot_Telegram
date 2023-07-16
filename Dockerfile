@@ -17,7 +17,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* /var/tmp/*
 WORKDIR /app
-COPY --from=build /build/target/release/webhookstuff .
+COPY --from=build /build/target/release/deficiente_telegram_bot .
 RUN adduser --disabled-password appuser
 USER appuser
 ENV RUST_LOG=debug
@@ -27,4 +27,4 @@ USER root
 RUN chown -R appuser:appuser /app
 USER appuser
 
-ENTRYPOINT [ "./webhookstuff" ]
+ENTRYPOINT [ "./deficiente_telegram_bot" ]
