@@ -1,6 +1,6 @@
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 
-const WORDS: [&str; 27] = [
+const WORDS: [&str; 26] = [
     "cbt",
     "lentejas",
     "colegas",
@@ -19,7 +19,6 @@ const WORDS: [&str; 27] = [
     "china",
     "euskadi",
     "69",
-    "pan",
     "spiderman",
     "viernes",
     "anime",
@@ -87,7 +86,7 @@ fn copypastas(word: &str) -> &str {
         "amiga" => "\"amiga\"",
         "euskadi" => "el ojo de",
         "69" => "> nice",
-        "pan" => "Pues resulta que he ido a comprar el pan a un moro de estos guays que me cobran 50 centimos por la barra de pan sus cojones ahi y entonces entro y le digo ey que pasa como va alqaeda bien?como va la financiada jajajaaj como soy bromista pues pa reirme y eso porque siempre se lo decia al moro de mi barrio pues coje este moro que era nuevo y me dice asalam juaralam massan o algo asi raro y le digo yo abracadabra abracadabra mesaguaope mechami its cheaaaaaa asi con el tono del cd makina total o los antiguos lo recodais como lo mas duro ajjajaa sa quedao flipando el moro y mañana ire otra vez asi con mi humor gracioso porque tenemos que reinrnos de algo si no te rayas en casa y sin hacer na jajjajajajaja",
+        // "pan" => "Pues resulta que he ido a comprar el pan a un moro de estos guays que me cobran 50 centimos por la barra de pan sus cojones ahi y entonces entro y le digo ey que pasa como va alqaeda bien?como va la financiada jajajaaj como soy bromista pues pa reirme y eso porque siempre se lo decia al moro de mi barrio pues coje este moro que era nuevo y me dice asalam juaralam massan o algo asi raro y le digo yo abracadabra abracadabra mesaguaope mechami its cheaaaaaa asi con el tono del cd makina total o los antiguos lo recodais como lo mas duro ajjajaa sa quedao flipando el moro y mañana ire otra vez asi con mi humor gracioso porque tenemos que reinrnos de algo si no te rayas en casa y sin hacer na jajjajajajaja",
         "spiderman" => " Os cuento, quede con una golfilla para intimar en su pisito, empezamos normal, nos liamos y demas (ella tenia bastante interes en chuparme la oreja, a un rato me dio hasta mal rollo la cabrona). Bueno, yo no lleve cartera y claro, cuando estabamos ya muy cachondos le dije amablamente si tenia condones, me dijo que no...hice como que me molestaba...ella me dijo que yo siempre suelo llevarlos, le dije que se me olvido la cartera y demas...total que accedio a hacer la marcha atras y yo pensando \"esta es la mia, le hare el spiderman\". Estamos arreando y demas y despues d eun buen rato veo que me voy a correr, saco mi tizona, me corro en mi mano y ella se queda un poco con cara de roto2, y entonces cojo y le tiro la lefada a su cara y le digo \"soy spidermaaaaan\" y no me esperaba su reaccion, me empezo a llamar hijo de puta, me dio tortazos como loca :S y empezo a decir que no veia, que se lo meti en el ojo, yo viendo el percal me vesti y me fui, luego me llamo y me dijo que era un hijo de puta, yo le dije que era una broma en plan colegas, pero nada, dice que tuvo que ir al medico pasando verguenza porque tenia el ojo muy irritado... y que como volviera a enviarla algo para quedar me denuncia.",
         "viernes" => "Preparate la puta que te re pario porque Los viernes de la jungla serán a todo ojete Todo ojete todo ojete (Coro) Ojete, ojete, ojete Para vivir una noche con las mejores putas de la zona No te la puedes perder hijo de re mil Porque si no estás allí; Andate a la concha de la lora Te esperamos para que vivas una noche de la puta madre",
         "anime" => "El anime es de otakus y pringaos que no tienen nada más que hacer que sucumbir al escapismo de dibujos de personajes en 2D. Los consumidores de anime NO tienen derechos y debería recaer sobre ellos todo el peso de la ley. Si tienes avatar de anime tu opinión no solo no cuenta, si no que voy a pensar automáticamente lo contrario de lo que me digas. En definitiva el anime es basura y fumarlo es de idiotas.",
