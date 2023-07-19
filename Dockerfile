@@ -18,6 +18,7 @@ RUN apt-get update && \
     rm -rf /tmp/* /var/tmp/*
 WORKDIR /app
 COPY --from=build /build/target/release/deficiente_telegram_bot .
+COPY viernes.ogg .
 RUN adduser --disabled-password appuser
 USER appuser
 ENV RUST_LOG=debug

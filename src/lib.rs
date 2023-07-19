@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use log::error;
 use message_checks::{bad_words, thursday, webm};
-use teloxide::payloads::SendMessageSetters;
+use teloxide::payloads::{SendAudioSetters, SendMessageSetters, SendVideoSetters};
 use teloxide::requests::Requester;
 use teloxide::types::Message;
 use teloxide::update_listeners::UpdateListener;
@@ -57,6 +57,7 @@ async fn process_text_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn s
                             message_checks::webm::MP4,
                         )),
                     )
+                    .reply_to_message_id(msg.id)
                     .await?;
                 }
             }
@@ -71,10 +72,19 @@ async fn process_text_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn s
 
         let copypastas = message_checks::copypasta::find_copypasta(&message);
         for copypasta in copypastas.await {
-            actions.push(
-                bot.send_message(msg.chat.id, copypasta)
-                    .reply_to_message_id(msg.id),
-            );
+            if copypasta == "viernes" {
+                bot.send_audio(
+                    msg.chat.id,
+                    teloxide::types::InputFile::file(std::path::Path::new("viernes.ogg")),
+                )
+                .reply_to_message_id(msg.id)
+                .await?;
+            } else {
+                actions.push(
+                    bot.send_message(msg.chat.id, copypasta)
+                        .reply_to_message_id(msg.id),
+                );
+            }
         }
 
         if thursday::is_thursday().await && thursday::check_asuka(&message).await {
