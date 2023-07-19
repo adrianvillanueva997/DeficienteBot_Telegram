@@ -73,6 +73,8 @@ async fn process_text_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn s
         let copypastas = message_checks::copypasta::find_copypasta(&message);
         for copypasta in copypastas.await {
             if copypasta == "viernes" {
+                bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::RecordVoice)
+                    .await?;
                 bot.send_audio(
                     msg.chat.id,
                     teloxide::types::InputFile::file(std::path::Path::new("viernes.ogg")),
