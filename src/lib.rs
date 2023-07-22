@@ -114,15 +114,15 @@ async fn process_text_messages(
     Ok(())
 }
 
-/// .
+/// Checks if the file is a webm and converts it to mp4 and sends it.
 ///
 /// # Panics
 ///
-/// Panics if .
+/// Panics if the bot fails to download the file or convert it.
 ///
 /// # Errors
 ///
-/// This function will return an error if .
+/// This function will return an error if the bot fails to download the file or convert it.
 pub async fn process_files(
     bot: &Bot,
     msg: &Message,
@@ -153,7 +153,7 @@ pub async fn process_files(
     Ok(())
 }
 
-/// .
+/// Handles messages from the bot.
 ///
 /// # Errors
 ///
@@ -161,8 +161,8 @@ pub async fn process_files(
 pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn std::error::Error>> {
     if let Some(text) = msg.text() {
         process_text_messages(bot, msg, text).await?
-    } else if let Some(_file) = msg.document() {
-        process_files(bot, msg, _file).await?
+    } else if let Some(file) = msg.document() {
+        process_files(bot, msg, file).await?
     }
     Ok(())
 }
