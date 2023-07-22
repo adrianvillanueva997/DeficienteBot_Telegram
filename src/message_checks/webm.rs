@@ -75,11 +75,20 @@ pub async fn delete_mp4() {
 }
 
 /// Checks if the webm file exists.
-pub async fn webm_exists() -> bool {
+async fn webm_exists() -> bool {
     std::path::Path::new(WEBM).exists()
 }
 
 /// Checks if the mp4 file exists.
-pub async fn mp4_exists() -> bool {
+async fn mp4_exists() -> bool {
     std::path::Path::new(MP4).exists()
+}
+
+pub async fn files_exist() {
+    if webm_exists().await {
+        delete_webm().await;
+    }
+    if mp4_exists().await {
+        delete_mp4().await;
+    }
 }

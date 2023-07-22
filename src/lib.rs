@@ -46,12 +46,7 @@ async fn process_text_messages(
                         .reply_to_message_id(msg.id),
                 );
             } else {
-                if webm::webm_exists().await {
-                    webm::delete_webm().await;
-                }
-                if webm::mp4_exists().await {
-                    webm::delete_mp4().await;
-                }
+                webm::files_exist().await;
                 bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                     .await?;
                 message_checks::webm::download_webm(&message).await;
@@ -128,14 +123,9 @@ pub async fn process_files(
     msg: &Message,
     _file: &Document,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    // Telegram max file size: 20 MB
     if _file.clone().file_name.unwrap().contains("webm") && _file.clone().file.size <= 20000000 {
-        // 20 MB
-        if webm::webm_exists().await {
-            webm::delete_webm().await;
-        }
-        if webm::mp4_exists().await {
-            webm::delete_mp4().await;
-        }
+        webm::files_exist().await;
         bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
             .await
             .unwrap();
