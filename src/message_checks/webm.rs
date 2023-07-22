@@ -2,7 +2,7 @@ use std::process::Command;
 
 use tokio::{fs::File, io::AsyncWriteExt};
 use tokio_stream::StreamExt;
-const WEBM: &str = "file.webm";
+pub const WEBM: &str = "file.webm";
 pub const MP4: &str = "file.mp4";
 
 /// Checks if the message contains a valid url.
