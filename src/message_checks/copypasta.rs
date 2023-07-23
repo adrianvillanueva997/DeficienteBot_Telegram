@@ -98,3 +98,16 @@ fn copypastas(word: &str) -> &str {
 
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn test_find_copypasta() {
+        let copypasta = "amiga";
+        assert_eq!(
+            find_copypasta(copypasta).await,
+            vec!["\"amiga\"".to_string()]
+        );
+    }
+}

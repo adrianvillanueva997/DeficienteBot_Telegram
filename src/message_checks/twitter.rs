@@ -9,3 +9,15 @@ pub async fn update_vxtwitter(message: &str) -> Option<String> {
 
     None
 }
+
+// test
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn test_update_vxtwitter() {
+        let twitter = "https://twitter.com/AsukaLangleyS/status/1375160000000000000";
+        let fxtwitter = "https://fxtwitter.com/AsukaLangleyS/status/1375160000000000000";
+        assert_eq!(update_vxtwitter(twitter).await, Some(fxtwitter.to_string()));
+    }
+}

@@ -33,3 +33,25 @@ pub async fn random_message() -> String {
     let rng = rand::thread_rng().gen_range(0..THURSDAY_GREETINGS.len());
     THURSDAY_GREETINGS[rng].to_string()
 }
+
+//test
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn test_is_thursday() {
+        if chrono::offset::Local::now().date_naive().weekday() == chrono::Weekday::Thu {
+            assert!(is_thursday().await);
+        }
+    }
+    #[tokio::test]
+    async fn test_check_asuka() {
+        let message = "gracias asuka";
+        assert!(check_asuka(message).await);
+    }
+    #[tokio::test]
+    async fn test_random_message() {
+        let message = random_message().await;
+        assert!(THURSDAY_GREETINGS.contains(&message.as_str()));
+    }
+}

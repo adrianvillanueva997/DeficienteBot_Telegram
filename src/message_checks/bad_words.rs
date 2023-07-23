@@ -19,3 +19,13 @@ pub async fn find_bad_words(input: &str) -> bool {
         .await
         .unwrap()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn test_find_bad_words() {
+        let bad_words = "uwu";
+        assert!(find_bad_words(bad_words).await);
+    }
+}

@@ -92,3 +92,25 @@ pub async fn files_exist() {
         delete_mp4().await;
     }
 }
+
+// test
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn test_check_url_status_code() {
+        let url = "https://google.com";
+        assert_eq!(check_url_status_code(url).await, Some(200));
+    }
+    #[tokio::test]
+    async fn test_download_webm() {
+        let url = "https://i.imgur.com/1X2fYXp.webm";
+        download_webm(url).await;
+        assert!(webm_exists().await);
+    }
+    #[test]
+    fn test_url_is_webm() {
+        let url = "https://i.imgur.com/1X2fYXp.webm";
+        assert!(url_is_webm(url));
+    }
+}
