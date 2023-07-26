@@ -15,6 +15,7 @@ name = "deficiente_telegram_bot"
 
 [dependencies]
 axum = "0.6.18"
+bendy = "^0.3"
 chrono = "0.4.26"
 lazy_static = "1.4.0"
 log = "0.4.19"
@@ -23,6 +24,8 @@ rand = "0.8.5"
 rayon = "1.7.0"
 regex = "1.8.4"
 reqwest = "0.11.18"
+serde = "1.0.175"
+serde_bytes = "0.11.12"
 teloxide = { version = "0.12", features = ["macros", "webhooks-axum"] }
 time = "0.3.23"
 tokio = { version = "1.8", features = ["rt-multi-thread", "macros", "process"] }

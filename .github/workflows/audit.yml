@@ -13,6 +13,9 @@ jobs:
         architectures:
           - linux/amd64
     steps:
+      - uses: rui314/setup-mold@v1
+        with:
+          make-default: false
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Rust
