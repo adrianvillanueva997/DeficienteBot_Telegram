@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+      - uses: rui314/setup-mold@v1
+        with:
+          make-default: false
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
