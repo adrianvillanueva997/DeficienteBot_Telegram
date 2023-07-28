@@ -4,9 +4,7 @@ use std::time::Duration;
 use log::error;
 use message_checks::{bad_words, thursday, webm};
 use teloxide::net::Download;
-use teloxide::payloads::{
-    SendAudioSetters, SendDocumentSetters, SendMessageSetters, SendVideoSetters,
-};
+use teloxide::payloads::{SendAudioSetters, SendMessageSetters, SendVideoSetters};
 use teloxide::requests::Requester;
 use teloxide::types::{Document, Message};
 use teloxide::update_listeners::UpdateListener;
@@ -62,20 +60,6 @@ async fn process_text_messages(
                 .await?;
             }
         }
-    }
-    if message_checks::magnets::is_magnet(&message).await {
-        message_checks::magnets::torrent_exists().await;
-        message_checks::magnets::write_magnet_to_file(&message).await;
-        bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadDocument)
-            .await?;
-        bot.send_document(
-            msg.chat.id,
-            teloxide::types::InputFile::file(std::path::Path::new(
-                message_checks::magnets::TORRENT_FILE,
-            )),
-        )
-        .reply_to_message_id(msg.id)
-        .await?;
     }
 
     if bad_words::find_bad_words(&message).await {
