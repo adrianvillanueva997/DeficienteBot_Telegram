@@ -14,7 +14,7 @@ name = "deficiente_telegram_bot"
 
 
 [dependencies]
-axum = "0.6.18"
+axum = "0.6.20"
 chrono = "0.4.26"
 lazy_static = "1.4.0"
 log = "0.4.19"
