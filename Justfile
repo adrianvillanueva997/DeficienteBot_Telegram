@@ -1,6 +1,6 @@
 set dotenv-load
-
-DOCKER_IMAGE_NAME: "telegrambot_deficiente"
+set export
+DOCKER_IMAGE_NAME := "telegrambot_deficiente"
 
 dev:
     @echo "Running the app"
