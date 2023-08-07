@@ -32,8 +32,8 @@ const WORDS: [&str; 26] = [
 /// Find matching words in a string.
 pub async fn find_matching_words(sentence: &str) -> Vec<String> {
     let mut matching_words = Vec::new();
-    let splitted_sentence = sentence.split_whitespace().collect::<Vec<_>>();
-    for token in splitted_sentence {
+    let split_sentence = sentence.split_whitespace().collect::<Vec<_>>();
+    for token in split_sentence {
         for word in WORDS {
             if token.to_lowercase().contains(word) {
                 matching_words.push(word.to_string());

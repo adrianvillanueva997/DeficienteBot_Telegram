@@ -17,3 +17,6 @@ target/
 .webm
 .mp4
 torrent.torrent
+file.webm
+
+.env
