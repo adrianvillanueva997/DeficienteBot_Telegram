@@ -17,7 +17,7 @@ audit:
     @echo "Auditing the app"
     cargo audit
 
-lint:
+clippy:
     @echo "Linting the app"
     cargo clippy --all-targets --all-features -- -D warnings
 
