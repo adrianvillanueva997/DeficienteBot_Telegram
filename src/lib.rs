@@ -3,6 +3,7 @@ use std::time::Duration;
 
 use log::error;
 use message_checks::{bad_words, thursday, webm};
+use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{SendAudioSetters, SendMessageSetters, SendVideoSetters};
 use teloxide::requests::Requester;
@@ -11,7 +12,6 @@ use teloxide::update_listeners::UpdateListener;
 use teloxide::Bot;
 use tokio::fs;
 use tokio::time::sleep;
-
 mod message_checks;
 
 /// Bot logic goes here.
@@ -23,11 +23,7 @@ mod message_checks;
 /// # Errors
 ///
 /// This function will return an error if the bot fails to run.
-async fn process_text_messages(
-    bot: &Bot,
-    msg: &Message,
-    text: &str,
-) -> Result<(), Box<dyn std::error::Error>> {
+async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(), Box<dyn Error>> {
     let message = text.to_lowercase();
     let mut actions: Vec<_> = Vec::new();
     if message_checks::url::is_url(&message) {
@@ -38,8 +34,8 @@ async fn process_text_messages(
             let tweet = format!("@{} \n{} ", user, twitter);
             bot.delete_message(msg.chat.id, msg.id).await?;
             actions.push(bot.send_message(msg.chat.id, tweet));
-        } else if message_checks::webm::url_is_webm(&message) {
-            if message_checks::webm::check_url_status_code(&message).await != Some(200) {
+        } else if webm::url_is_webm(&message) {
+            if webm::check_url_status_code(&message).await != Some(200) {
                 actions.push(
                     bot.send_message(msg.chat.id, "El video no existe :(")
                         .reply_to_message_id(msg.id),
@@ -48,13 +44,11 @@ async fn process_text_messages(
                 webm::files_exist().await;
                 bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                     .await?;
-                message_checks::webm::download_webm(&message).await;
-                message_checks::webm::convert_webm_to_mp4().await;
+                webm::download_webm(&message).await;
+                webm::convert_webm_to_mp4().await;
                 bot.send_video(
                     msg.chat.id,
-                    teloxide::types::InputFile::file(std::path::Path::new(
-                        message_checks::webm::MP4,
-                    )),
+                    teloxide::types::InputFile::file(std::path::Path::new(webm::MP4)),
                 )
                 .reply_to_message_id(msg.id)
                 .await?;
@@ -121,7 +115,7 @@ pub async fn process_files(
     bot: &Bot,
     msg: &Message,
     _file: &Document,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<(), Box<dyn Error>> {
     // Telegram max file size: 20 MB
     if _file.clone().file_name.unwrap().contains("webm") && _file.clone().file.size <= 20000000 {
         webm::files_exist().await;
@@ -147,7 +141,7 @@ pub async fn process_files(
 /// # Errors
 ///
 /// This function will return an error if .
-pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn Error>> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
             process_text_messages(bot, msg, msg.text().unwrap()).await?

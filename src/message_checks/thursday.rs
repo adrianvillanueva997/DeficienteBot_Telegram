@@ -14,6 +14,8 @@ const THURSDAY_GREETINGS: [&str; 10] = [
     "las que tu tienes, fiera, crack, maquina, mastodonte",
 ];
 
+const ASUKA: &str = "gracias asuka";
+
 /// Check if today is Thursday.
 pub async fn is_thursday() -> bool {
     let now = chrono::offset::Local::now();
@@ -25,7 +27,7 @@ pub async fn is_thursday() -> bool {
 
 /// Check if the message contains "gracias asuka".
 pub async fn check_asuka(message: &str) -> bool {
-    message.contains("gracias asuka")
+    message.contains(ASUKA)
 }
 
 /// Return a random message from the THURSDAY_GREETINGS array.

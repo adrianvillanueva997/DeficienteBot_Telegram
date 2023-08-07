@@ -13,9 +13,6 @@ jobs:
         architectures:
           - linux/amd64
     steps:
-      - uses: rui314/setup-mold@v1
-        with:
-          make-default: false
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Rust
@@ -25,5 +22,6 @@ jobs:
           override: true
       - name: Install audit
         run: cargo install cargo-audit
+      - uses: extractions/setup-just@v1
       - name: Run audit
-        run: cargo audit
+        run: just audit

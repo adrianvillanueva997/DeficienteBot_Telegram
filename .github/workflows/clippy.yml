@@ -15,13 +15,11 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-      - uses: rui314/setup-mold@v1
-        with:
-          make-default: false
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
+      - uses: extractions/setup-just@v1
       - name: Run clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: just clippy
