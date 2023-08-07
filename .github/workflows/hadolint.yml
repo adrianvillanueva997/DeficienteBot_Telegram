@@ -1,4 +1,4 @@
-name: audit
+name: Hadolint
 
 on:
   pull_request:
