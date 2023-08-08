@@ -1,4 +1,4 @@
-name: run audit
+name: Clippy
 
 on:
   pull_request:

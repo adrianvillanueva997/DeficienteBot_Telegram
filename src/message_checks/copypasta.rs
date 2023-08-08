@@ -1,6 +1,6 @@
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 
-const WORDS: [&str; 26] = [
+const WORDS: [&str; 27] = [
     "cbt",
     "lentejas",
     "colegas",
@@ -26,6 +26,7 @@ const WORDS: [&str; 26] = [
     "tetas",
     "profe",
     "peruano",
+    "amogus",
     "abogado",
 ];
 
@@ -94,6 +95,7 @@ fn copypastas(word: &str) -> &str {
         "profe" => "Hola profe, perdón por no asistir a clases, me sucedió un problema. No sé preocupe, no fue algo grande. Bueno, si tanto insiste se lo explico, el pez de mi abuela se estaba ahogando, por lo tanto esta lo sacó de la pecera, y pues el pez se murió, se lo mató el gato. Por lo tanto, mi abuela le hizo un funeral, bueno, en realidad no hizo un funeral, el pez era algo grande, sabes? se veía rico, entonces, nos comimos al pez. Pero pasó algo raro, mi primo comenzó a convulsionar, no sé por qué. Mi primo se tiró a la piscina y empezó a nadar, se convirtió en un pez, creo. Lo íbamos a llevar al medico, pero al final no lo pudimos hacer por qué se murió, tranquila, esta vez no nos comimos al muerto. Bueno, no sabíamos donde dejar el cadáver de mi primo, entonces mi abuela propuso una idea \"si no hay cuerpo no hay muerto\" por lo tanto nos comimos a mi primo (he de decir que sabe mal, normal, estaba quemado). Bueno, enterramos los huesos para fingir que eran de un cavernicola. Funcionó, vino un arqueólogo, este se dio cuenta de que eran falsos, lo sobornamos al arqueólogo y ahora mi primo se encuentra en el museo y nosotros con mucho dinero. Por lo tanto, quiero decirle que si no me aprueba la materia, me la comeré (a usted, no a la materia) y la pondré en un museo y ganaré mucho dinero.",
         "peruano" => "Malditos peruanos, los odio, son como venezolanos pero con fetiches raros con aves. Estoy seguro de que no soy la única persona que piensa esto, odio a mi abuela peruana, a la vez la quiero, pero deseo su muerte, todo es su culpa. Maldigo el día en el que la sangre peruana se metió dentro de mi cuerpo y me infectó de por vida. Estaría dispuesto a hacerme innumerables transfusiones de sangre solo para eliminar este veneno que reside dentro de mi. Si eres peruano y estás leyendo esto, no te preocupes, prometo que algún día encontraré la cura a esta grave enfermedad.",
         "abogado" => "El que tengo aqui colgado xd",
+        "amogus" => "ඞ",
         _ => ""
 
     }
