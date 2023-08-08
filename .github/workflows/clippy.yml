@@ -1,4 +1,4 @@
-name: clippy
+name: Clippy
 
 on:
   pull_request:
