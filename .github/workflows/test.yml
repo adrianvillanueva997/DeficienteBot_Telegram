@@ -24,5 +24,7 @@ jobs:
         run: cargo install cargo-nextest --secure
       - name: List tests
         run: cargo nextest list
+      - name: Install ffmpeg
+        run: sudo apt-get install ffmpeg -y
       - name: Run tests
         run: just test
