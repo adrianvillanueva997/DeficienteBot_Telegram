@@ -96,6 +96,7 @@ pub async fn files_exist() {
 // test
 #[cfg(test)]
 mod tests {
+    const URL :&str = "https://cdn.discordapp.com/attachments/851166737692098580/933357925852921886/Never_Ending_Tech.webm";
     use super::*;
     #[tokio::test]
     async fn test_check_url_status_code() {
@@ -104,13 +105,21 @@ mod tests {
     }
     #[tokio::test]
     async fn test_download_webm() {
-        let url = "https://i.imgur.com/1X2fYXp.webm";
-        download_webm(url).await;
+        download_webm(URL).await;
         assert!(webm_exists().await);
     }
     #[test]
     fn test_url_is_webm() {
-        let url = "https://i.imgur.com/1X2fYXp.webm";
-        assert!(url_is_webm(url));
+        assert!(url_is_webm(URL));
+    }
+    #[tokio::test]
+    async fn test_e2e_webm_workflow() {
+        download_webm(URL).await;
+        convert_webm_to_mp4().await;
+        assert!(mp4_exists().await);
+        delete_webm().await;
+        delete_mp4().await;
+        assert!(!webm_exists().await);
+        assert!(!mp4_exists().await);
     }
 }

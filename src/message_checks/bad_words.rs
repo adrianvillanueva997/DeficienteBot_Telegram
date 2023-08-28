@@ -14,7 +14,6 @@ lazy_static! {
 /// Panics if the regex fails to compile.
 pub async fn find_bad_words(input: &str) -> bool {
     let input = input.to_string();
-    // BAD_WORD_REGEX.is_match(input)
     task::spawn_blocking(move || BAD_WORD_REGEX.is_match(&input))
         .await
         .unwrap()

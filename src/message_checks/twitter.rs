@@ -3,11 +3,9 @@ pub async fn update_vxtwitter(message: &str) -> Option<String> {
     if (message.contains("twitter") && message.contains("status"))
         && !(message.contains("fxtwitter") || message.contains("vxtwitter"))
     {
-        let url = message.replace("twitter", "fxtwitter");
-        return Some(url);
+        return Some(message.replace("twitter", "fxtwitter"));
     } else if message.contains("x.com") && message.contains("status") {
-        let url = message.replace("x.com", "fixupx.com");
-        return Some(url);
+        return Some(message.replace("x.com", "fixupx.com"));
     }
 
     None

@@ -7,7 +7,7 @@ dev:
     cargo run
 test:
     @echo "Running tests"
-    cargo test --verbose --all
+    cargo nextest run
 
 build:
     @echo "Building the app"
