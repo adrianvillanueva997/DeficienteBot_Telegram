@@ -21,7 +21,7 @@ jobs:
           override: true
       - uses: extractions/setup-just@v1
       - name: Setup nextest
-        run: cargo install cargo-nextest --secure
+        uses: taiki-e/install-action@nextest
       - name: List tests
         run: cargo nextest list
       - name: Install ffmpeg
