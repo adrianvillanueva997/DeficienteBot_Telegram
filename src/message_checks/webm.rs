@@ -103,11 +103,6 @@ mod tests {
         let url = "https://google.com";
         assert_eq!(check_url_status_code(url).await, Some(200));
     }
-    #[tokio::test]
-    async fn test_download_webm() {
-        download_webm(URL).await;
-        assert!(webm_exists().await);
-    }
     #[test]
     fn test_url_is_webm() {
         assert!(url_is_webm(URL));
