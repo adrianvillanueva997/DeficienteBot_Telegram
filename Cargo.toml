@@ -29,4 +29,4 @@ teloxide = { version = "0.12", features = ["macros", "webhooks-axum"] }
 time = "0.3.28"
 tokio = { version = "1.32", features = ["rt-multi-thread", "macros", "process"] }
 tokio-stream = "0.1.14"
-url = "2.4.0"
+url = "2.4.1"
