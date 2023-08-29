@@ -19,10 +19,7 @@ const ASUKA: &str = "gracias asuka";
 /// Check if today is Thursday.
 pub async fn is_thursday() -> bool {
     let now = chrono::offset::Local::now();
-    if now.date_naive().weekday() == chrono::Weekday::Thu {
-        return true;
-    }
-    false
+    now.date_naive().weekday() == chrono::Weekday::Thu
 }
 
 /// Check if the message contains "gracias asuka".

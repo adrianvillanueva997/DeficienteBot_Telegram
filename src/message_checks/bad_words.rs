@@ -14,7 +14,6 @@ lazy_static! {
 /// Panics if the regex fails to compile.
 pub async fn find_bad_words(input: &str) -> bool {
     let input = input.to_string();
-    // BAD_WORD_REGEX.is_match(input)
     task::spawn_blocking(move || BAD_WORD_REGEX.is_match(&input))
         .await
         .unwrap()
@@ -24,8 +23,23 @@ pub async fn find_bad_words(input: &str) -> bool {
 mod tests {
     use super::*;
     #[tokio::test]
-    async fn test_find_bad_words() {
+    async fn test_uwu_badword() {
         let bad_words = "uwu";
         assert!(find_bad_words(bad_words).await);
+    }
+    #[tokio::test]
+    async fn test_v_badword() {
+        let bad_words = ":v";
+        assert!(find_bad_words(bad_words).await);
+    }
+    #[tokio::test]
+    async fn test_owo_badword() {
+        let bad_words = "owo";
+        assert!(find_bad_words(bad_words).await);
+    }
+    #[tokio::test]
+    async fn test_no_badword() {
+        let bad_words = "hola";
+        assert!(!find_bad_words(bad_words).await);
     }
 }

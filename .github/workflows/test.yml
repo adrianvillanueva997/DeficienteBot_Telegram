@@ -3,6 +3,8 @@ on:
   pull_request:
     branches:
       - main
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
   run-clippy:
@@ -20,5 +22,11 @@ jobs:
           toolchain: stable
           override: true
       - uses: extractions/setup-just@v1
+      - name: Setup nextest
+        uses: taiki-e/install-action@nextest
+      - name: List tests
+        run: cargo nextest list
+      - name: Install ffmpeg
+        run: sudo apt-get install ffmpeg -y
       - name: Run tests
         run: just test
