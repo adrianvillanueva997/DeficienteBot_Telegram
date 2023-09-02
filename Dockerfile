@@ -5,7 +5,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* /var/tmp/*
-COPY . .
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
 RUN cargo build --release
 
 FROM ubuntu:22.04 AS prod
