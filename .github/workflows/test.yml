@@ -24,6 +24,7 @@ jobs:
       - uses: extractions/setup-just@v1
       - name: Setup nextest
         uses: taiki-e/install-action@nextest
+      - uses: Swatinem/rust-cache@v2
       - name: List tests
         run: cargo nextest list
       - name: Install ffmpeg

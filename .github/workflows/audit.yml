@@ -22,6 +22,7 @@ jobs:
           override: true
       - name: Install audit
         run: cargo install cargo-audit
+      - uses: Swatinem/rust-cache@v2
       - uses: extractions/setup-just@v1
       - name: Run audit
         run: just audit
