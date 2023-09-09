@@ -12,7 +12,8 @@ use teloxide::update_listeners::UpdateListener;
 use teloxide::Bot;
 use tokio::fs;
 use tokio::time::sleep;
-mod message_checks;
+
+pub mod message_checks;
 
 /// Bot logic goes here.
 ///
@@ -35,7 +36,9 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
             bot.delete_message(msg.chat.id, msg.id).await?;
             actions.push(bot.send_message(msg.chat.id, tweet));
         } else if webm::url_is_webm(&message) {
-            if webm::check_url_status_code(&message).await == Some(404) || webm::check_url_status_code(&message).await != Some(400)  {
+            if webm::check_url_status_code(&message).await == Some(404)
+                || webm::check_url_status_code(&message).await != Some(400)
+            {
                 actions.push(
                     bot.send_message(msg.chat.id, "El video no existe :(")
                         .reply_to_message_id(msg.id),
