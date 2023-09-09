@@ -75,12 +75,12 @@ pub async fn delete_mp4() {
 }
 
 /// Checks if the webm file exists.
-async fn webm_exists() -> bool {
+pub async fn webm_exists() -> bool {
     std::path::Path::new(WEBM).exists()
 }
 
 /// Checks if the mp4 file exists.
-async fn mp4_exists() -> bool {
+pub async fn mp4_exists() -> bool {
     std::path::Path::new(MP4).exists()
 }
 
@@ -90,31 +90,5 @@ pub async fn files_exist() {
     }
     if mp4_exists().await {
         delete_mp4().await;
-    }
-}
-
-// test
-#[cfg(test)]
-mod tests {
-    const URL :&str = "https://cdn.discordapp.com/attachments/851166737692098580/933357925852921886/Never_Ending_Tech.webm";
-    use super::*;
-    #[tokio::test]
-    async fn test_check_url_status_code() {
-        let url = "https://google.com";
-        assert_eq!(check_url_status_code(url).await, Some(200));
-    }
-    #[test]
-    fn test_url_is_webm() {
-        assert!(url_is_webm(URL));
-    }
-    #[tokio::test]
-    async fn test_e2e_webm_workflow() {
-        download_webm(URL).await;
-        convert_webm_to_mp4().await;
-        assert!(mp4_exists().await);
-        delete_webm().await;
-        delete_mp4().await;
-        assert!(!webm_exists().await);
-        assert!(!mp4_exists().await);
     }
 }
