@@ -5,10 +5,10 @@ on:
     branches:
       - main
     paths:
-      - 'Dockerfile'
-      - 'src/**'
-      - 'Cargo.toml'
-      - 'Cargo.lock'
+      - "Dockerfile"
+      - "src/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
 
 env:
   REGISTRY: ghcr.io
