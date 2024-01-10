@@ -9,6 +9,9 @@ on:
       - "src/**"
       - "Cargo.toml"
       - "Cargo.lock"
+  release:
+    types:
+      - created
 
 env:
   REGISTRY: ghcr.io
@@ -59,4 +62,5 @@ jobs:
           tags: |
             ${{ steps.meta.outputs.tags }}
             ${{ env.REGISTRY }}/adrianvillanueva997/deficientebot_telegram:latest
+            ${{ steps.meta.outputs.tags }},latest
           labels: ${{ steps.meta.outputs.labels }}
