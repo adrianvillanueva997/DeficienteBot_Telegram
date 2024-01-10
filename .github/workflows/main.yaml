@@ -1,12 +1,4 @@
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "Dockerfile"
-      - "src/**"
-      - "Cargo.toml"
-      - "Cargo.lock"
   release:
     types:
       - created
