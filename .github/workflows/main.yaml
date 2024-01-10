@@ -9,6 +9,8 @@ on:
       - "src/**"
       - "Cargo.toml"
       - "Cargo.lock"
+    tags:
+      - "*"
   release:
     types:
       - created
