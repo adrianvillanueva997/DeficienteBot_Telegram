@@ -51,3 +51,13 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.tags }}
             ghcr.io/${{ github.repository }}:latest
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+        with:
+          tag_name: ${{ steps.meta.outputs.tags }}
+          release_name: Release ${{ steps.meta.outputs.tags }}
+          draft: false
+          prerelease: false
