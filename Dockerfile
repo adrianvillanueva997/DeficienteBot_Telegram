@@ -23,7 +23,7 @@ COPY viernes.ogg .
 RUN adduser --disabled-password appuser
 USER appuser
 ENV RUST_LOG=debug
-EXPOSE 80
+EXPOSE 8080
 
 USER root
 RUN chown -R appuser:appuser /app
