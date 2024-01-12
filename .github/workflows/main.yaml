@@ -48,7 +48,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ steps.meta.outputs.tags }}
-            ghcr.io/adrianvillanueva997/deficientebot_telegram:latest
-            ${{ steps.meta.outputs.tags }},latest
+            ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.tags }}
+            ghcr.io/${{ github.repository }}:latest
           labels: ${{ steps.meta.outputs.labels }}
