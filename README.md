@@ -29,3 +29,7 @@ In the docker-compose file you have my personal configuration, you can use it as
 - [Traefik](https://traefik.io/)
 - [Telegram](https://telegram.org/)
 - [ngrok](https://ngrok.com/)
+
+# License
+
+This project is licensed under the GNU GPL3 License - see the [LICENSE.md](LICENSE.md) file for details
