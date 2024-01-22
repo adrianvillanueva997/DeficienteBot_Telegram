@@ -1,8 +1,10 @@
 use std::convert::Infallible;
+
 use std::time::Duration;
 
 use log::error;
 use message_checks::{bad_words, thursday, webm};
+
 use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{SendAudioSetters, SendMessageSetters, SendVideoSetters};
@@ -14,6 +16,8 @@ use tokio::fs;
 use tokio::time::sleep;
 
 pub mod message_checks;
+pub mod ranking;
+pub mod redis_connection;
 
 /// Bot logic goes here.
 ///
@@ -24,7 +28,12 @@ pub mod message_checks;
 /// # Errors
 ///
 /// This function will return an error if the bot fails to run.
-async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(), Box<dyn Error>> {
+async fn process_text_messages(
+    bot: &Bot,
+    msg: &Message,
+    redis_connection: &redis::Client,
+    text: &str,
+) -> Result<(), Box<dyn Error>> {
     let message = text.to_lowercase();
     let mut actions: Vec<_> = Vec::new();
     if message_checks::url::is_url(&message) {
@@ -117,6 +126,7 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
 pub async fn process_files(
     bot: &Bot,
     msg: &Message,
+    redis_connection: &redis::Client,
     _file: &Document,
 ) -> Result<(), Box<dyn Error>> {
     // Telegram max file size: 20 MB
@@ -144,13 +154,17 @@ pub async fn process_files(
 /// # Errors
 ///
 /// This function will return an error if .
-pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn Error>> {
+pub async fn handle_messages(
+    bot: &Bot,
+    msg: &Message,
+    redis_connection: &redis::Client,
+) -> Result<(), Box<dyn Error>> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
-            process_text_messages(bot, msg, msg.text().unwrap()).await?
+            process_text_messages(bot, msg, redis_connection, msg.text().unwrap()).await?
         }
         Some(msg) if msg.document().is_some() => {
-            process_files(bot, msg, msg.document().unwrap()).await?
+            process_files(bot, msg, redis_connection, msg.document().unwrap()).await?
         }
         Some(_) => (),
         None => (),
@@ -160,13 +174,17 @@ pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn Err
 
 /// Parse messages from the bot.
 pub async fn parse_messages(bot: Bot, listener: impl UpdateListener<Err = Infallible> + Send) {
+    let redis_client = redis_connection::redis_connection().await.unwrap();
     teloxide::repl_with_listener(
         bot,
-        |bot, msg| async move {
-            if let Err(err) = handle_messages(&bot, &msg).await {
-                error!("Error processing text messages: {}", err);
+        move |bot, msg| {
+            let redis_client = redis_client.clone();
+            async move {
+                if let Err(err) = handle_messages(&bot, &msg, &redis_client).await {
+                    error!("Error processing text messages: {}", err);
+                }
+                Ok(())
             }
-            Ok(())
         },
         listener,
     )
