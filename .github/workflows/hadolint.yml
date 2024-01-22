@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  run-clippy:
+  Hadolint:
     runs-on: ubuntu-latest
     container: hadolint/hadolint:latest-alpine
     strategy:
