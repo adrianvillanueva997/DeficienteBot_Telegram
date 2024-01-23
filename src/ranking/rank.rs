@@ -38,7 +38,7 @@ impl Rank {
     }
     #[instrument]
     pub async fn update_rank(&self, command_id: &str) {
-        let score = self.get_score(&command_id).await.unwrap_or(0); // If the command doesn't exist, it will be created with a score of 0.
+        let score = self.get_score(command_id).await.unwrap_or(0); // If the command doesn't exist, it will be created with a score of 0.
         self.set_rank(command_id, score + 1).await;
     }
 }

@@ -72,6 +72,7 @@ async fn process_text_messages(
 ) -> Result<(), Box<dyn Error>> {
     let message = text.to_lowercase();
     let mut actions: Vec<_> = Vec::new();
+    // TODO: Refactor this to an external function.
     if message_checks::url::is_url(&message) {
         let twitter = message_checks::twitter::update_vxtwitter(&message).await;
         if let Some(twitter) = twitter {
@@ -93,7 +94,7 @@ async fn process_text_messages(
             .await;
         }
     }
-
+    // TODO: Refactor this to an external function.
     if bad_words::find_bad_words(&message).await {
         Rank::new(redis_connection.clone())
             .update_rank("uwus")
@@ -103,7 +104,7 @@ async fn process_text_messages(
                 .reply_to_message_id(msg.id),
         );
     }
-
+    // TODO: Refactor this to an external function.
     let copypastas = message_checks::copypasta::find_copypasta(&message);
     for copypasta in copypastas.await {
         Rank::new(redis_connection.clone())
