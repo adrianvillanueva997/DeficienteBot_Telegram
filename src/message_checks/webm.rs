@@ -1,18 +1,21 @@
 use std::process::Command;
-
 use tokio::{fs::File, io::AsyncWriteExt};
 use tokio_stream::StreamExt;
-pub const WEBM: &str = "file.webm";
-pub const MP4: &str = "file.mp4";
+use tracing::{error, info, instrument};
 
 /// Checks if the message contains a valid url.
+#[instrument]
 pub async fn check_url_status_code(url: &str) -> Option<u16> {
     let request = reqwest::get(url).await;
     let response = match request {
         Ok(response) => response,
-        Err(_) => return None,
+        Err(err) => {
+            error!("Failed to get response: {}", err);
+            return None;
+        }
     };
     let status_code = response.status().as_u16();
+    info!("Status code: {}", status_code);
     Some(status_code)
 }
 
@@ -21,13 +24,16 @@ pub async fn check_url_status_code(url: &str) -> Option<u16> {
 /// # Panics
 ///
 /// Panics if the file can't be created or if the file can't be written to.
-pub async fn download_webm(url: &str) {
+#[instrument]
+pub async fn download_webm(url: &str, webm_filename: &str) {
     let request = reqwest::get(url);
     let response = match request.await {
         Ok(response) => response,
         Err(_) => return,
     };
-    let mut file = File::create(WEBM).await.expect("Failed to create file");
+    let mut file = File::create(webm_filename)
+        .await
+        .expect("Failed to create file");
     let mut stream = response.bytes_stream();
     while let Some(item) = stream.next().await {
         let item = item.expect("Failed to get item");
@@ -47,11 +53,12 @@ pub fn url_is_webm(url: &str) -> bool {
 /// # Panics
 ///
 /// Panics if the command fails to execute.
-pub async fn convert_webm_to_mp4() {
+#[instrument]
+pub async fn convert_webm_to_mp4(webm_filename: &str, mp4_filename: &str) {
     Command::new("ffmpeg")
         .arg("-i")
-        .arg(WEBM)
-        .arg(MP4)
+        .arg(webm_filename)
+        .arg(mp4_filename)
         .output()
         .expect("Failed to execute FFmpeg command");
 }
@@ -61,8 +68,9 @@ pub async fn convert_webm_to_mp4() {
 /// # Panics
 ///
 /// Panics if the file can't be deleted.
-pub async fn delete_webm() {
-    std::fs::remove_file(WEBM).expect("Failed to delete webm");
+#[instrument]
+pub async fn delete_webm(webm_filename: &str) {
+    std::fs::remove_file(webm_filename).expect("Failed to delete webm");
 }
 
 /// Deletes the mp4 file.
@@ -70,25 +78,29 @@ pub async fn delete_webm() {
 /// # Panics
 ///
 /// Panics if the file can't be deleted.
-pub async fn delete_mp4() {
-    std::fs::remove_file(MP4).expect("Failed to delete mp4");
+#[instrument]
+pub async fn delete_mp4(mp4_filename: &str) {
+    std::fs::remove_file(mp4_filename).expect("Failed to delete mp4");
 }
 
 /// Checks if the webm file exists.
-pub async fn webm_exists() -> bool {
-    std::path::Path::new(WEBM).exists()
+#[instrument]
+pub async fn webm_exists(webm_filename: &str) -> bool {
+    std::path::Path::new(&webm_filename).exists()
 }
 
 /// Checks if the mp4 file exists.
-pub async fn mp4_exists() -> bool {
-    std::path::Path::new(MP4).exists()
+#[instrument]
+pub async fn mp4_exists(mp4_filename: &str) -> bool {
+    std::path::Path::new(&mp4_filename).exists()
 }
 
-pub async fn files_exist() {
-    if webm_exists().await {
-        delete_webm().await;
+#[instrument]
+pub async fn files_exist(webm_filename: &str, mp4_filename: &str) {
+    if webm_exists(webm_filename).await {
+        delete_webm(webm_filename).await;
     }
-    if mp4_exists().await {
-        delete_mp4().await;
+    if mp4_exists(mp4_filename).await {
+        delete_mp4(mp4_filename).await;
     }
 }

@@ -24,6 +24,17 @@ services:
       - "traefik.docker.network=proxy"
     env_file:
       - .env
+  redis:
+    image: redis:alpine
+    container_name: deficiente-redis
+    restart: unless-stopped
+    volumes:
+      - ./redis:/data
+    labels:
+      - com.ouroboros.enable=true
+      - "traefik.enable=false"
+    env_file:
+      - .env
 networks:
   proxy:
     external: true

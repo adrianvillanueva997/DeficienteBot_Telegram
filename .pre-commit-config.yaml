@@ -3,7 +3,7 @@
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-yaml
         name: ⚙️ Check YAML
@@ -25,7 +25,7 @@ repos:
         name: "⚙️ Check debug statements"
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.3
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         name: 🖌️ Format code with Prettier
@@ -41,8 +41,6 @@ repos:
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
     hooks:
-      - id: fmt
-        name: 🦀 Format Rust code
       - id: cargo-check
         name: 🦀 Check Rust code
       - id: clippy
