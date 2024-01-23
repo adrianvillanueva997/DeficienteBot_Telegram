@@ -14,7 +14,7 @@ impl Rank {
     }
 
     #[instrument]
-    async fn set_rank(&self, command_id: String, score: i32) {
+    async fn set_rank(&self, command_id: &str, score: i32) {
         let mut connection = self.redis_client.get_async_connection().await.unwrap();
         let _: () = connection
             .zadd(LEADERBOARD, command_id, score)
@@ -22,7 +22,7 @@ impl Rank {
             .unwrap();
     }
     #[instrument]
-    async fn get_score(&self, command_id: String) -> Option<i32> {
+    async fn get_score(&self, command_id: &str) -> Option<i32> {
         let mut connection = self.redis_client.get_async_connection().await.unwrap();
         let score: Option<i32> = connection.zscore(LEADERBOARD, command_id).await.unwrap();
         score
@@ -37,8 +37,8 @@ impl Rank {
         ranking
     }
     #[instrument]
-    pub async fn update_rank(&self, command_id: String) {
-        let score = self.get_score(command_id.clone()).await.unwrap_or(0); // If the command doesn't exist, it will be created with a score of 0.
+    pub async fn update_rank(&self, command_id: &str) {
+        let score = self.get_score(&command_id).await.unwrap_or(0); // If the command doesn't exist, it will be created with a score of 0.
         self.set_rank(command_id, score + 1).await;
     }
 }

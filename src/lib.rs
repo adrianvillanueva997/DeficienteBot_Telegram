@@ -1,5 +1,6 @@
 use std::convert::Infallible;
 
+use std::thread;
 use std::time::Duration;
 
 use message_checks::{bad_words, thursday, webm};
@@ -20,6 +21,39 @@ use tokio::time::sleep;
 pub mod message_checks;
 pub mod ranking;
 pub mod redis_connection;
+
+#[instrument]
+async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
+    thread::spawn(move || {
+        tokio::runtime::Runtime::new().unwrap().block_on(async {
+            if webm::check_url_status_code(&url).await != Some(200) {
+                bot.send_message(msg.chat.id, "El video no existe 😭")
+                    .reply_to_message_id(msg.id)
+                    .await
+                    .unwrap();
+            } else {
+                let uuid = Uuid::new_v4();
+                let webm_filename = format!("{}.webm", uuid);
+                let mp4_filename = format!("{}.mp4", uuid);
+                bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
+                    .await
+                    .unwrap();
+                webm::download_webm(&url, &webm_filename).await;
+                webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
+                bot.send_video(
+                    msg.chat.id,
+                    teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
+                )
+                .reply_to_message_id(msg.id)
+                .await
+                .unwrap();
+                Rank::new(redis_connection.clone())
+                    .update_rank("twitter")
+                    .await;
+            }
+        });
+    });
+}
 
 /// Bot logic goes here.
 ///
@@ -46,35 +80,24 @@ async fn process_text_messages(
             let tweet = format!("@{} \n{} ", user, twitter);
             bot.delete_message(msg.chat.id, msg.id).await?;
             Rank::new(redis_connection.clone())
-                .update_rank("twitter".to_string())
+                .update_rank("twitter")
                 .await;
             actions.push(bot.send_message(msg.chat.id, tweet));
         } else if webm::url_is_webm(&message) {
-            if webm::check_url_status_code(&message).await != Some(200) {
-                actions.push(
-                    bot.send_message(msg.chat.id, "El video no existe 😭")
-                        .reply_to_message_id(msg.id),
-                );
-            } else {
-                // webm::files_exist().await; // TODO: Instead of checking this, do clenaup after sending the video.
-                let uuid = Uuid::new_v4();
-                let webm_filename = format!("{}.webm,", uuid);
-                let mp4_filename = format!("{}.mp4", uuid);
-                bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
-                    .await?;
-                webm::download_webm(&message, &webm_filename).await;
-                webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
-                bot.send_video(
-                    msg.chat.id,
-                    teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
-                )
-                .reply_to_message_id(msg.id)
-                .await?;
-            }
+            process_webm_urls(
+                bot.clone(),
+                msg.clone(),
+                message.clone(),
+                redis_connection.clone(),
+            )
+            .await;
         }
     }
 
     if bad_words::find_bad_words(&message).await {
+        Rank::new(redis_connection.clone())
+            .update_rank("uwus")
+            .await;
         actions.push(
             bot.send_message(msg.chat.id, "Deficiente")
                 .reply_to_message_id(msg.id),
@@ -83,6 +106,9 @@ async fn process_text_messages(
 
     let copypastas = message_checks::copypasta::find_copypasta(&message);
     for copypasta in copypastas.await {
+        Rank::new(redis_connection.clone())
+            .update_rank(&copypasta)
+            .await;
         if copypasta == "viernes" {
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::RecordVoice)
                 .await?;
@@ -101,6 +127,9 @@ async fn process_text_messages(
     }
 
     if thursday::is_thursday().await && thursday::check_asuka(&message).await {
+        Rank::new(redis_connection.clone())
+            .update_rank("Asuka")
+            .await;
         actions.push(
             bot.send_message(msg.chat.id, thursday::random_message().await)
                 .reply_to_message_id(msg.id),
