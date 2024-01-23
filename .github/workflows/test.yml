@@ -30,6 +30,6 @@ jobs:
       - name: List tests
         run: cargo nextest list
       - name: Install ffmpeg
-        run: sudo apt-get update && apt-get install ffmpeg -y
+        run: sudo apt-get update && sudo apt-get install ffmpeg -y
       - name: Run tests
         run: just test
