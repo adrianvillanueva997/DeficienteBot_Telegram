@@ -28,14 +28,15 @@ impl Rank {
         score
     }
     #[instrument]
-    pub async fn get_ranking(&self) -> Vec<(String, i32)> {
+    pub async fn get_ranking(&self) -> Result<Vec<(String, i32)>, redis::RedisError> {
         let mut connection = self.redis_client.get_async_connection().await.unwrap();
-        let ranking: Vec<(String, i32)> = connection
-            .zrange_withscores(LEADERBOARD, 0, -1)
-            .await
-            .unwrap();
-        ranking
+        let mut cmd = redis::cmd("ZRANGE");
+        cmd.arg(LEADERBOARD).arg(0).arg(-1).arg("WITHSCORES");
+        let mut ranking: Vec<(String, i32)> = cmd.query_async(&mut connection).await?;
+        ranking.sort_by(|a, b| b.1.cmp(&a.1));
+        Ok(ranking)
     }
+
     #[instrument]
     pub async fn update_rank(&self, command_id: &str) {
         let score = self.get_score(command_id).await.unwrap_or(0); // If the command doesn't exist, it will be created with a score of 0.

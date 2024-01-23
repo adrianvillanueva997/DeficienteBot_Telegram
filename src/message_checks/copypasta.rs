@@ -52,14 +52,15 @@ pub async fn find_matching_words(sentence: &str) -> Vec<String> {
     matching_words
 }
 
-/// Find copypastas in a string.
+/// Finds copypastas in a string
 #[instrument]
-pub async fn find_copypasta(input: &str) -> Vec<String> {
+pub async fn find_copypasta(input: &str) -> (Vec<String>, Vec<String>) {
     let words = find_matching_words(input).await;
-    words
+    let copypastas = words
         .par_iter()
         .map(|word| copypastas(word).to_string())
-        .collect()
+        .collect();
+    (words, copypastas)
 }
 
 /// Return the copypasta for a given word.
@@ -96,7 +97,7 @@ fn copypastas(word: &str) -> &str {
         "69" => "> nice",
         "spiderman" => " Os cuento, quede con una golfilla para intimar en su pisito, empezamos normal, nos liamos y demas (ella tenia bastante interes en chuparme la oreja, a un rato me dio hasta mal rollo la cabrona). Bueno, yo no lleve cartera y claro, cuando estabamos ya muy cachondos le dije amablamente si tenia condones, me dijo que no...hice como que me molestaba...ella me dijo que yo siempre suelo llevarlos, le dije que se me olvido la cartera y demas...total que accedio a hacer la marcha atras y yo pensando \"esta es la mia, le hare el spiderman\". Estamos arreando y demas y despues d eun buen rato veo que me voy a correr, saco mi tizona, me corro en mi mano y ella se queda un poco con cara de roto2, y entonces cojo y le tiro la lefada a su cara y le digo \"soy spidermaaaaan\" y no me esperaba su reaccion, me empezo a llamar hijo de puta, me dio tortazos como loca :S y empezo a decir que no veia, que se lo meti en el ojo, yo viendo el percal me vesti y me fui, luego me llamo y me dijo que era un hijo de puta, yo le dije que era una broma en plan colegas, pero nada, dice que tuvo que ir al medico pasando verguenza porque tenia el ojo muy irritado... y que como volviera a enviarla algo para quedar me denuncia.",
         "viernes" => "viernes",
-        "anime" => "El anime es de otakus y pringaos que no tienen nada más que hacer que sucumbir al escapismo de dibujos de personajes en 2D. Los consumidores de anime NO tienen derechos y debería recaer sobre ellos todo el peso de la ley. Si tienes avatar de anime tu opinión no solo no cuenta, si no que voy a pensar automáticamente lo contrario de lo que me digas. En definitiva el anime es basura y fumarlo es de idiotas.",
+        // "anime" => "El anime es de otakus y pringaos que no tienen nada más que hacer que sucumbir al escapismo de dibujos de personajes en 2D. Los consumidores de anime NO tienen derechos y debería recaer sobre ellos todo el peso de la ley. Si tienes avatar de anime tu opinión no solo no cuenta, si no que voy a pensar automáticamente lo contrario de lo que me digas. En definitiva el anime es basura y fumarlo es de idiotas.",
         // "anime" => "No les pasa que algunos hábitos del anime se les queda?😥😥😱😱😰😓😰😓 ayer estaba comprando tortillas y una señora no se movía de la fila🙄 y le grité SHINEE😣😠‼️ me di cuenta de lo que había hecho y le dije 本当にごめんなさ (gomenasai para los que no saben🙄) y me agaché para pedirle perdón, creo que nací en el país incorrecto😅😂😂",
         "hetero" => "omgg, eres hetero???😍😍😳 Siempre quise un amigo😅 hetero🤣, yo tengo un conocido hetero🧐, telo presento alomejor y se gustan pq son 😳😳heteros😳😳fifa, fútbol🤭🤭, violencia intrafamiliar😘😘, 😏😏misoginia, 🤗🤗peluches de Stich, golpear paredes 😳",
         "tetas" => "Tetitas, tetazas, tetorras, tetotas, tetarracas, tetacas, tetuzas, teturras, tetungas, tetillas, bufas, bufarras, bufarracas, bufoncias, mamelungas, mamelones, melones, domingas, bubalongas, babongas, pechugas, peras, peritas, perolas, mamellas, tetolas, gemelas, maracas, bazucas, petacas.",

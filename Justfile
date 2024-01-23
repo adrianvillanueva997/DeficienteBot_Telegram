@@ -1,7 +1,9 @@
 set dotenv-load
 set export
 DOCKER_IMAGE_NAME := "telegrambot_deficiente"
-
+RUST_LOG :="info"
+REDIS_URL :="redis://localhost:6379"
+URL := "https://flat-planets-stay.loca.lt"
 dev:
     @echo "Running the app"
     cargo run

@@ -48,7 +48,7 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection
                 .await
                 .unwrap();
                 Rank::new(redis_connection.clone())
-                    .update_rank("twitter")
+                    .update_rank("webm")
                     .await;
             }
         });
@@ -104,12 +104,13 @@ async fn process_text_messages(
                 .reply_to_message_id(msg.id),
         );
     }
-    // TODO: Refactor this to an external function.
-    let copypastas = message_checks::copypasta::find_copypasta(&message);
-    for copypasta in copypastas.await {
-        Rank::new(redis_connection.clone())
-            .update_rank(&copypasta)
-            .await;
+
+    let (matching_words, copypastas) = message_checks::copypasta::find_copypasta(&message).await;
+    for word in matching_words {
+        Rank::new(redis_connection.clone()).update_rank(&word).await;
+    }
+
+    for copypasta in copypastas {
         if copypasta == "viernes" {
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::RecordVoice)
                 .await?;
@@ -135,6 +136,31 @@ async fn process_text_messages(
             bot.send_message(msg.chat.id, thursday::random_message().await)
                 .reply_to_message_id(msg.id),
         );
+    }
+    if &message == "deficienteranking" {
+        match Rank::new(redis_connection.clone()).get_ranking().await {
+            Ok(rank) => {
+                let mut ranking_message = String::new();
+                for (key, value) in rank {
+                    ranking_message.push_str(&format!("{} {}: {}\n", "🔥", key, value));
+                }
+                actions.push(
+                    bot.send_message(msg.chat.id, ranking_message)
+                        .reply_to_message_id(msg.id),
+                );
+            }
+            Err(e) => {
+                eprintln!("Error getting ranking: {}", e);
+                // Handle the error appropriately here, e.g., by sending an error message
+                actions.push(
+                    bot.send_message(
+                        msg.chat.id,
+                        "Error getting ranking. Please try again later.",
+                    )
+                    .reply_to_message_id(msg.id),
+                );
+            }
+        }
     }
 
     if !actions.is_empty() {
