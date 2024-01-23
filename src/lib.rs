@@ -2,8 +2,10 @@ use std::convert::Infallible;
 
 use std::time::Duration;
 
-use log::error;
 use message_checks::{bad_words, thursday, webm};
+use ranking::rank::Rank;
+use tracing::{error, instrument};
+use uuid::Uuid;
 
 use std::error::Error;
 use teloxide::net::Download;
@@ -43,24 +45,28 @@ async fn process_text_messages(
             let user = message.from().as_ref().unwrap().username.as_ref().unwrap();
             let tweet = format!("@{} \n{} ", user, twitter);
             bot.delete_message(msg.chat.id, msg.id).await?;
+            Rank::new(redis_connection.clone())
+                .update_rank("twitter".to_string())
+                .await;
             actions.push(bot.send_message(msg.chat.id, tweet));
         } else if webm::url_is_webm(&message) {
-            if webm::check_url_status_code(&message).await == Some(404)
-                || webm::check_url_status_code(&message).await != Some(400)
-            {
+            if webm::check_url_status_code(&message).await != Some(200) {
                 actions.push(
-                    bot.send_message(msg.chat.id, "El video no existe :(")
+                    bot.send_message(msg.chat.id, "El video no existe 😭")
                         .reply_to_message_id(msg.id),
                 );
             } else {
-                webm::files_exist().await;
+                // webm::files_exist().await; // TODO: Instead of checking this, do clenaup after sending the video.
+                let uuid = Uuid::new_v4();
+                let webm_filename = format!("{}.webm,", uuid);
+                let mp4_filename = format!("{}.mp4", uuid);
                 bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                     .await?;
-                webm::download_webm(&message).await;
-                webm::convert_webm_to_mp4().await;
+                webm::download_webm(&message, &webm_filename).await;
+                webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
                 bot.send_video(
                     msg.chat.id,
-                    teloxide::types::InputFile::file(std::path::Path::new(webm::MP4)),
+                    teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
                 )
                 .reply_to_message_id(msg.id)
                 .await?;
@@ -123,6 +129,7 @@ async fn process_text_messages(
 /// # Errors
 ///
 /// This function will return an error if the bot fails to download the file or convert it.
+#[instrument]
 pub async fn process_files(
     bot: &Bot,
     msg: &Message,
@@ -131,20 +138,27 @@ pub async fn process_files(
 ) -> Result<(), Box<dyn Error>> {
     // Telegram max file size: 20 MB
     if _file.clone().file_name.unwrap().contains("webm") && _file.clone().file.size <= 20000000 {
-        webm::files_exist().await;
+        // webm::files_exist().await; // TODO: Instead of checking this, do clenaup after sending the video.
+        let uuid = Uuid::new_v4();
+        let webm_filename = format!("{}.webm,", uuid);
+        let mp4_filename = format!("{}.mp4", uuid);
         bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
             .await
             .unwrap();
         let file = bot.get_file(_file.file.clone().id).await.unwrap();
-        let mut dst = fs::File::create(webm::WEBM).await.unwrap();
+        let mut dst = fs::File::create(format!("{}.webm", webm_filename))
+            .await
+            .unwrap();
         bot.download_file(&file.path, &mut dst).await.unwrap();
-        webm::convert_webm_to_mp4().await;
+        webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
         bot.send_video(
             msg.chat.id,
-            teloxide::types::InputFile::file(std::path::Path::new(webm::MP4)),
+            teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
         )
         .reply_to_message_id(msg.id)
         .await?;
+        webm::delete_mp4(&mp4_filename).await;
+        webm::delete_webm(&webm_filename).await;
     }
     Ok(())
 }
@@ -154,6 +168,7 @@ pub async fn process_files(
 /// # Errors
 ///
 /// This function will return an error if .
+
 pub async fn handle_messages(
     bot: &Bot,
     msg: &Message,

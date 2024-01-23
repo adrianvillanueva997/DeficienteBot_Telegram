@@ -1,4 +1,5 @@
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
+use tracing::instrument;
 
 const WORDS: [&str; 32] = [
     "cbt",
@@ -36,6 +37,7 @@ const WORDS: [&str; 32] = [
 ];
 
 /// Find matching words in a string.
+#[instrument]
 pub async fn find_matching_words(sentence: &str) -> Vec<String> {
     let mut matching_words = Vec::new();
     let split_sentence = sentence.split_whitespace().collect::<Vec<_>>();
@@ -51,6 +53,7 @@ pub async fn find_matching_words(sentence: &str) -> Vec<String> {
 }
 
 /// Find copypastas in a string.
+#[instrument]
 pub async fn find_copypasta(input: &str) -> Vec<String> {
     let words = find_matching_words(input).await;
     words

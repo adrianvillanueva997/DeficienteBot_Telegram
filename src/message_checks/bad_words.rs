@@ -1,6 +1,7 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 use tokio::task;
+use tracing::instrument;
 
 const BAD_WORDS: &str = r"\W*((?i)(uwu|:v|owo)(?-i))\W*";
 
@@ -12,6 +13,8 @@ lazy_static! {
 /// # Panics
 ///
 /// Panics if the regex fails to compile.
+
+#[instrument]
 pub async fn find_bad_words(input: &str) -> bool {
     let input = input.to_string();
     task::spawn_blocking(move || BAD_WORD_REGEX.is_match(&input))
