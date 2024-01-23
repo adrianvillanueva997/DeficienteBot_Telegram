@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use deficiente_telegram_bot::message_checks::webm::{
-        self, check_url_status_code, convert_webm_to_mp4, delete_mp4, delete_webm, download_webm,
+        check_url_status_code, convert_webm_to_mp4, delete_mp4, delete_webm, download_webm,
         mp4_exists, url_is_webm, webm_exists,
     };
     use uuid::Uuid;
