@@ -24,11 +24,11 @@ rand = "0.8.5"
 rayon = "1.8.1"
 redis = { version = "0.24.0", features = ["tokio-comp", "connection-manager"] }
 regex = "1.10.3"
-reqwest = "0.11.23"
+reqwest = "0.11.24"
 serde = "1.0.196"
 serde_bytes = "0.11.14"
 teloxide = { version = "0.12", features = ["macros", "webhooks-axum"] }
-time = "0.3.31"
+time = "0.3.32"
 tokio = { version = "1.35", features = ["full"] }
 tokio-stream = "0.1.14"
 tracing = "0.1"
