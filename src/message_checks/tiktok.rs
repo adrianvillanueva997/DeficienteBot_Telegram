@@ -1,6 +1,6 @@
 use tracing::instrument;
 
-const TNTOK: &str = "tntok";
+const TNTOK: &str = "tnktok";
 
 /// Checks if the message contains a tiktok link and if it does, it replaces it with a link to tntok (a privacy focused version of tiktok)
 #[instrument]
