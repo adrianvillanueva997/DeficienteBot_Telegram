@@ -55,6 +55,12 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection
     });
 }
 
+fn format_message_username(msg: &Message, content: String) -> String {
+    let message = msg.clone();
+    let user = message.from().as_ref().unwrap().username.as_ref().unwrap();
+    format!("@{} \n{} ", user, content)
+}
+
 /// Bot logic goes here.
 ///
 /// # Panics
@@ -76,9 +82,7 @@ async fn process_text_messages(
     if message_checks::url::is_url(&message) {
         let twitter = message_checks::twitter::update_vxtwitter(&message).await;
         if let Some(twitter) = twitter {
-            let message = msg.clone();
-            let user = message.from().as_ref().unwrap().username.as_ref().unwrap();
-            let tweet = format!("@{} \n{} ", user, twitter);
+            let tweet = format_message_username(msg, twitter);
             bot.delete_message(msg.chat.id, msg.id).await?;
             Rank::new(redis_connection.clone())
                 .update_rank("twitter")
@@ -92,6 +96,19 @@ async fn process_text_messages(
                 redis_connection.clone(),
             )
             .await;
+        } else if (message_checks::tiktok::is_tiktok(&message)).await {
+            let tntok = message_checks::tiktok::updated_tiktok(&message).await;
+            if let Some(tntok) = tntok {
+                let tiktok = format_message_username(msg, tntok);
+                Rank::new(redis_connection.clone())
+                    .update_rank("tiktok")
+                    .await;
+                bot.delete_message(msg.chat.id, msg.id).await?;
+                actions.push(
+                    bot.send_message(msg.chat.id, tiktok)
+                        .reply_to_message_id(msg.id),
+                );
+            }
         }
     }
     // TODO: Refactor this to an external function.
