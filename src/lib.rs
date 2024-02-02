@@ -104,10 +104,7 @@ async fn process_text_messages(
                     .update_rank("tiktok")
                     .await;
                 bot.delete_message(msg.chat.id, msg.id).await?;
-                actions.push(
-                    bot.send_message(msg.chat.id, tiktok)
-                        .reply_to_message_id(msg.id),
-                );
+                actions.push(bot.send_message(msg.chat.id, tiktok));
             }
         }
     }
