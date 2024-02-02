@@ -76,7 +76,8 @@ async fn process_text_messages(
     redis_connection: &redis::Client,
     text: &str,
 ) -> Result<(), Box<dyn Error>> {
-    let message = text.to_lowercase();
+    // let message = text.to_lowercase();
+    let message = text.to_string();
     let mut actions: Vec<_> = Vec::new();
     // TODO: Refactor this to an external function.
     if message_checks::url::is_url(&message) {
@@ -109,6 +110,7 @@ async fn process_text_messages(
         }
     }
     // TODO: Refactor this to an external function.
+    let message = message.to_lowercase();
     if bad_words::find_bad_words(&message).await {
         Rank::new(redis_connection.clone())
             .update_rank("uwus")
@@ -118,7 +120,6 @@ async fn process_text_messages(
                 .reply_to_message_id(msg.id),
         );
     }
-
     let (matching_words, copypastas) = message_checks::copypasta::find_copypasta(&message).await;
     for word in matching_words {
         Rank::new(redis_connection.clone()).update_rank(&word).await;
