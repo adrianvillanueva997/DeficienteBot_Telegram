@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  audit:
+  machete:
     runs-on: ubuntu-latest
     strategy:
       matrix:
