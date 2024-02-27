@@ -6,7 +6,7 @@ mod tests {
     };
     use uuid::Uuid;
 
-    const URL :&str = "https://cdn.discordapp.com/attachments/851166737692098580/933357925852921886/Never_Ending_Tech.webm";
+    const URL: &str = "https://i.4cdn.org/wsg/1708205885082829.webm";
     #[tokio::test]
     async fn test_check_url_status_code() {
         let url = "https://google.com";
@@ -21,6 +21,8 @@ mod tests {
         let uuid = Uuid::new_v4();
         let webm_filename = format!("{}.webm", uuid);
         let mp4_filename = format!("{}.mp4", uuid);
+        println!("webm_filename: {}", webm_filename);
+        println!("mp4_filename: {}", mp4_filename);
         download_webm(URL, &webm_filename).await;
         convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
         assert!(mp4_exists(&mp4_filename).await);
