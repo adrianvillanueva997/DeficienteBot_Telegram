@@ -23,7 +23,7 @@ jobs:
         with:
           toolchain: stable
           override: true
-      - uses: extractions/setup-just@v1
+      - uses: extractions/setup-just@v2
       - name: Setup nextest
         uses: taiki-e/install-action@nextest
       - uses: Swatinem/rust-cache@v2
