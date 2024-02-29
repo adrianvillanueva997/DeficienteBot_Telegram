@@ -19,7 +19,7 @@ color-eyre = "0.6.2"
 lazy_static = "1.4.0"
 pretty_env_logger = "0.5.0"
 rand = "0.8.5"
-rayon = "1.8.1"
+rayon = "1.9.0"
 redis = { version = "0.24.0", features = ["tokio-comp", "connection-manager"] }
 regex = "1.10.3"
 reqwest = "0.11.24"
