@@ -14,7 +14,7 @@ name = "deficiente_telegram_bot"
 
 
 [dependencies]
-chrono = "0.4.34"
+chrono = "0.4.35"
 color-eyre = "0.6.2"
 lazy_static = "1.4.0"
 pretty_env_logger = "0.5.0"
