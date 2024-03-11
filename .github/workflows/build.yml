@@ -27,7 +27,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
       - name: Build and push
-        uses: docker/build-push-action@v5.1.0
+        uses: docker/build-push-action@v5.2.0
         with:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
