@@ -1,7 +1,7 @@
 version: "3.0"
 services:
   web:
-    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:latest@sha256:8e26e92566e0b53a2effecf8ee758e991f5b33067ae0b2f796a6e8b465e3fbae
+    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:latest@sha256:a556856fe92b9bfeebd18d00f7ad6f769bdd1f0837d3655468190305fa2e9041
     networks:
       - proxy
     container_name: deficiente-test
