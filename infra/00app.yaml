@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: telegrambot-deficiente-bot
-          image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v7.1.0@sha256:19801e72d6a5a23537c99d174d604b75ac005e779a54e23972fde49c29803141
+          image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.3.0@sha256:a556856fe92b9bfeebd18d00f7ad6f769bdd1f0837d3655468190305fa2e9041
           ports:
             - containerPort: 8080
           env:
