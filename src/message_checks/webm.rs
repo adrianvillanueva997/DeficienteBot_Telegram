@@ -2,7 +2,6 @@ use std::process::Command;
 use tokio::{fs::File, io::AsyncWriteExt};
 use tokio_stream::StreamExt;
 use tracing::{error, info, instrument};
-
 /// Checks if the message contains a valid url.
 #[instrument]
 pub async fn check_url_status_code(url: &str) -> Option<u16> {
