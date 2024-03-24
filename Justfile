@@ -34,3 +34,5 @@ hadolint:
 docker-build:
     @echo "Building the docker image"
     docker build -t $(DOCKER_IMAGE_NAME) .
+tunnel:
+    pnpm run tunnel
