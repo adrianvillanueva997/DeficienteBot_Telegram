@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegrambot-deficiente
+  namespace: telegrambot-deficiente
+spec:
+  selector:
+    matchLabels:
+      app: telegrambot-deficiente
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: telegrambot-deficiente
+    spec:
+      containers:
+        - name: telegrambot-deficiente-bot
+          image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v7.0.0@sha256:b9eaf01c270dd3c467a70b66a88ca35a7c97577177d6eef76e9de0d80e696418
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TELOXIDE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: secret-teloxide-token-telegrambot-deficiente
+                  key: token
+            - name: URL
+              value: "https://deficiente.thexiao77.com"
+            - name: RUST_BACKTRACE
+              value: "full"
+            - name: RUST_LOG
+              value: "info"
+            - name: "REDIS_URL"
+              value: "redis://telegrambot-deficiente-redis-service"
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegrambot-deficiente-redis
+  namespace: telegrambot-deficiente
+spec:
+  selector:
+    matchLabels:
+      app: telegrambot-deficiente-redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: telegrambot-deficiente-redis
+    spec:
+      containers:
+        - name: telegrambot-deficiente-redis
+          image: redis:7.2.4-alpine@sha256:7635b0bfdd7dd8552b4b31d6541fef07b734614045b45a52fd5cc27c9dada9e2
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: telegrambot-deficiente-redis-data
+              mountPath: /data
+      restartPolicy: Always
+      volumes:
+        - name: telegrambot-deficiente-redis-data
+          persistentVolumeClaim:
+            claimName: telegrambot-deficiente-redis-pvc
