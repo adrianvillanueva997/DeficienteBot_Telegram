@@ -8,14 +8,14 @@ on:
 jobs:
   Hadolint:
     runs-on: ubuntu-latest
-    container: hadolint/hadolint:latest-alpine
+    container: hadolint/hadolint:latest-alpine@sha256:e6f3fb90751bd85e53e4f0b758fbd77bce25833c80d9dcdb49aabc5ee39ff018
     strategy:
       matrix:
         architectures:
           - linux/amd64
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       - name: Install Just
         run: apk add --no-cache just
       - name: Run Hadolint

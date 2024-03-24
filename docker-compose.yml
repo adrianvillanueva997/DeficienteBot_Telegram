@@ -1,7 +1,7 @@
 version: "3.0"
 services:
   web:
-    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:latest
+    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:latest@sha256:8e26e92566e0b53a2effecf8ee758e991f5b33067ae0b2f796a6e8b465e3fbae
     networks:
       - proxy
     container_name: deficiente-test
@@ -25,7 +25,7 @@ services:
     env_file:
       - .env
   redis:
-    image: redis:alpine
+    image: redis:alpine@sha256:7635b0bfdd7dd8552b4b31d6541fef07b734614045b45a52fd5cc27c9dada9e2
     container_name: deficiente-redis
     restart: unless-stopped
     volumes:
