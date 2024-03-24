@@ -6,6 +6,15 @@ on:
       - closed
     branches:
       - main
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "yarn.lock"
+      - "cargo.toml"
+      - "Cargo.lock"
+      - src/**
+      - Dockerfile
+      - pyproject.toml
 
 jobs:
   build:
