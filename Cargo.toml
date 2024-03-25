@@ -22,7 +22,7 @@ rand = "0.8.5"
 rayon = "1.10.0"
 redis = { version = "0.25.2", features = ["tokio-comp", "connection-manager"] }
 regex = "1.10.4"
-reqwest = { version = "0.12.1", features = ["stream"] }
+reqwest = { version = "0.12.2", features = ["stream"] }
 teloxide = { version = "0.12", features = ["macros", "webhooks-axum"] }
 time = "0.3.34"
 tokio = { version = "1.36", features = ["full"] }
