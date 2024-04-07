@@ -1,7 +1,7 @@
 name: telegrambot_deficiente
 services:
   web:
-    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.4.0
+    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.4.0@sha256:9be5e5fdeb51d541c42764b6794b35eed13172ac7c717f6e0d99aee0607ff76f
     networks:
       - proxy
     container_name: telegrambot_deficiente
@@ -25,7 +25,7 @@ services:
     depends_on:
       - redis
   redis:
-    image: redis:7.2.4
+    image: redis:7.2.4@sha256:3134997edb04277814aa51a4175a588d45eb4299272f8eff2307bbf8b39e4d43
     container_name: deficiente-redis
     restart: unless-stopped
     volumes:
