@@ -14,18 +14,18 @@ name = "deficiente_telegram_bot"
 
 
 [dependencies]
-chrono = "0.4.35"
+chrono = "0.4.37"
 color-eyre = "0.6.3"
 lazy_static = "1.4.0"
 pretty_env_logger = "0.5.0"
 rand = "0.8.5"
 rayon = "1.10.0"
-redis = { version = "0.25.2", features = ["tokio-comp", "connection-manager"] }
+redis = { version = "0.25.3", features = ["tokio-comp", "connection-manager"] }
 regex = "1.10.4"
-reqwest = { version = "0.12.2", features = ["stream"] }
+reqwest = { version = "0.12.3", features = ["stream"] }
 teloxide = { version = "0.12", features = ["macros", "webhooks-axum"] }
 time = "0.3.34"
-tokio = { version = "1.36", features = ["full"] }
+tokio = { version = "1.37", features = ["full"] }
 tokio-stream = "0.1.15"
 tracing = "0.1"
 url = "2.5.0"
