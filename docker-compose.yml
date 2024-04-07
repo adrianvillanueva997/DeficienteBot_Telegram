@@ -1,10 +1,10 @@
-version: "3.0"
+name: telegrambot_deficiente
 services:
   web:
-    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:latest@sha256:9be5e5fdeb51d541c42764b6794b35eed13172ac7c717f6e0d99aee0607ff76f
+    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.4.0
     networks:
       - proxy
-    container_name: deficiente-test
+    container_name: telegrambot_deficiente
     restart: unless-stopped
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
@@ -22,19 +22,17 @@ services:
       - traefik.http.routers.deficiente-websecure.tls=true
       - traefik.http.routers.deficiente-websecure.entrypoints=https
       - "traefik.docker.network=proxy"
-    env_file:
-      - .env
+    depends_on:
+      - redis
   redis:
-    image: redis:alpine@sha256:7635b0bfdd7dd8552b4b31d6541fef07b734614045b45a52fd5cc27c9dada9e2
+    image: redis:7.2.4
     container_name: deficiente-redis
     restart: unless-stopped
     volumes:
-      - ./redis:/data
+      - /mnt/telegrambot_deficiente_redis:/data
     labels:
       - com.ouroboros.enable=true
       - "traefik.enable=false"
-    env_file:
-      - .env
 networks:
   proxy:
     external: true
