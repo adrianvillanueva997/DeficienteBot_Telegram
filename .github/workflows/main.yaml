@@ -49,17 +49,3 @@ jobs:
           push: true
           tags: ghcr.io/adrianvillanueva997/telegrambot-deficiente:latest, ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Get current tag
-        id: current_tag
-        run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
-        with:
-          tag_name: ${{ steps.current_tag.outputs.tag }}
-          release_name: Release ${{ steps.current_tag.outputs.tag }}
-          draft: false
-          prerelease: false
