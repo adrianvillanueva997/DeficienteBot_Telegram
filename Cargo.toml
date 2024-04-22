@@ -14,7 +14,7 @@ name = "deficiente_telegram_bot"
 
 
 [dependencies]
-chrono = "0.4.37"
+chrono = "0.4.38"
 color-eyre = "0.6.3"
 lazy_static = "1.4.0"
 pretty_env_logger = "0.5.0"
@@ -22,9 +22,9 @@ rand = "0.8.5"
 rayon = "1.10.0"
 redis = { version = "0.25.3", features = ["tokio-comp", "connection-manager"] }
 regex = "1.10.4"
-reqwest = { version = "0.12.3", features = ["stream"] }
+reqwest = { version = "0.12.4", features = ["stream"] }
 teloxide = { version = "0.12", features = ["macros", "webhooks-axum"] }
-time = "0.3.35"
+time = "0.3.36"
 tokio = { version = "1.37", features = ["full"] }
 tokio-stream = "0.1.15"
 tracing = "0.1"
