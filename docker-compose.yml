@@ -28,7 +28,7 @@ services:
     env_file: stack.env
 
   redis:
-    image: redis:7.2.4@sha256:8482ee910acbcd8f31c5a08329e3903dbd2a018e2837897bfaf9bafb80b494b2
+    image: redis:7.2.4@sha256:f14f42fc7e824b93c0e2fe3cdf42f68197ee0311c3d2e0235be37480b2e208e6
     container_name: deficiente-redis
     restart: unless-stopped
     networks:
