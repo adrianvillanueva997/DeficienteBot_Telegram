@@ -23,10 +23,10 @@ rayon = "1.10.0"
 redis = { version = "0.25.3", features = ["tokio-comp", "connection-manager"] }
 regex = "1.10.4"
 reqwest = { version = "0.12.4", features = ["stream"] }
-teloxide = { version = "0.12", features = ["macros", "webhooks-axum"] }
+teloxide = { version = "0.12.2", features = ["macros", "webhooks-axum"] }
 time = "0.3.36"
 tokio = { version = "1.37", features = ["full"] }
 tokio-stream = "0.1.15"
-tracing = "0.1"
+tracing = "0.1.40"
 url = "2.5.0"
 uuid = "1.8.0"
