@@ -33,6 +33,7 @@ services:
     restart: unless-stopped
     networks:
       - telegrambot_deficiente
+      - redis_network
     volumes:
       - /mnt/telegrambot_deficiente_redis:/data
     labels:
@@ -44,3 +45,5 @@ networks:
   telegrambot_deficiente:
     external: false
     driver: bridge
+  redis_network:
+    external: true
