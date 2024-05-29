@@ -26,25 +26,26 @@ pub async fn check_url_status_code(url: &str) -> Option<u16> {
 #[instrument]
 pub async fn download_webm(url: &str, webm_filename: &str) {
     let request = reqwest::get(url);
-    let response = match request.await {
-        Ok(response) => response,
-        Err(_) => return,
-    };
-    let mut file = File::create(webm_filename)
-        .await
-        .expect("Failed to create file");
-    let mut stream = response.bytes_stream();
-    while let Some(item) = stream.next().await {
-        let item = item.expect("Failed to get item");
-        file.write_all(&item)
+    if let Ok(response) = request.await {
+        let mut file = File::create(webm_filename)
             .await
-            .expect("Failed to write to file");
+            .expect("Failed to create file");
+        let mut stream = response.bytes_stream();
+        while let Some(item) = stream.next().await {
+            let item = item.expect("Failed to get item");
+            file.write_all(&item)
+                .await
+                .expect("Failed to write to file");
+        }
     }
 }
 
 /// Checks if the url ends with .webm.
-pub fn url_is_webm(url: &str) -> bool {
-    url.ends_with(".webm")
+#[must_use]
+pub fn is_webm_url(url: &str) -> bool {
+    std::path::Path::new(url)
+        .extension()
+        .map_or(false, |ext| ext.eq_ignore_ascii_case("webm"))
 }
 
 /// Converts a webm to mp4.

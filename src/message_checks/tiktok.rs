@@ -13,6 +13,8 @@ pub async fn updated_tiktok(message: &str) -> Option<String> {
     None
 }
 
-pub async fn is_tiktok(message: &str) -> bool {
+/// .
+#[must_use]
+pub fn check_if_tiktok(message: &str) -> bool {
     message.contains("https://vm.tiktok") || message.contains("https://tiktok.com/")
 }

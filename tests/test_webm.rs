@@ -2,7 +2,7 @@
 mod tests {
     use deficiente_telegram_bot::message_checks::webm::{
         check_url_status_code, convert_webm_to_mp4, delete_mp4, delete_webm, download_webm,
-        mp4_exists, url_is_webm, webm_exists,
+        is_webm_url, mp4_exists, webm_exists,
     };
     use uuid::Uuid;
 
@@ -14,7 +14,7 @@ mod tests {
     }
     #[test]
     fn test_url_is_webm() {
-        assert!(url_is_webm(URL));
+        assert!(is_webm_url(URL));
     }
     #[tokio::test]
     async fn test_e2e_webm_workflow() {
