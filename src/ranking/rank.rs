@@ -9,6 +9,7 @@ pub struct Rank {
 }
 
 impl Rank {
+    #[must_use]
     pub fn new(redis_client: redis::Client) -> Self {
         Self { redis_client }
     }

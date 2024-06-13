@@ -1,9 +1,15 @@
+#![warn(clippy::pedantic)]
+
 use std::convert::Infallible;
 
 use std::thread;
 use std::time::Duration;
 
+use message_checks::tiktok::check_if_tiktok;
+
 use message_checks::{bad_words, thursday, webm};
+use online_downloads::url_checker::{check_url_status_code, is_mp4_url, is_webm_url};
+use online_downloads::video_downloader::{delete_file, download_video};
 use ranking::rank::Rank;
 use tracing::{error, instrument};
 use uuid::Uuid;
@@ -19,6 +25,7 @@ use tokio::fs;
 use tokio::time::sleep;
 
 pub mod message_checks;
+pub mod online_downloads;
 pub mod ranking;
 pub mod redis_connection;
 
@@ -26,19 +33,14 @@ pub mod redis_connection;
 async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
     thread::spawn(move || {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
-            if webm::check_url_status_code(&url).await != Some(200) {
-                bot.send_message(msg.chat.id, "El video no existe 😭")
-                    .reply_to_message_id(msg.id)
-                    .await
-                    .unwrap();
-            } else {
+            if check_url_status_code(&url).await == Some(200) {
                 let uuid = Uuid::new_v4();
-                let webm_filename = format!("{}.webm", uuid);
-                let mp4_filename = format!("{}.mp4", uuid);
+                let webm_filename = format!("{uuid}.webm");
+                let mp4_filename = format!("{uuid}.mp4");
                 bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                     .await
                     .unwrap();
-                webm::download_webm(&url, &webm_filename).await;
+                download_video(&url, &webm_filename).await;
                 webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
                 bot.send_video(
                     msg.chat.id,
@@ -50,15 +52,49 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection
                 Rank::new(redis_connection.clone())
                     .update_rank("webm")
                     .await;
+            } else {
+                bot.send_message(msg.chat.id, "El video no existe 😭")
+                    .reply_to_message_id(msg.id)
+                    .await
+                    .unwrap();
             }
         });
     });
 }
 
-fn format_message_username(msg: &Message, content: String) -> String {
+#[instrument]
+async fn process_mp4_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
+    thread::spawn(move || {
+        tokio::runtime::Runtime::new().unwrap().block_on(async {
+            if check_url_status_code(&url).await == Some(200) {
+                let uuid = Uuid::new_v4();
+                let mp4_filename = format!("{uuid}.mp4");
+                bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
+                    .await
+                    .unwrap();
+                download_video(&url, &mp4_filename).await;
+                bot.send_video(
+                    msg.chat.id,
+                    teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
+                )
+                .reply_to_message_id(msg.id)
+                .await
+                .unwrap();
+                Rank::new(redis_connection.clone()).update_rank("mp4").await;
+            } else {
+                bot.send_message(msg.chat.id, "El video no existe 😭")
+                    .reply_to_message_id(msg.id)
+                    .await
+                    .unwrap();
+            }
+        });
+    });
+}
+
+fn format_message_username(msg: &Message, content: &str) -> String {
     let message = msg.clone();
     let user = message.from().as_ref().unwrap().username.as_ref().unwrap();
-    format!("@{} \n{} ", user, content)
+    format!("@{user} \n{content} ")
 }
 
 /// Bot logic goes here.
@@ -70,6 +106,7 @@ fn format_message_username(msg: &Message, content: String) -> String {
 /// # Errors
 ///
 /// This function will return an error if the bot fails to run.
+#[allow(clippy::too_many_lines)]
 async fn process_text_messages(
     bot: &Bot,
     msg: &Message,
@@ -79,17 +116,16 @@ async fn process_text_messages(
     // let message = text.to_lowercase();
     let message = text.to_string();
     let mut actions: Vec<_> = Vec::new();
-    // TODO: Refactor this to an external function.
     if message_checks::url::is_url(&message) {
         let twitter = message_checks::twitter::update_vxtwitter(&message).await;
         if let Some(twitter) = twitter {
-            let tweet = format_message_username(msg, twitter);
+            let tweet = format_message_username(msg, &twitter);
             bot.delete_message(msg.chat.id, msg.id).await?;
             Rank::new(redis_connection.clone())
                 .update_rank("twitter")
                 .await;
             actions.push(bot.send_message(msg.chat.id, tweet));
-        } else if webm::url_is_webm(&message) {
+        } else if is_webm_url(&message) {
             process_webm_urls(
                 bot.clone(),
                 msg.clone(),
@@ -97,19 +133,27 @@ async fn process_text_messages(
                 redis_connection.clone(),
             )
             .await;
-        } else if (message_checks::tiktok::is_tiktok(&message)).await {
+        } else if check_if_tiktok(&message) {
             let tntok = message_checks::tiktok::updated_tiktok(&message).await;
             if let Some(tntok) = tntok {
-                let tiktok = format_message_username(msg, tntok);
+                let tiktok = format_message_username(msg, &tntok);
                 Rank::new(redis_connection.clone())
                     .update_rank("tiktok")
                     .await;
                 bot.delete_message(msg.chat.id, msg.id).await?;
                 actions.push(bot.send_message(msg.chat.id, tiktok));
             }
+        } else if is_mp4_url(&message) {
+            process_mp4_urls(
+                bot.clone(),
+                msg.clone(),
+                message.clone(),
+                redis_connection.clone(),
+            )
+            .await;
+            Rank::new(redis_connection.clone()).update_rank("mp4").await;
         }
     }
-    // TODO: Refactor this to an external function.
     let message = message.to_lowercase();
     if bad_words::find_bad_words(&message).await {
         Rank::new(redis_connection.clone())
@@ -165,7 +209,7 @@ async fn process_text_messages(
                 );
             }
             Err(e) => {
-                eprintln!("Error getting ranking: {}", e);
+                eprintln!("Error getting ranking: {e}");
                 // Handle the error appropriately here, e.g., by sending an error message
                 actions.push(
                     bot.send_message(
@@ -205,19 +249,20 @@ pub async fn process_files(
     bot: &Bot,
     msg: &Message,
     redis_connection: &redis::Client,
-    _file: &Document,
+    file_to_read: &Document,
 ) -> Result<(), Box<dyn Error>> {
     // Telegram max file size: 20 MB
-    if _file.clone().file_name.unwrap().contains("webm") && _file.clone().file.size <= 20000000 {
-        // webm::files_exist().await; // TODO: Instead of checking this, do clenaup after sending the video.
+    if file_to_read.clone().file_name.unwrap().contains("webm")
+        && file_to_read.clone().file.size <= 20_000_000
+    {
         let uuid = Uuid::new_v4();
-        let webm_filename = format!("{}.webm,", uuid);
-        let mp4_filename = format!("{}.mp4", uuid);
+        let webm_filename = format!("{uuid}.webm,");
+        let mp4_filename = format!("{uuid}.mp4");
         bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
             .await
             .unwrap();
-        let file = bot.get_file(_file.file.clone().id).await.unwrap();
-        let mut dst = fs::File::create(format!("{}.webm", webm_filename))
+        let file = bot.get_file(file_to_read.file.clone().id).await.unwrap();
+        let mut dst = fs::File::create(format!("{webm_filename}.webm"))
             .await
             .unwrap();
         bot.download_file(&file.path, &mut dst).await.unwrap();
@@ -228,8 +273,8 @@ pub async fn process_files(
         )
         .reply_to_message_id(msg.id)
         .await?;
-        webm::delete_mp4(&mp4_filename).await;
-        webm::delete_webm(&webm_filename).await;
+        delete_file(&mp4_filename).await;
+        delete_file(&webm_filename).await;
     }
     Ok(())
 }
@@ -238,8 +283,11 @@ pub async fn process_files(
 ///
 /// # Errors
 ///
-/// This function will return an error if .
-
+/// This function will return an error if the bot fails to handle the messages.
+///
+/// # Panics
+///
+/// Panics if the bot fails to handle the messages.
 pub async fn handle_messages(
     bot: &Bot,
     msg: &Message,
@@ -247,18 +295,21 @@ pub async fn handle_messages(
 ) -> Result<(), Box<dyn Error>> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
-            process_text_messages(bot, msg, redis_connection, msg.text().unwrap()).await?
+            process_text_messages(bot, msg, redis_connection, msg.text().unwrap()).await?;
         }
         Some(msg) if msg.document().is_some() => {
-            process_files(bot, msg, redis_connection, msg.document().unwrap()).await?
+            process_files(bot, msg, redis_connection, msg.document().unwrap()).await?;
         }
-        Some(_) => (),
-        None => (),
+        Some(_) | None => (),
     };
     Ok(())
 }
 
 /// Parse messages from the bot.
+///
+/// # Panics
+///
+/// Panics if the bot fails to parse the messages.
 pub async fn parse_messages(bot: Bot, listener: impl UpdateListener<Err = Infallible> + Send) {
     let redis_client = redis_connection::redis_connection().await.unwrap();
     teloxide::repl_with_listener(
