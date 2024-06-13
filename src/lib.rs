@@ -5,7 +5,11 @@ use std::convert::Infallible;
 use std::thread;
 use std::time::Duration;
 
+use message_checks::tiktok::check_if_tiktok;
+
 use message_checks::{bad_words, thursday, webm};
+use online_downloads::url_checker::{check_url_status_code, is_mp4_url, is_webm_url};
+use online_downloads::video_downloader::{delete_file, download_video};
 use ranking::rank::Rank;
 use tracing::{error, instrument};
 use uuid::Uuid;
@@ -21,6 +25,7 @@ use tokio::fs;
 use tokio::time::sleep;
 
 pub mod message_checks;
+pub mod online_downloads;
 pub mod ranking;
 pub mod redis_connection;
 
@@ -28,14 +33,14 @@ pub mod redis_connection;
 async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
     thread::spawn(move || {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
-            if webm::check_url_status_code(&url).await == Some(200) {
+            if check_url_status_code(&url).await == Some(200) {
                 let uuid = Uuid::new_v4();
                 let webm_filename = format!("{uuid}.webm");
                 let mp4_filename = format!("{uuid}.mp4");
                 bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                     .await
                     .unwrap();
-                webm::download_webm(&url, &webm_filename).await;
+                download_video(&url, &webm_filename).await;
                 webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
                 bot.send_video(
                     msg.chat.id,
@@ -47,6 +52,35 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection
                 Rank::new(redis_connection.clone())
                     .update_rank("webm")
                     .await;
+            } else {
+                bot.send_message(msg.chat.id, "El video no existe 😭")
+                    .reply_to_message_id(msg.id)
+                    .await
+                    .unwrap();
+            }
+        });
+    });
+}
+
+#[instrument]
+async fn process_mp4_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
+    thread::spawn(move || {
+        tokio::runtime::Runtime::new().unwrap().block_on(async {
+            if check_url_status_code(&url).await == Some(200) {
+                let uuid = Uuid::new_v4();
+                let mp4_filename = format!("{uuid}.mp4");
+                bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
+                    .await
+                    .unwrap();
+                download_video(&url, &mp4_filename).await;
+                bot.send_video(
+                    msg.chat.id,
+                    teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
+                )
+                .reply_to_message_id(msg.id)
+                .await
+                .unwrap();
+                Rank::new(redis_connection.clone()).update_rank("mp4").await;
             } else {
                 bot.send_message(msg.chat.id, "El video no existe 😭")
                     .reply_to_message_id(msg.id)
@@ -91,7 +125,7 @@ async fn process_text_messages(
                 .update_rank("twitter")
                 .await;
             actions.push(bot.send_message(msg.chat.id, tweet));
-        } else if webm::is_webm_url(&message) {
+        } else if is_webm_url(&message) {
             process_webm_urls(
                 bot.clone(),
                 msg.clone(),
@@ -99,7 +133,7 @@ async fn process_text_messages(
                 redis_connection.clone(),
             )
             .await;
-        } else if message_checks::tiktok::check_if_tiktok(&message) {
+        } else if check_if_tiktok(&message) {
             let tntok = message_checks::tiktok::updated_tiktok(&message).await;
             if let Some(tntok) = tntok {
                 let tiktok = format_message_username(msg, &tntok);
@@ -109,6 +143,15 @@ async fn process_text_messages(
                 bot.delete_message(msg.chat.id, msg.id).await?;
                 actions.push(bot.send_message(msg.chat.id, tiktok));
             }
+        } else if is_mp4_url(&message) {
+            process_mp4_urls(
+                bot.clone(),
+                msg.clone(),
+                message.clone(),
+                redis_connection.clone(),
+            )
+            .await;
+            Rank::new(redis_connection.clone()).update_rank("mp4").await;
         }
     }
     let message = message.to_lowercase();
@@ -230,8 +273,8 @@ pub async fn process_files(
         )
         .reply_to_message_id(msg.id)
         .await?;
-        webm::delete_mp4(&mp4_filename).await;
-        webm::delete_webm(&webm_filename).await;
+        delete_file(&mp4_filename).await;
+        delete_file(&webm_filename).await;
     }
     Ok(())
 }
