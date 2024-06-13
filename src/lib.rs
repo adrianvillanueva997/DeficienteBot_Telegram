@@ -81,6 +81,7 @@ async fn process_mp4_urls(bot: Bot, msg: Message, url: String, redis_connection:
                 .await
                 .unwrap();
                 Rank::new(redis_connection.clone()).update_rank("mp4").await;
+                delete_file(&mp4_filename).await;
             } else {
                 bot.send_message(msg.chat.id, "El video no existe 😭")
                     .reply_to_message_id(msg.id)
