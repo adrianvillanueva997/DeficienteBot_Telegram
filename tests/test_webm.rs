@@ -6,7 +6,7 @@ mod tests {
     };
     use uuid::Uuid;
 
-    const URL: &str = "https://i.4cdn.org/wsg/1708205885082829.webm";
+    const URL: &str = "https://is2.4chan.org/wsg/1716815519675831.webm";
     #[tokio::test]
     async fn test_check_url_status_code() {
         let url = "https://google.com";

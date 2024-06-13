@@ -28,12 +28,7 @@ pub mod redis_connection;
 async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
     thread::spawn(move || {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
-            if webm::check_url_status_code(&url).await != Some(200) {
-                bot.send_message(msg.chat.id, "El video no existe 😭")
-                    .reply_to_message_id(msg.id)
-                    .await
-                    .unwrap();
-            } else {
+            if webm::check_url_status_code(&url).await == Some(200) {
                 let uuid = Uuid::new_v4();
                 let webm_filename = format!("{uuid}.webm");
                 let mp4_filename = format!("{uuid}.mp4");
@@ -52,6 +47,11 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection
                 Rank::new(redis_connection.clone())
                     .update_rank("webm")
                     .await;
+            } else {
+                bot.send_message(msg.chat.id, "El video no existe 😭")
+                    .reply_to_message_id(msg.id)
+                    .await
+                    .unwrap();
             }
         });
     });
@@ -82,7 +82,6 @@ async fn process_text_messages(
     // let message = text.to_lowercase();
     let message = text.to_string();
     let mut actions: Vec<_> = Vec::new();
-    // TODO: Refactor this to an external function.
     if message_checks::url::is_url(&message) {
         let twitter = message_checks::twitter::update_vxtwitter(&message).await;
         if let Some(twitter) = twitter {
@@ -112,7 +111,6 @@ async fn process_text_messages(
             }
         }
     }
-    // TODO: Refactor this to an external function.
     let message = message.to_lowercase();
     if bad_words::find_bad_words(&message).await {
         Rank::new(redis_connection.clone())
@@ -214,7 +212,6 @@ pub async fn process_files(
     if file_to_read.clone().file_name.unwrap().contains("webm")
         && file_to_read.clone().file.size <= 20_000_000
     {
-        // webm::files_exist().await; // TODO: Instead of checking this, do clenaup after sending the video.
         let uuid = Uuid::new_v4();
         let webm_filename = format!("{uuid}.webm,");
         let mp4_filename = format!("{uuid}.mp4");
@@ -243,7 +240,11 @@ pub async fn process_files(
 ///
 /// # Errors
 ///
-/// This function will return an error if .
+/// This function will return an error if the bot fails to handle the messages.
+///
+/// # Panics
+///
+/// Panics if the bot fails to handle the messages.
 pub async fn handle_messages(
     bot: &Bot,
     msg: &Message,
@@ -262,6 +263,10 @@ pub async fn handle_messages(
 }
 
 /// Parse messages from the bot.
+///
+/// # Panics
+///
+/// Panics if the bot fails to parse the messages.
 pub async fn parse_messages(bot: Bot, listener: impl UpdateListener<Err = Infallible> + Send) {
     let redis_client = redis_connection::redis_connection().await.unwrap();
     teloxide::repl_with_listener(
