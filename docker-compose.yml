@@ -24,7 +24,6 @@ services:
       - "traefik.docker.network=proxy"
     depends_on:
       - redis
-    env_file: deficiente.env
 
   redis:
     image: redis:7.2.5@sha256:fb534a36ac2034a6374933467d971fbcbfa5d213805507f560d564851a720355
