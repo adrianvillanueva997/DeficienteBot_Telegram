@@ -4,6 +4,7 @@ services:
     image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.6.2
     networks:
       - proxy
+      - telegrambot_deficiente_network
     container_name: telegrambot_deficiente
     restart: unless-stopped
     volumes:
@@ -38,6 +39,10 @@ services:
     labels:
       - com.ouroboros.enable=true
       - "traefik.enable=false"
+    networks:
+      - telegrambot_deficiente_network
 networks:
   proxy:
     external: true
+  telegrambot_deficiente_network:
+    driver: bridge
