@@ -18,7 +18,7 @@ use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{SendAudioSetters, SendMessageSetters, SendVideoSetters};
 use teloxide::requests::Requester;
-use teloxide::types::{Document, Message};
+use teloxide::types::{Document, Message, ReplyParameters};
 use teloxide::update_listeners::UpdateListener;
 use teloxide::Bot;
 use tokio::fs;
@@ -46,7 +46,7 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection
                     msg.chat.id,
                     teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
                 )
-                .reply_to_message_id(msg.id)
+                .reply_parameters(ReplyParameters::new(msg.id))
                 .await
                 .unwrap();
                 Rank::new(redis_connection.clone())
@@ -54,7 +54,7 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection
                     .await;
             } else {
                 bot.send_message(msg.chat.id, "El video no existe 😭")
-                    .reply_to_message_id(msg.id)
+                    .reply_parameters(ReplyParameters::new(msg.id))
                     .await
                     .unwrap();
             }
@@ -77,14 +77,14 @@ async fn process_mp4_urls(bot: Bot, msg: Message, url: String, redis_connection:
                     msg.chat.id,
                     teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
                 )
-                .reply_to_message_id(msg.id)
+                .reply_parameters(ReplyParameters::new(msg.id))
                 .await
                 .unwrap();
                 Rank::new(redis_connection.clone()).update_rank("mp4").await;
                 delete_file(&mp4_filename).await;
             } else {
                 bot.send_message(msg.chat.id, "El video no existe 😭")
-                    .reply_to_message_id(msg.id)
+                    .reply_parameters(ReplyParameters::new(msg.id))
                     .await
                     .unwrap();
             }
@@ -94,7 +94,7 @@ async fn process_mp4_urls(bot: Bot, msg: Message, url: String, redis_connection:
 
 fn format_message_username(msg: &Message, content: &str) -> String {
     let message = msg.clone();
-    let user = message.from().as_ref().unwrap().username.as_ref().unwrap();
+    let user = message.from.as_ref().unwrap().username.as_ref().unwrap();
     format!("@{user} \n{content} ")
 }
 
@@ -162,7 +162,7 @@ async fn process_text_messages(
             .await;
         actions.push(
             bot.send_message(msg.chat.id, "Deficiente")
-                .reply_to_message_id(msg.id),
+                .reply_parameters(ReplyParameters::new(msg.id)),
         );
     }
     let (matching_words, copypastas) = message_checks::copypasta::find_copypasta(&message).await;
@@ -178,12 +178,12 @@ async fn process_text_messages(
                 msg.chat.id,
                 teloxide::types::InputFile::file(std::path::Path::new("viernes.ogg")),
             )
-            .reply_to_message_id(msg.id)
+            .reply_parameters(ReplyParameters::new(msg.id))
             .await?;
         } else {
             actions.push(
                 bot.send_message(msg.chat.id, copypasta)
-                    .reply_to_message_id(msg.id),
+                    .reply_parameters(ReplyParameters::new(msg.id)),
             );
         }
     }
@@ -194,7 +194,7 @@ async fn process_text_messages(
             .await;
         actions.push(
             bot.send_message(msg.chat.id, thursday::random_message().await)
-                .reply_to_message_id(msg.id),
+                .reply_parameters(ReplyParameters::new(msg.id)),
         );
     }
     if &message == "deficienteranking" {
@@ -206,7 +206,7 @@ async fn process_text_messages(
                 }
                 actions.push(
                     bot.send_message(msg.chat.id, ranking_message)
-                        .reply_to_message_id(msg.id),
+                        .reply_parameters(ReplyParameters::new(msg.id)),
                 );
             }
             Err(e) => {
@@ -217,7 +217,7 @@ async fn process_text_messages(
                         msg.chat.id,
                         "Error getting ranking. Please try again later.",
                     )
-                    .reply_to_message_id(msg.id),
+                    .reply_parameters(ReplyParameters::new(msg.id)),
                 );
             }
         }
@@ -272,7 +272,7 @@ pub async fn process_files(
             msg.chat.id,
             teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
         )
-        .reply_to_message_id(msg.id)
+        .reply_parameters(ReplyParameters::new(msg.id))
         .await?;
         delete_file(&mp4_filename).await;
         delete_file(&webm_filename).await;
