@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::{convert::Infallible, env, str::FromStr};
 use teloxide::{
     update_listeners::{webhooks, UpdateListener},
@@ -29,6 +31,6 @@ async fn main() {
     color_eyre::install().unwrap();
     // env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
     let (bot, listener) = set_up_bot().await;
-    deficiente_telegram_bot::parse_messages(bot, listener).await;
+    Box::pin(deficiente_telegram_bot::parse_messages(bot, listener)).await;
 }
 // redis url = redis://localhost:6379
