@@ -31,7 +31,7 @@ services:
       - REDIS_URL=${REDIS_URL}
 
   redis:
-    image: redis:7.4.0@sha256:eadf354977d428e347d93046bb1a5569d701e8deb68f090215534a99dbcb23b9
+    image: redis:7.4.1@sha256:bb142a9c18ac18a16713c1491d779697b4e107c22a97266616099d288237ef47
     container_name: telegrambot_deficiente_redis
     restart: unless-stopped
     volumes:
