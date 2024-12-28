@@ -1,5 +1,6 @@
 #![warn(clippy::pedantic)]
 
+use mimalloc::MiMalloc;
 use std::{convert::Infallible, env, str::FromStr};
 use teloxide::{
     update_listeners::{webhooks, UpdateListener},
@@ -7,6 +8,9 @@ use teloxide::{
 };
 use tracing::info;
 use url::Url;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 async fn set_up_bot() -> (Bot, impl UpdateListener<Err = Infallible>) {
     let bot: Bot = Bot::from_env();

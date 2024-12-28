@@ -14,6 +14,13 @@ name = "deficiente_telegram_bot"
 
 
 [dependencies]
+tokio = { version = "1.37", default-features = false, features = [
+    "rt-multi-thread",
+    "macros",
+    "fs",
+    "time",
+] }
+tokio-stream = "0.1.15"
 anyhow = "1.0.95"
 chrono = "0.4.38"
 color-eyre = "0.6.3"
@@ -27,11 +34,18 @@ regex = "1.10.4"
 reqwest = { version = "0.12.4", features = ["stream"] }
 rust-embed = "8.5.0"
 teloxide = { version = "0.13.0", features = ["macros", "webhooks-axum"] }
-tokio = { version = "1.37", features = ["full"] }
-tokio-stream = "0.1.15"
 tracing = "0.1.40"
 url = "2.5.0"
 uuid = "1.8.0"
+mimalloc = { version = "0.1", default-features = false }
 
 [profile.release]
-lto = true
+lto = true        # Already enabled
+codegen-units = 1 # Optimize for size at the cost of compile time
+opt-level = 3     # Maximum optimizations
+panic = "abort"   # Remove panic unwinding code
+strip = true      # Remove debug symbols
+
+[profile.dev]
+opt-level = 1 # Basic optimizations for dev builds
+debug = true  # Keep debug info
