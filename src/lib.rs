@@ -35,7 +35,7 @@ pub mod prank;
 pub mod ranking;
 pub mod redis_connection;
 
-pub const PRANK_THRESHOLD: u32 = 45;
+pub const PRANK_THRESHOLD: u32 = 30;
 
 #[instrument]
 async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
