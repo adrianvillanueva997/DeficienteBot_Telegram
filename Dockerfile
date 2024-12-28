@@ -7,6 +7,7 @@ RUN apt-get update && \
     rm -rf /tmp/* /var/tmp/*
 COPY Cargo.toml Cargo.lock ./
 COPY src ./src
+COPY assets ./assets
 RUN cargo build --release
 
 FROM ubuntu:noble-20241015@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295 AS prod
