@@ -3,7 +3,7 @@ use chrono::Utc;
 use chrono::prelude::*;
 
 #[must_use]
-pub fn check_28_december() -> bool {
+pub fn is_prank_day() -> bool {
     let now = Utc::now();
-    now.month() == 12 && now.day() == 28
+    now.month() == 12 && now.day() == 28 || now.month() == 4 && now.day() == 1
 }
