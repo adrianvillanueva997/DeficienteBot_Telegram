@@ -10,13 +10,18 @@ use message_checks::tiktok::check_if_tiktok;
 use message_checks::{bad_words, thursday, webm};
 use online_downloads::url_checker::{check_url_status_code, is_mp4_url, is_webm_url};
 use online_downloads::video_downloader::{delete_file, download_video};
+use prank::day_check::check_28_december;
+use prank::randomizer::{generate_one_or_zero, should_trigger};
+use prank::reverse_words::upside_down_string;
 use ranking::rank::Rank;
 use tracing::{error, instrument};
 use uuid::Uuid;
 
 use std::error::Error;
 use teloxide::net::Download;
-use teloxide::payloads::{SendAudioSetters, SendMessageSetters, SendVideoSetters};
+use teloxide::payloads::{
+    SendAudioSetters, SendMessageSetters, SendPhotoSetters, SendVideoSetters,
+};
 use teloxide::requests::Requester;
 use teloxide::types::{Document, Message, ReplyParameters};
 use teloxide::update_listeners::UpdateListener;
@@ -29,6 +34,8 @@ pub mod online_downloads;
 pub mod prank;
 pub mod ranking;
 pub mod redis_connection;
+
+pub const PRANK_THRESHOLD: u32 = 30;
 
 #[instrument]
 async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
@@ -153,6 +160,28 @@ async fn process_text_messages(
             )
             .await;
             Rank::new(redis_connection.clone()).update_rank("mp4").await;
+        }
+    }
+    if check_28_december() && should_trigger(PRANK_THRESHOLD) {
+        if generate_one_or_zero() == 0 {
+            let reversed_message = upside_down_string(&message);
+            bot.delete_message(msg.chat.id, msg.id).await?;
+            actions.push(bot.send_message(msg.chat.id, reversed_message));
+        } else {
+            match prank::mario::fetch_random_image() {
+                Ok((caption, image)) => {
+                    bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
+                        .await?;
+                    // Send photo immediately since we can't queue it
+                    bot.send_photo(msg.chat.id, image)
+                        .reply_parameters(ReplyParameters::new(msg.id))
+                        .caption(caption)
+                        .await?;
+                }
+                Err(e) => {
+                    tracing::error!("Failed to fetch random image: {}", e);
+                }
+            }
         }
     }
     let message = message.to_lowercase();
