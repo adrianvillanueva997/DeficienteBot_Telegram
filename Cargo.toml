@@ -45,7 +45,3 @@ codegen-units = 1 # Optimize for size at the cost of compile time
 opt-level = 3     # Maximum optimizations
 panic = "abort"   # Remove panic unwinding code
 strip = true      # Remove debug symbols
-
-[profile.dev]
-opt-level = 1 # Basic optimizations for dev builds
-debug = true  # Keep debug info
