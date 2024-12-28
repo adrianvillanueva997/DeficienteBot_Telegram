@@ -26,6 +26,7 @@ use tokio::time::sleep;
 
 pub mod message_checks;
 pub mod online_downloads;
+pub mod prank;
 pub mod ranking;
 pub mod redis_connection;
 
@@ -114,7 +115,6 @@ async fn process_text_messages(
     redis_connection: &redis::Client,
     text: &str,
 ) -> Result<(), Box<dyn Error>> {
-    // let message = text.to_lowercase();
     let message = text.to_string();
     let mut actions: Vec<_> = Vec::new();
     if message_checks::url::is_url(&message) {
@@ -176,6 +176,7 @@ async fn process_text_messages(
                 .await?;
             bot.send_audio(
                 msg.chat.id,
+                // TODO: Move this to embedded in the binary
                 teloxide::types::InputFile::file(std::path::Path::new("viernes.ogg")),
             )
             .reply_parameters(ReplyParameters::new(msg.id))
