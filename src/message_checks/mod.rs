@@ -5,3 +5,4 @@ pub mod tiktok;
 pub mod twitter;
 pub mod url;
 pub mod webm;
+pub mod friday;

@@ -5,6 +5,7 @@ use std::convert::Infallible;
 use std::thread;
 use std::time::Duration;
 
+use message_checks::friday::fetch_friday_video;
 use message_checks::tiktok::check_if_tiktok;
 
 use message_checks::{bad_words, thursday, webm};
@@ -20,7 +21,7 @@ use uuid::Uuid;
 use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{
-    SendAudioSetters, SendMessageSetters, SendPhotoSetters, SendVideoSetters,
+    SendMessageSetters, SendPhotoSetters, SendVideoSetters,
 };
 use teloxide::requests::Requester;
 use teloxide::types::{Document, Message, ReplyParameters};
@@ -201,15 +202,18 @@ async fn process_text_messages(
 
     for copypasta in copypastas {
         if copypasta == "viernes" {
-            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::RecordVoice)
+            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                 .await?;
-            bot.send_audio(
-                msg.chat.id,
-                // TODO: Move this to embedded in the binary
-                teloxide::types::InputFile::file(std::path::Path::new("viernes.ogg")),
-            )
+            bot.send_video(msg.chat.id, fetch_friday_video().unwrap())
             .reply_parameters(ReplyParameters::new(msg.id))
             .await?;
+            // bot.send_audio(
+            //     msg.chat.id,
+            //     // TODO: Move this to embedded in the binary
+            //     teloxide::types::InputFile::file(std::path::Path::new("viernes.ogg")),
+            // )
+            // .reply_parameters(ReplyParameters::new(msg.id))
+            // .await?;
         } else {
             actions.push(
                 bot.send_message(msg.chat.id, copypasta)
