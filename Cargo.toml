@@ -13,6 +13,9 @@ path = "src/main.rs"
 name = "deficiente_telegram_bot"
 
 
+[build-dependencies]
+walkdir = "2.5.0"
+
 [dependencies]
 tokio = { version = "1.37", default-features = false, features = [
     "rt-multi-thread",
