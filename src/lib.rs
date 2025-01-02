@@ -21,7 +21,7 @@ use uuid::Uuid;
 use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{
-    SendAudioSetters, SendMessageSetters, SendPhotoSetters, SendVideoSetters,
+    SendMessageSetters, SendPhotoSetters, SendVideoSetters,
 };
 use teloxide::requests::Requester;
 use teloxide::types::{Document, Message, ReplyParameters};
