@@ -10,13 +10,6 @@ struct Asset;
 
 /// Fetches the Friday celebration video from the embedded assets.
 ///
-/// # Examples
-///
-/// ```
-/// use crate::message_checks::friday::fetch_friday_video;
-///
-/// let video = fetch_friday_video().expect("Failed to load Friday video");
-/// ```
 ///
 /// # Errors
 ///

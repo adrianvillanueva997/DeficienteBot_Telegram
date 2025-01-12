@@ -19,13 +19,11 @@ pub async fn check_url_status_code(url: &str) -> Option<u16> {
 #[must_use]
 pub fn is_mp4_url(url: &str) -> bool {
     std::path::Path::new(url)
-        .extension()
-        .map_or(false, |ext| ext.eq_ignore_ascii_case("mp4"))
+        .extension().is_some_and(|ext| ext.eq_ignore_ascii_case("mp4"))
 }
 
 #[must_use]
 pub fn is_webm_url(url: &str) -> bool {
     std::path::Path::new(url)
-        .extension()
-        .map_or(false, |ext| ext.eq_ignore_ascii_case("webm"))
+        .extension().is_some_and(|ext| ext.eq_ignore_ascii_case("webm"))
 }
