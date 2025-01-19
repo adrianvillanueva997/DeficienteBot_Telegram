@@ -32,7 +32,7 @@ services:
       - ENVIRONMENT=prod
 
   redis:
-    image: redis:7.4.2@sha256:75b50e479a39e86d33531f278d0b1c86c46fe220d0f647cab3727f27287d9737
+    image: redis:7.4.2@sha256:ca65ea36ae16e709b0f1c7534bc7e5b5ac2e5bb3c97236e4fec00e3625eb678d
     container_name: telegrambot_deficiente_redis
     restart: unless-stopped
     volumes:
