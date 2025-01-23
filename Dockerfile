@@ -10,7 +10,7 @@ COPY src ./src
 COPY assets ./assets
 RUN cargo build --release
 
-FROM ubuntu:noble-20241015@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295 AS prod
+FROM ubuntu:noble-20241118.1@sha256:80dd3c3b9c6cecb9f1667e9290b3bc61b78c2678c02cbdae5f0fea92cc6734ab AS prod
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list
 RUN apt-get update && \
