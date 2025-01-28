@@ -33,6 +33,6 @@ pub async fn check_asuka(message: &str) -> bool {
 /// Return a random message from the THURSDAY_GREETINGS array.
 #[instrument]
 pub async fn random_message() -> String {
-    let rng = rand::thread_rng().gen_range(0..THURSDAY_GREETINGS.len());
+    let rng = rand::rng().random_range(0..THURSDAY_GREETINGS.len());
     THURSDAY_GREETINGS[rng].to_string()
 }

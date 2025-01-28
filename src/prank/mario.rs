@@ -35,7 +35,7 @@ static IMAGES_MAP: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
 pub fn fetch_random_image() -> Result<(&'static str, InputFile)> {
     let (image, description) = IMAGES_MAP
         .iter()
-        .choose(&mut rand::thread_rng())
+        .choose(&mut rand::rng())
         .ok_or_else(|| anyhow!("No images available"))?;
 
     let file = Asset::get(image).ok_or_else(|| anyhow!("Failed to load image: {}", image))?;
