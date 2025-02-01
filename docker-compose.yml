@@ -6,7 +6,7 @@ services:
       - dokploy-network
       - telegrambot_deficiente_network
     container_name: telegrambot_deficiente
-    restart: always
+    restart: unless-stopped
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
@@ -28,7 +28,7 @@ services:
   redis:
     image: redis:7.4.2@sha256:ca65ea36ae16e709b0f1c7534bc7e5b5ac2e5bb3c97236e4fec00e3625eb678d
     container_name: telegrambot_deficiente_redis
-    restart: always
+    restart: unless-stopped
     volumes:
       - /mnt/telegrambot_deficiente_redis:/data
     labels:
