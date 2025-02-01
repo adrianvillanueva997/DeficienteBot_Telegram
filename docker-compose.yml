@@ -3,26 +3,20 @@ services:
   bot:
     image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.7.0
     networks:
-      - proxy
+      - dokploy-network
       - telegrambot_deficiente_network
     container_name: telegrambot_deficiente
-    restart: unless-stopped
+    restart: always
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     labels:
-      - com.ouroboros.enable=true
       - "traefik.enable=true"
-      - "traefik.http.middlewares.deficiente-redirect-websecure.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.deficiente-redirect-websecure.redirectscheme.permanent=true"
-      - "traefik.http.routers.deficiente-web.middlewares=deficiente-redirect-websecure"
-      - traefik.http.routers.deficiente-web.rule=Host(`deficiente.thexiao77.com`)
-      - traefik.http.routers.deficiente-web.entrypoints=http
-      - traefik.http.routers.deficiente-websecure.rule=Host(`deficiente.thexiao77.com`)
-      - traefik.http.routers.deficiente-websecure.tls.certresolver=le
-      - traefik.http.routers.deficiente-websecure.tls=true
-      - traefik.http.routers.deficiente-websecure.entrypoints=https
-      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.telegrambot_deficiente.rule=Host(`deficiente.thexiao77.com`)"
+      - "traefik.http.routers.telegrambot_deficiente.entrypoints=websecure"
+      - "traefik.http.routers.telegrambot_deficiente.tls.certResolver=letsencrypt"
+      - "traefik.http.services.telegrambot_deficiente.loadbalancer.server.port=3000"
+
     depends_on:
       - redis
     environment:
@@ -34,16 +28,15 @@ services:
   redis:
     image: redis:7.4.2@sha256:ca65ea36ae16e709b0f1c7534bc7e5b5ac2e5bb3c97236e4fec00e3625eb678d
     container_name: telegrambot_deficiente_redis
-    restart: unless-stopped
+    restart: always
     volumes:
       - /mnt/telegrambot_deficiente_redis:/data
     labels:
-      - com.ouroboros.enable=true
       - "traefik.enable=false"
     networks:
       - telegrambot_deficiente_network
 networks:
-  proxy:
+  dokploy-network:
     external: true
   telegrambot_deficiente_network:
     driver: bridge
