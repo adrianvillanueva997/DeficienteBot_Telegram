@@ -5,7 +5,6 @@ services:
     networks:
       - coolify
       - telegrambot_deficiente_network
-    container_name: telegrambot_deficiente
     restart: unless-stopped
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
