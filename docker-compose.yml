@@ -28,7 +28,7 @@ services:
       - "traefik.http.routers.deficiente-https.rule=Host(`deficiente.thexiao77.com`)"
       - "traefik.http.routers.deficiente-https.entrypoints=https"
       - "traefik.http.routers.deficiente-https.tls=true"
-      - "traefik.http.routers.deficiente-https.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.deficiente-https.tls.certresolver=le"
 
       - "traefik.http.services.deficiente.loadbalancer.server.port=8080"
 
