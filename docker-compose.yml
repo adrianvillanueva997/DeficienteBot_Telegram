@@ -27,10 +27,6 @@ services:
       - "traefik.http.middlewares.secure-headers.headers.forceSTSHeader=true"
       - "traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000"
 
-      # Middleware - Rate Limiting
-      - "traefik.http.middlewares.rate-limit.ratelimit.average=100"
-      - "traefik.http.middlewares.rate-limit.ratelimit.burst=50"
-
       # HTTP to HTTPS redirect
       - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
@@ -46,9 +42,6 @@ services:
       - "traefik.http.routers.deficiente-https.tls=true"
       - "traefik.http.routers.deficiente-https.tls.certresolver=letsencrypt"
       - "traefik.http.routers.deficiente-https.middlewares=secure-headers,rate-limit"
-
-      # Service
-      - "traefik.http.services.deficiente.loadbalancer.server.port=8080"
 
     depends_on:
       - redis
