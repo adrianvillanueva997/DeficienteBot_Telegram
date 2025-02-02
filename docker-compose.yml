@@ -3,7 +3,7 @@ services:
   bot:
     image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.7.0
     networks:
-      - dokploy-network
+      - coolify
       - telegrambot_deficiente_network
     container_name: telegrambot_deficiente
     restart: unless-stopped
@@ -11,11 +11,17 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.telegrambot_deficiente.rule=Host(`deficiente.thexiao77.com`)"
-      - "traefik.http.routers.telegrambot_deficiente.entrypoints=websecure"
-      - "traefik.http.routers.telegrambot_deficiente.tls.certResolver=letsencrypt"
-      - "traefik.http.services.telegrambot_deficiente.loadbalancer.server.port=3000"
+      - traefik.enable=true
+      - traefik.http.middlewares.telegrambot_deficiente-redirect-https.redirectscheme.scheme=https
+      - traefik.http.middlewares.telegrambot_deficiente-redirect-https.redirectscheme.permanent=true
+      - traefik.http.routers.telegrambot_deficiente-http.middlewares=telegrambot_deficiente-redirect-https
+      - traefik.http.routers.telegrambot_deficiente-http.rule=Host(`deficiente.thexiao77.com`)
+      - traefik.http.routers.telegrambot_deficiente-http.entrypoints=http
+      - traefik.http.routers.telegrambot_deficiente-https.rule=Host(`deficiente.thexiao77.com`)
+      - traefik.http.routers.telegrambot_deficiente-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.telegrambot_deficiente-https.tls=true
+      - traefik.http.routers.telegrambot_deficiente-https.entrypoints=https
+      - traefik.docker.network=coolify
 
     depends_on:
       - redis
@@ -36,7 +42,7 @@ services:
     networks:
       - telegrambot_deficiente_network
 networks:
-  dokploy-network:
+  coolify:
     external: true
   telegrambot_deficiente_network:
     driver: bridge
