@@ -10,6 +10,8 @@ services:
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - 8080
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.telegrambot_deficiente-redirect-https.redirectscheme.scheme=https
