@@ -15,17 +15,11 @@ services:
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-    ports:
-      - 8080
+
     labels:
       # Enable Traefik
       - "traefik.enable=true"
       - "traefik.docker.network=coolify"
-
-      # Middleware - Security Headers
-      - "traefik.http.middlewares.secure-headers.headers.sslRedirect=true"
-      - "traefik.http.middlewares.secure-headers.headers.forceSTSHeader=true"
-      - "traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000"
 
       # HTTP to HTTPS redirect
       - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
@@ -41,7 +35,8 @@ services:
       - "traefik.http.routers.deficiente-https.entrypoints=https"
       - "traefik.http.routers.deficiente-https.tls=true"
       - "traefik.http.routers.deficiente-https.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.deficiente-https.middlewares=secure-headers,rate-limit"
+
+      - "traefik.http.services.deficiente.loadbalancer.server.port=8080"
 
     depends_on:
       - redis
