@@ -3,15 +3,9 @@ services:
   bot:
     image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.7.0
     networks:
-      - coolify
+      - proxy
       - telegrambot_deficiente_network
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
@@ -19,7 +13,7 @@ services:
     labels:
       # Enable Traefik
       - "traefik.enable=true"
-      - "traefik.docker.network=coolify"
+      - "traefik.docker.network=proxy"
 
       # HTTP to HTTPS redirect
       - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
@@ -63,7 +57,7 @@ services:
     networks:
       - telegrambot_deficiente_network
 networks:
-  coolify:
+  proxy:
     external: true
   telegrambot_deficiente_network:
     driver: bridge
