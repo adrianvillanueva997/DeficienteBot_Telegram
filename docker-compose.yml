@@ -12,17 +12,37 @@ services:
     ports:
       - 8080
     labels:
-      - traefik.enable=true
-      - traefik.http.middlewares.telegrambot_deficiente-redirect-https.redirectscheme.scheme=https
-      - traefik.http.middlewares.telegrambot_deficiente-redirect-https.redirectscheme.permanent=true
-      - traefik.http.routers.telegrambot_deficiente-http.middlewares=telegrambot_deficiente-redirect-https
-      - traefik.http.routers.telegrambot_deficiente-http.rule=Host(`deficiente.thexiao77.com`)
-      - traefik.http.routers.telegrambot_deficiente-http.entrypoints=http
-      - traefik.http.routers.telegrambot_deficiente-https.rule=Host(`deficiente.thexiao77.com`)
-      - traefik.http.routers.telegrambot_deficiente-https.tls.certresolver=letsencrypt
-      - traefik.http.routers.telegrambot_deficiente-https.tls=true
-      - traefik.http.routers.telegrambot_deficiente-https.entrypoints=https
-      - traefik.docker.network=coolify
+      # Enable Traefik
+      - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
+
+      # Middleware - Security Headers
+      - "traefik.http.middlewares.secure-headers.headers.sslRedirect=true"
+      - "traefik.http.middlewares.secure-headers.headers.forceSTSHeader=true"
+      - "traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000"
+
+      # Middleware - Rate Limiting
+      - "traefik.http.middlewares.rate-limit.ratelimit.average=100"
+      - "traefik.http.middlewares.rate-limit.ratelimit.burst=50"
+
+      # HTTP to HTTPS redirect
+      - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
+
+      # HTTP Router
+      - "traefik.http.routers.deficiente-http.rule=Host(`deficiente.thexiao77.com`)"
+      - "traefik.http.routers.deficiente-http.entrypoints=http"
+      - "traefik.http.routers.deficiente-http.middlewares=redirect-https"
+
+      # HTTPS Router
+      - "traefik.http.routers.deficiente-https.rule=Host(`deficiente.thexiao77.com`)"
+      - "traefik.http.routers.deficiente-https.entrypoints=https"
+      - "traefik.http.routers.deficiente-https.tls=true"
+      - "traefik.http.routers.deficiente-https.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.deficiente-https.middlewares=secure-headers,rate-limit"
+
+      # Service
+      - "traefik.http.services.deficiente.loadbalancer.server.port=8080"
 
     depends_on:
       - redis
