@@ -102,4 +102,9 @@ impl Spotify {
             }
         }
     }
+
+    async fn get_spotify_song(&self){}
+    async fn get_spotify_album(&self){}
+    async fn get_spotify_artist(&self){}
+    async fn get_spotify_playlist(&self){}
 }
