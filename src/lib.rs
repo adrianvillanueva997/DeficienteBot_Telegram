@@ -4,6 +4,7 @@ use std::convert::Infallible;
 
 use std::time::Duration;
 
+use chrono::format;
 use message_checks::friday::fetch_friday_video;
 use message_checks::tiktok::check_if_tiktok;
 
@@ -18,7 +19,7 @@ use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{SendMessageSetters, SendPhotoSetters, SendVideoSetters};
 use teloxide::requests::Requester;
-use teloxide::types::{Document, Message, ReplyParameters};
+use teloxide::types::{Document, InputFile, Message, ReplyParameters};
 use teloxide::update_listeners::UpdateListener;
 use teloxide::Bot;
 use tokio::fs;
@@ -32,6 +33,11 @@ pub mod prank;
 pub mod spotify;
 
 pub const PRANK_THRESHOLD: u32 = 30;
+
+fn get_telegram_username(msg: &Message) -> String {
+    let user = msg.from.as_ref().unwrap().username.as_ref().unwrap();
+    format!("@{user}")
+}
 
 #[instrument]
 async fn process_webm_urls(bot: Bot, msg: Message, url: String) {
@@ -85,15 +91,315 @@ async fn process_mp4_urls(bot: Bot, msg: Message, url: String) {
 }
 
 fn format_message_username(msg: &Message, content: &str) -> String {
-    let message = msg.clone();
-    let user = message.from.as_ref().unwrap().username.as_ref().unwrap();
+    let user = msg.from.as_ref().unwrap().username.as_ref().unwrap();
     format!("@{user} \n{content} ")
 }
 
-async fn prepare_album_content() {}
-async fn prepare_artist_content() {}
-async fn prepare_playlist_content() {}
-async fn prepare_track_content() {}
+async fn prepare_album_content(
+    spotify_client: Spotify,
+    bot: &Bot,
+    msg: &Message,
+    album_id: String,
+) {
+    let album_data = spotify_client.get_spotify_album(album_id).await;
+    match album_data {
+        Ok(album) => {
+            // Format artists
+            let artists = album
+                .artists
+                .iter()
+                .map(|artist| artist.name.as_str())
+                .collect::<Vec<_>>()
+                .join(", ");
+
+            // Format genres
+            let genres = if album.genres.is_empty() {
+                "N/A".to_string()
+            } else {
+                album.genres.join(", ")
+            };
+
+            // Format tracks with duration
+            let tracks = album
+                .tracks
+                .items
+                .iter()
+                .map(|track| {
+                    let duration = Duration::from_millis(track.duration_ms.unsigned_abs());
+                    let minutes = duration.as_secs() / 60;
+                    let seconds = duration.as_secs() % 60;
+                    let explicit_mark = if track.explicit { "🔞 " } else { "" };
+                    format!(
+                        "{}. {} {} ({:02}:{:02})",
+                        track.track_number, explicit_mark, track.name, minutes, seconds
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("\n");
+
+            // Get album cover (first image)
+            let cover_url = album.images.first().map_or("", |img| img.url.as_str());
+
+            let content = format!(
+                "*Sent by:* {}\n\
+🎨 *Album:* {}\n\
+🎼 *Album Type:* {}\n\
+👥 *Artists:* {}\n\
+📅 *Release Date:* {}\n\
+🎵 *Total Tracks:* {}\n\
+🏷️ *Label:* {}\n\
+🎭 *Genres:* {}\n\
+⭐ *Popularity:* {}/100\n\n\
+*Tracks:*\n\
+{}\n\n\
+[🔗 Open in Spotify]({})",
+                escape_markdown(&get_telegram_username(msg)),
+                escape_markdown(&album.name),
+                escape_markdown(&album.album_type),
+                escape_markdown(&artists),
+                escape_markdown(&album.release_date),
+                escape_markdown(&album.total_tracks.to_string()),
+                escape_markdown(&album.label),
+                escape_markdown(&genres),
+                escape_markdown(&album.popularity.to_string()),
+                escape_markdown(&tracks),
+                escape_markdown(&album.external_urls.spotify)
+            );
+
+            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
+                .await
+                .unwrap();
+            // Send photo immediately since we can't queue it
+            bot.send_photo(
+                msg.chat.id,
+                InputFile::url(url::Url::parse(cover_url).unwrap()),
+            )
+            .reply_parameters(ReplyParameters::new(msg.id))
+            .caption(content)
+            .parse_mode(teloxide::types::ParseMode::MarkdownV2)
+            .await
+            .unwrap();
+        }
+        Err(e) => {
+            error!("Failed to fetch album data: {}", e);
+        }
+    }
+}
+
+fn escape_markdown(text: &str) -> String {
+    let special_chars = [
+        '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!',
+    ];
+    let mut result = String::with_capacity(text.len() * 2);
+    for c in text.chars() {
+        if special_chars.contains(&c) {
+            result.push('\\');
+        }
+        result.push(c);
+    }
+    result
+}
+
+async fn prepare_artist_content(
+    spotify_client: Spotify,
+    bot: &Bot,
+    msg: &Message,
+    artist_id: String,
+) {
+    let artist_data = spotify_client.get_spotify_artist(artist_id).await;
+    match artist_data {
+        Ok(artist) => {
+            let genres = if artist.genres.is_empty() {
+                "N/A".to_string()
+            } else {
+                artist.genres.join(", ")
+            };
+
+            // Get artist image
+            let artist_image = artist.images.first().map_or("", |img| img.url.as_str());
+
+            let content = format!(
+                "*Sent by:* {}\n\
+👤 *Artist:* {}\n\
+🎭 *Genres:* {}\n\
+👥 *Followers:* {}\n\
+⭐ *Popularity:* {}/100\n\n\
+[🔗 Open in Spotify]({})",
+                escape_markdown(&get_telegram_username(msg)),
+                escape_markdown(&artist.name),
+                escape_markdown(&genres),
+                escape_markdown(&artist.followers.total.to_string()),
+                escape_markdown(&artist.popularity.to_string()),
+                escape_markdown(&artist.external_urls.spotify)
+            );
+
+            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
+                .await
+                .unwrap();
+            bot.send_photo(
+                msg.chat.id,
+                InputFile::url(url::Url::parse(artist_image).unwrap()),
+            )
+            .reply_parameters(ReplyParameters::new(msg.id))
+            .caption(content)
+            .parse_mode(teloxide::types::ParseMode::MarkdownV2)
+            .await
+            .unwrap();
+        }
+        Err(e) => {
+            error!("Failed to fetch artist data: {}", e);
+        }
+    }
+}
+
+async fn prepare_playlist_content(
+    spotify_client: Spotify,
+    bot: &Bot,
+    msg: &Message,
+    playlist_id: String,
+) {
+    let playlist_data = spotify_client.get_spotify_playlist(playlist_id).await;
+    match playlist_data {
+        Ok(playlist) => {
+            // Format tracks with duration
+            let tracks = playlist
+                .tracks
+                .items
+                .iter()
+                .enumerate()
+                .map(|(i, item)| {
+                    let track = &item.track;
+                    let duration = Duration::from_millis(track.duration_ms as u64);
+                    let minutes = duration.as_secs() / 60;
+                    let seconds = duration.as_secs() % 60;
+                    let explicit_mark = if track.explicit { "🔞 " } else { "" };
+                    let artists = track
+                        .artists
+                        .iter()
+                        .map(|artist| artist.name.as_str())
+                        .collect::<Vec<_>>()
+                        .join(", ");
+                    format!(
+                        "{}. {} {} - {} ({:02}:{:02})",
+                        i + 1,
+                        explicit_mark,
+                        track.name,
+                        artists,
+                        minutes,
+                        seconds
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("\n");
+
+            let playlist_image = playlist.images.first().map_or("", |img| img.url.as_str());
+
+            let content = format!(
+                "*Sent by:* {}\n\
+📜 *Playlist:* {}\n\
+👤 *Created by:* {}\n\
+📝 *Description:* {}\n\
+🎵 *Total Tracks:* {}\n\
+👥 *Followers:* {}\n\n\
+*Tracks:*\n\
+{}\n\n\
+[🔗 Open in Spotify]({})",
+                escape_markdown(&get_telegram_username(msg)),
+                escape_markdown(&playlist.name),
+                escape_markdown(&playlist.owner.display_name),
+                escape_markdown(&playlist.description.unwrap_or_default()),
+                escape_markdown(&playlist.tracks.total.to_string()),
+                escape_markdown(&playlist.followers.total.to_string()),
+                escape_markdown(&tracks),
+                escape_markdown(&playlist.external_urls.spotify)
+            );
+
+            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
+                .await
+                .unwrap();
+            bot.send_photo(
+                msg.chat.id,
+                InputFile::url(url::Url::parse(playlist_image).unwrap()),
+            )
+            .caption(content)
+            .parse_mode(teloxide::types::ParseMode::MarkdownV2)
+            .await
+            .unwrap();
+        }
+        Err(e) => {
+            error!("Failed to fetch playlist data: {}", e);
+        }
+    }
+}
+
+async fn prepare_track_content(
+    spotify_client: Spotify,
+    bot: &Bot,
+    msg: &Message,
+    track_id: String,
+) {
+    let track_data = spotify_client.get_spotify_song(track_id).await;
+    match track_data {
+        Ok(track) => {
+            let duration = Duration::from_millis(track.duration_ms as u64);
+            let minutes = duration.as_secs() / 60;
+            let seconds = duration.as_secs() % 60;
+
+            let artists = track
+                .artists
+                .iter()
+                .map(|artist| artist.name.as_str())
+                .collect::<Vec<_>>()
+                .join(", ");
+
+            let track_image = track
+                .album
+                .images
+                .first()
+                .map_or("", |img| img.url.as_str());
+
+            let content = format!(
+                "*Sent by:* {}\n\
+🎵 *Track:* {}\n\
+👥 *Artists:* {}\n\
+💿 *Album:* {}\n\
+⏱️ *Duration:* {:02}:{:02}\n\
+🔞 *Explicit:* {}\n\
+⭐ *Popularity:* {}/100\n\
+🎼 *Key:* {}\n\
+🎭 *Available Markets:* {}\n\n\
+[🔗 Open in Spotify]({})",
+                escape_markdown(&get_telegram_username(msg)),
+                escape_markdown(&track.name),
+                escape_markdown(&artists),
+                escape_markdown(&track.album.name),
+                minutes,
+                seconds,
+                if track.explicit { "Yes" } else { "No" },
+                escape_markdown(&track.popularity.to_string()),
+                escape_markdown(&track.key.to_string()),
+                escape_markdown(&track.available_markets.len().to_string()),
+                escape_markdown(&track.external_urls.spotify)
+            );
+
+            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
+                .await
+                .unwrap();
+            bot.send_photo(
+                msg.chat.id,
+                InputFile::url(url::Url::parse(track_image).unwrap()),
+            )
+            .caption(content)
+            .parse_mode(teloxide::types::ParseMode::MarkdownV2)
+            .await
+            .unwrap();
+        }
+        Err(e) => {
+            error!("Failed to fetch track data: {}", e);
+        }
+    }
+}
+
 /// Bot logic goes here.
 ///
 /// # Panics
@@ -128,12 +434,16 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
         let spotify = Spotify::new(SpotifyConfig::from_env()?);
         let spotify_url = spotify.identify_spotify_url(&message);
         if spotify_url != SpotifyKind::Unknown {
-            match spotify_url {
-                SpotifyKind::Album => prepare_album_content().await,
-                SpotifyKind::Artist => prepare_artist_content().await,
-                SpotifyKind::Playlist => prepare_playlist_content().await,
-                SpotifyKind::Track => prepare_track_content().await,
-                SpotifyKind::Unknown => todo!(),
+            if let Some(url) = spotify.extract_spotify_id(&message) {
+                match spotify_url {
+                    SpotifyKind::Album => {
+                        prepare_album_content(spotify, bot, msg, url).await;
+                    }
+                    SpotifyKind::Artist => prepare_artist_content(spotify, bot, msg, url).await,
+                    SpotifyKind::Playlist => prepare_playlist_content(spotify, bot, msg, url).await,
+                    SpotifyKind::Track => prepare_track_content(spotify, bot, msg, url).await,
+                    SpotifyKind::Unknown => todo!(),
+                }
             }
         }
     }
@@ -169,7 +479,7 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
     let (_matching_words, copypastas) = message_checks::copypasta::find_copypasta(&message).await;
 
     for copypasta in copypastas {
-        if copypasta == "viernes" {
+        if (copypasta == "viernes") {
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                 .await?;
             bot.send_video(msg.chat.id, fetch_friday_video().unwrap())
