@@ -2,7 +2,6 @@
 
 use std::convert::Infallible;
 
-use std::thread;
 use std::time::Duration;
 
 use message_checks::friday::fetch_friday_video;
@@ -14,15 +13,12 @@ use online_downloads::video_downloader::{delete_file, download_video};
 use prank::day_check::is_prank_day;
 use prank::randomizer::should_trigger;
 use prank::reverse_words::upside_down_string;
-use ranking::rank::Rank;
 use tracing::{error, instrument};
 use uuid::Uuid;
 
 use std::error::Error;
 use teloxide::net::Download;
-use teloxide::payloads::{
-    SendMessageSetters, SendPhotoSetters, SendVideoSetters,
-};
+use teloxide::payloads::{SendMessageSetters, SendPhotoSetters, SendVideoSetters};
 use teloxide::requests::Requester;
 use teloxide::types::{Document, Message, ReplyParameters};
 use teloxide::update_listeners::UpdateListener;
@@ -33,72 +29,60 @@ use tokio::time::sleep;
 pub mod message_checks;
 pub mod online_downloads;
 pub mod prank;
-pub mod ranking;
-pub mod redis_connection;
+pub mod spotify;
 
 pub const PRANK_THRESHOLD: u32 = 30;
 
 #[instrument]
-async fn process_webm_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
-    thread::spawn(move || {
-        tokio::runtime::Runtime::new().unwrap().block_on(async {
-            if check_url_status_code(&url).await == Some(200) {
-                let uuid = Uuid::new_v4();
-                let webm_filename = format!("{uuid}.webm");
-                let mp4_filename = format!("{uuid}.mp4");
-                bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
-                    .await
-                    .unwrap();
-                download_video(&url, &webm_filename).await;
-                webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
-                bot.send_video(
-                    msg.chat.id,
-                    teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
-                )
-                .reply_parameters(ReplyParameters::new(msg.id))
-                .await
-                .unwrap();
-                Rank::new(redis_connection.clone())
-                    .update_rank("webm")
-                    .await;
-            } else {
-                bot.send_message(msg.chat.id, "El video no existe 😭")
-                    .reply_parameters(ReplyParameters::new(msg.id))
-                    .await
-                    .unwrap();
-            }
-        });
-    });
+async fn process_webm_urls(bot: Bot, msg: Message, url: String) {
+    if check_url_status_code(&url).await == Some(200) {
+        let uuid = Uuid::new_v4();
+        let webm_filename = format!("{uuid}.webm");
+        let mp4_filename = format!("{uuid}.mp4");
+        bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
+            .await
+            .unwrap();
+        download_video(&url, &webm_filename).await;
+        webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
+        bot.send_video(
+            msg.chat.id,
+            teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
+        )
+        .reply_parameters(ReplyParameters::new(msg.id))
+        .await
+        .unwrap();
+
+    } else {
+        bot.send_message(msg.chat.id, "El video no existe 😭")
+            .reply_parameters(ReplyParameters::new(msg.id))
+            .await
+            .unwrap();
+    }
 }
 
 #[instrument]
-async fn process_mp4_urls(bot: Bot, msg: Message, url: String, redis_connection: redis::Client) {
-    thread::spawn(move || {
-        tokio::runtime::Runtime::new().unwrap().block_on(async {
-            if check_url_status_code(&url).await == Some(200) {
-                let uuid = Uuid::new_v4();
-                let mp4_filename = format!("{uuid}.mp4");
-                bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
-                    .await
-                    .unwrap();
-                download_video(&url, &mp4_filename).await;
-                bot.send_video(
-                    msg.chat.id,
-                    teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
-                )
-                .reply_parameters(ReplyParameters::new(msg.id))
-                .await
-                .unwrap();
-                Rank::new(redis_connection.clone()).update_rank("mp4").await;
-                delete_file(&mp4_filename).await;
-            } else {
-                bot.send_message(msg.chat.id, "El video no existe 😭")
-                    .reply_parameters(ReplyParameters::new(msg.id))
-                    .await
-                    .unwrap();
-            }
-        });
-    });
+async fn process_mp4_urls(bot: Bot, msg: Message, url: String, ) {
+    if check_url_status_code(&url).await == Some(200) {
+        let uuid = Uuid::new_v4();
+        let mp4_filename = format!("{uuid}.mp4");
+        bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
+            .await
+            .unwrap();
+        download_video(&url, &mp4_filename).await;
+        bot.send_video(
+            msg.chat.id,
+            teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
+        )
+        .reply_parameters(ReplyParameters::new(msg.id))
+        .await
+        .unwrap();
+        delete_file(&mp4_filename).await;
+    } else {
+        bot.send_message(msg.chat.id, "El video no existe 😭")
+            .reply_parameters(ReplyParameters::new(msg.id))
+            .await
+            .unwrap();
+    }
 }
 
 fn format_message_username(msg: &Message, content: &str) -> String {
@@ -120,7 +104,6 @@ fn format_message_username(msg: &Message, content: &str) -> String {
 async fn process_text_messages(
     bot: &Bot,
     msg: &Message,
-    redis_connection: &redis::Client,
     text: &str,
 ) -> Result<(), Box<dyn Error>> {
     let message = text.to_string();
@@ -130,25 +113,18 @@ async fn process_text_messages(
         if let Some(twitter) = twitter {
             let tweet = format_message_username(msg, &twitter);
             bot.delete_message(msg.chat.id, msg.id).await?;
-            Rank::new(redis_connection.clone())
-                .update_rank("twitter")
-                .await;
             actions.push(bot.send_message(msg.chat.id, tweet));
         } else if is_webm_url(&message) {
             process_webm_urls(
                 bot.clone(),
                 msg.clone(),
                 message.clone(),
-                redis_connection.clone(),
             )
             .await;
         } else if check_if_tiktok(&message) {
             let tntok = message_checks::tiktok::updated_tiktok(&message).await;
             if let Some(tntok) = tntok {
                 let tiktok = format_message_username(msg, &tntok);
-                Rank::new(redis_connection.clone())
-                    .update_rank("tiktok")
-                    .await;
                 bot.delete_message(msg.chat.id, msg.id).await?;
                 actions.push(bot.send_message(msg.chat.id, tiktok));
             }
@@ -157,10 +133,8 @@ async fn process_text_messages(
                 bot.clone(),
                 msg.clone(),
                 message.clone(),
-                redis_connection.clone(),
             )
             .await;
-            Rank::new(redis_connection.clone()).update_rank("mp4").await;
         }
     }
     if is_prank_day() && should_trigger(PRANK_THRESHOLD) {
@@ -187,26 +161,20 @@ async fn process_text_messages(
     }
     let message = message.to_lowercase();
     if bad_words::find_bad_words(&message).await {
-        Rank::new(redis_connection.clone())
-            .update_rank("uwus")
-            .await;
         actions.push(
             bot.send_message(msg.chat.id, "Deficiente")
                 .reply_parameters(ReplyParameters::new(msg.id)),
         );
     }
-    let (matching_words, copypastas) = message_checks::copypasta::find_copypasta(&message).await;
-    for word in matching_words {
-        Rank::new(redis_connection.clone()).update_rank(&word).await;
-    }
+    let (_matching_words, copypastas) = message_checks::copypasta::find_copypasta(&message).await;
 
     for copypasta in copypastas {
         if copypasta == "viernes" {
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                 .await?;
             bot.send_video(msg.chat.id, fetch_friday_video().unwrap())
-            .reply_parameters(ReplyParameters::new(msg.id))
-            .await?;
+                .reply_parameters(ReplyParameters::new(msg.id))
+                .await?;
             // bot.send_audio(
             //     msg.chat.id,
             //     // TODO: Move this to embedded in the binary
@@ -223,40 +191,11 @@ async fn process_text_messages(
     }
 
     if thursday::is_thursday().await && thursday::check_asuka(&message).await {
-        Rank::new(redis_connection.clone())
-            .update_rank("Asuka")
-            .await;
         actions.push(
             bot.send_message(msg.chat.id, thursday::random_message().await)
                 .reply_parameters(ReplyParameters::new(msg.id)),
         );
     }
-    if &message == "deficienteranking" {
-        match Rank::new(redis_connection.clone()).get_ranking().await {
-            Ok(rank) => {
-                let mut ranking_message = String::new();
-                for (key, value) in rank {
-                    ranking_message.push_str(&format!("{} {}: {}\n", "🔥", key, value));
-                }
-                actions.push(
-                    bot.send_message(msg.chat.id, ranking_message)
-                        .reply_parameters(ReplyParameters::new(msg.id)),
-                );
-            }
-            Err(e) => {
-                eprintln!("Error getting ranking: {e}");
-                // Handle the error appropriately here, e.g., by sending an error message
-                actions.push(
-                    bot.send_message(
-                        msg.chat.id,
-                        "Error getting ranking. Please try again later.",
-                    )
-                    .reply_parameters(ReplyParameters::new(msg.id)),
-                );
-            }
-        }
-    }
-
     if !actions.is_empty() {
         bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::Typing)
             .await?;
@@ -283,7 +222,6 @@ async fn process_text_messages(
 pub async fn process_files(
     bot: &Bot,
     msg: &Message,
-    redis_connection: &redis::Client,
     file_to_read: &Document,
 ) -> Result<(), Box<dyn Error>> {
     // Telegram max file size: 20 MB
@@ -326,14 +264,13 @@ pub async fn process_files(
 pub async fn handle_messages(
     bot: &Bot,
     msg: &Message,
-    redis_connection: &redis::Client,
 ) -> Result<(), Box<dyn Error>> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
-            process_text_messages(bot, msg, redis_connection, msg.text().unwrap()).await?;
+            process_text_messages(bot, msg,  msg.text().unwrap()).await?;
         }
         Some(msg) if msg.document().is_some() => {
-            process_files(bot, msg, redis_connection, msg.document().unwrap()).await?;
+            process_files(bot, msg, msg.document().unwrap()).await?;
         }
         Some(_) | None => (),
     };
@@ -346,13 +283,11 @@ pub async fn handle_messages(
 ///
 /// Panics if the bot fails to parse the messages.
 pub async fn parse_messages(bot: Bot, listener: impl UpdateListener<Err = Infallible> + Send) {
-    let redis_client = redis_connection::redis_connection().await.unwrap();
     teloxide::repl_with_listener(
         bot,
         move |bot, msg| {
-            let redis_client = redis_client.clone();
             async move {
-                if let Err(err) = handle_messages(&bot, &msg, &redis_client).await {
+                if let Err(err) = handle_messages(&bot, &msg).await {
                     error!("Error processing text messages: {}", err);
                 }
                 Ok(())
