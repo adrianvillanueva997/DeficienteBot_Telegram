@@ -13,9 +13,7 @@ use online_downloads::video_downloader::{delete_file, download_video};
 use prank::day_check::is_prank_day;
 use prank::randomizer::should_trigger;
 use prank::reverse_words::upside_down_string;
-use tracing::{error, instrument};
-use uuid::Uuid;
-
+use spotify::client::{Spotify, SpotifyConfig, SpotifyKind};
 use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{SendMessageSetters, SendPhotoSetters, SendVideoSetters};
@@ -25,6 +23,8 @@ use teloxide::update_listeners::UpdateListener;
 use teloxide::Bot;
 use tokio::fs;
 use tokio::time::sleep;
+use tracing::{error, instrument};
+use uuid::Uuid;
 
 pub mod message_checks;
 pub mod online_downloads;
@@ -51,7 +51,6 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String) {
         .reply_parameters(ReplyParameters::new(msg.id))
         .await
         .unwrap();
-
     } else {
         bot.send_message(msg.chat.id, "El video no existe 😭")
             .reply_parameters(ReplyParameters::new(msg.id))
@@ -61,7 +60,7 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String) {
 }
 
 #[instrument]
-async fn process_mp4_urls(bot: Bot, msg: Message, url: String, ) {
+async fn process_mp4_urls(bot: Bot, msg: Message, url: String) {
     if check_url_status_code(&url).await == Some(200) {
         let uuid = Uuid::new_v4();
         let mp4_filename = format!("{uuid}.mp4");
@@ -91,6 +90,10 @@ fn format_message_username(msg: &Message, content: &str) -> String {
     format!("@{user} \n{content} ")
 }
 
+async fn prepare_album_content() {}
+async fn prepare_artist_content() {}
+async fn prepare_playlist_content() {}
+async fn prepare_track_content() {}
 /// Bot logic goes here.
 ///
 /// # Panics
@@ -101,11 +104,7 @@ fn format_message_username(msg: &Message, content: &str) -> String {
 ///
 /// This function will return an error if the bot fails to run.
 #[allow(clippy::too_many_lines)]
-async fn process_text_messages(
-    bot: &Bot,
-    msg: &Message,
-    text: &str,
-) -> Result<(), Box<dyn Error>> {
+async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(), Box<dyn Error>> {
     let message = text.to_string();
     let mut actions: Vec<_> = Vec::new();
     if message_checks::url::is_url(&message) {
@@ -115,12 +114,7 @@ async fn process_text_messages(
             bot.delete_message(msg.chat.id, msg.id).await?;
             actions.push(bot.send_message(msg.chat.id, tweet));
         } else if is_webm_url(&message) {
-            process_webm_urls(
-                bot.clone(),
-                msg.clone(),
-                message.clone(),
-            )
-            .await;
+            process_webm_urls(bot.clone(), msg.clone(), message.clone()).await;
         } else if check_if_tiktok(&message) {
             let tntok = message_checks::tiktok::updated_tiktok(&message).await;
             if let Some(tntok) = tntok {
@@ -129,12 +123,18 @@ async fn process_text_messages(
                 actions.push(bot.send_message(msg.chat.id, tiktok));
             }
         } else if is_mp4_url(&message) {
-            process_mp4_urls(
-                bot.clone(),
-                msg.clone(),
-                message.clone(),
-            )
-            .await;
+            process_mp4_urls(bot.clone(), msg.clone(), message.clone()).await;
+        }
+        let spotify = Spotify::new(SpotifyConfig::from_env()?);
+        let spotify_url = spotify.identify_spotify_url(&message);
+        if spotify_url != SpotifyKind::Unknown {
+            match spotify_url {
+                SpotifyKind::Album => prepare_album_content().await,
+                SpotifyKind::Artist => prepare_artist_content().await,
+                SpotifyKind::Playlist => prepare_playlist_content().await,
+                SpotifyKind::Track => prepare_track_content().await,
+                SpotifyKind::Unknown => todo!(),
+            }
         }
     }
     if is_prank_day() && should_trigger(PRANK_THRESHOLD) {
@@ -261,13 +261,10 @@ pub async fn process_files(
 /// # Panics
 ///
 /// Panics if the bot fails to handle the messages.
-pub async fn handle_messages(
-    bot: &Bot,
-    msg: &Message,
-) -> Result<(), Box<dyn Error>> {
+pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn Error>> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
-            process_text_messages(bot, msg,  msg.text().unwrap()).await?;
+            process_text_messages(bot, msg, msg.text().unwrap()).await?;
         }
         Some(msg) if msg.document().is_some() => {
             process_files(bot, msg, msg.document().unwrap()).await?;
@@ -285,13 +282,11 @@ pub async fn handle_messages(
 pub async fn parse_messages(bot: Bot, listener: impl UpdateListener<Err = Infallible> + Send) {
     teloxide::repl_with_listener(
         bot,
-        move |bot, msg| {
-            async move {
-                if let Err(err) = handle_messages(&bot, &msg).await {
-                    error!("Error processing text messages: {}", err);
-                }
-                Ok(())
+        move |bot, msg| async move {
+            if let Err(err) = handle_messages(&bot, &msg).await {
+                error!("Error processing text messages: {}", err);
             }
+            Ok(())
         },
         listener,
     )

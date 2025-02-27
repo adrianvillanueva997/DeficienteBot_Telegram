@@ -1,10 +1,47 @@
 use moka::sync::Cache;
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
+use std::{env, error::Error, time::Duration};
 
-use super::{album::SpotifyAlbum, artist::SpotifyArtist, playlist::SpotifyPlaylist, song::SpotifySong, utils::{
-    SPOTIFY_ALBUM_ENDPOINT, SPOTIFY_API_BASE, SPOTIFY_AUTH_URL, SPOTIFY_TRACKS_ENDPOINT,
-}};
+use super::{
+    album::SpotifyAlbum,
+    artist::SpotifyArtist,
+    playlist::SpotifyPlaylist,
+    song::SpotifySong,
+    utils::{
+        SPOTIFY_ALBUM_ENDPOINT, SPOTIFY_API_BASE, SPOTIFY_ARTIST_ENDPOINT, SPOTIFY_AUTH_URL,
+        SPOTIFY_PLAYLIST_ENDPOINT, SPOTIFY_TRACKS_ENDPOINT,
+    },
+};
+
+pub struct SpotifyConfig {
+    pub spotify_client_id: String,
+    pub spotify_client_secret: String,
+}
+
+impl SpotifyConfig {
+    /// .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if .
+    pub fn from_env() -> Result<Self, Box<dyn Error>> {
+        Ok(Self {
+            spotify_client_id: env::var("SPOTIFY_CLIENT_ID")
+                .map_err(|_| "SPOTIFY_CLIENT_ID environment variable not set")?,
+            spotify_client_secret: env::var("SPOTIFY_CLIENT_SECRET")
+                .map_err(|_| "SPOTIFY_CLIENT_SECRET environment variable not set")?,
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum SpotifyKind {
+    Album,
+    Artist,
+    Playlist,
+    Track,
+    Unknown,
+}
 
 #[derive(Debug)]
 #[allow(dead_code)]
@@ -51,13 +88,13 @@ struct SpotifyAuthResponse {
     expires_in: i8,
 }
 
-
 impl Spotify {
     /// Creates a new [`Spotify`].
-    pub fn new(client_id: String, client_secret: String) -> Self {
+    #[must_use]
+    pub fn new(config: SpotifyConfig) -> Self {
         Spotify {
-            client_id,
-            client_secret,
+            client_id: config.spotify_client_id,
+            client_secret: config.spotify_client_secret,
             token_cache: Cache::builder()
                 .max_capacity(1)
                 .time_to_live(Duration::from_secs(3600)) // 1 hour TTL
@@ -79,7 +116,7 @@ impl Spotify {
     /// # Panics
     ///
     /// Panics if .
-    fn create_reqwest_client(&self) -> reqwest::Client {
+    fn create_reqwest_client() -> reqwest::Client {
         reqwest::Client::builder()
             .timeout(Duration::from_secs(10))
             .build()
@@ -95,7 +132,7 @@ impl Spotify {
         if let Some(spotify_auth_response) = self.get_cached_token() {
             return Ok(spotify_auth_response);
         }
-        let client = self.create_reqwest_client();
+        let client = Self::create_reqwest_client();
         let params = [
             ("grant_type", "client_credentials"),
             ("client_id", &self.client_id),
@@ -130,11 +167,10 @@ impl Spotify {
     /// # Errors
     ///
     /// This function will return an error if .
-    async fn get_spotify_song(&self, song_id: String) -> Result<SpotifySong, SpotifyError> {
+    pub async fn get_spotify_song(&self, song_id: String) -> Result<SpotifySong, SpotifyError> {
         let url = format!("{SPOTIFY_API_BASE}/{SPOTIFY_TRACKS_ENDPOINT}/{song_id}");
         let token = self.get_token().await?;
-        let response = self
-            .create_reqwest_client()
+        let response = Self::create_reqwest_client()
             .get(url)
             .bearer_auth(token.access_token)
             .send()
@@ -161,11 +197,15 @@ impl Spotify {
         }
     }
 
-    async fn get_spotify_album(&self, album_id: String) -> Result<SpotifyAlbum, SpotifyError> {
+    /// .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if .
+    pub async fn get_spotify_album(&self, album_id: String) -> Result<SpotifyAlbum, SpotifyError> {
         let url = format!("{SPOTIFY_API_BASE}/{SPOTIFY_ALBUM_ENDPOINT}/{album_id}");
         let token = self.get_token().await?;
-        let response = self
-            .create_reqwest_client()
+        let response = Self::create_reqwest_client()
             .get(url)
             .bearer_auth(token.access_token)
             .send()
@@ -190,11 +230,18 @@ impl Spotify {
             }
         }
     }
-        async fn get_spotify_artist(&self, artist_id: String) -> Result<SpotifyArtist, SpotifyError> {
-        let url = format!("{SPOTIFY_API_BASE}/{SPOTIFY_ALBUM_ENDPOINT}/{artist_id}");
+    /// .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if .
+    pub async fn get_spotify_artist(
+        &self,
+        artist_id: String,
+    ) -> Result<SpotifyArtist, SpotifyError> {
+        let url = format!("{SPOTIFY_API_BASE}/{SPOTIFY_ARTIST_ENDPOINT}/{artist_id}");
         let token = self.get_token().await?;
-        let response = self
-            .create_reqwest_client()
+        let response = Self::create_reqwest_client()
             .get(url)
             .bearer_auth(token.access_token)
             .send()
@@ -219,11 +266,18 @@ impl Spotify {
             }
         }
     }
-        async fn get_spotify_playlist(&self, playlist_id: String) -> Result<SpotifyPlaylist, SpotifyError> {
-        let url = format!("{SPOTIFY_API_BASE}/{SPOTIFY_ALBUM_ENDPOINT}/{playlist_id}");
+    /// .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if .
+    pub async fn get_spotify_playlist(
+        &self,
+        playlist_id: String,
+    ) -> Result<SpotifyPlaylist, SpotifyError> {
+        let url = format!("{SPOTIFY_API_BASE}/{SPOTIFY_PLAYLIST_ENDPOINT}/{playlist_id}");
         let token = self.get_token().await?;
-        let response = self
-            .create_reqwest_client()
+        let response = Self::create_reqwest_client()
             .get(url)
             .bearer_auth(token.access_token)
             .send()
@@ -247,5 +301,78 @@ impl Spotify {
                 )))
             }
         }
+    }
+
+    /// Identifies the type of Spotify URL
+    ///
+    /// # Arguments
+    ///
+    /// * `spotify_url` - A Spotify URL to identify
+    ///
+    /// # Returns
+    ///
+    /// Returns a `SpotifyKind` enum indicating the type of content
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let kind = spotify.identify_spotify_url("https://open.spotify.com/track/123");
+    /// assert_eq!(kind, SpotifyKind::Track);
+    /// ```
+    #[must_use]
+    pub fn identify_spotify_url(&self, spotify_url: &str) -> SpotifyKind {
+        // First verify it's a valid Spotify URL
+        if !spotify_url.starts_with("https://open.spotify.com/") {
+            return SpotifyKind::Unknown;
+        }
+
+        match spotify_url {
+            url if url.contains("/album/") => SpotifyKind::Album,
+            url if url.contains("/track/") => SpotifyKind::Track,
+            url if url.contains("/artist/") => SpotifyKind::Artist,
+            url if url.contains("/playlist/") => SpotifyKind::Playlist,
+            _ => SpotifyKind::Unknown,
+        }
+    }
+
+    /// Extracts the Spotify ID from a URL
+    ///
+    /// # Arguments
+    ///
+    /// * `url` - A Spotify URL (e.g., "<https://open.spotify.com/track/1234567890>")
+    ///
+    /// # Returns
+    ///
+    /// Returns `Some(String)` with the ID if found, `None` otherwise
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let spotify = Spotify::new(config);
+    /// let id = spotify.extract_spotify_id("https://open.spotify.com/track/1234567890");
+    /// assert_eq!(id, Some("1234567890".to_string()));
+    /// ```
+    pub fn extract_spotify_id(&self, url: &str) -> Option<String> {
+        // First verify it's a valid Spotify URL
+        if !url.starts_with("https://open.spotify.com/") {
+            return None;
+        }
+
+        // Split URL into parts and get the ID
+        let id = url
+            .split('/')
+            .last()
+            .and_then(|id| id.split('?').next())
+            .filter(|&id| !id.is_empty()) // Filter out empty strings
+            .map(String::from);
+
+        // Additional validation: ensure we have a non-empty ID
+        if let Some(ref id) = id {
+            if id.trim().is_empty() {
+                return None;
+            }
+        }
+
+        id
     }
 }
