@@ -247,13 +247,14 @@ impl Spotify {
             .send()
             .await
             .map_err(SpotifyError::Request)?;
+
         match response.status() {
             reqwest::StatusCode::OK => response
                 .json::<SpotifyArtist>()
                 .await
                 .map_err(SpotifyError::Request),
             reqwest::StatusCode::NOT_FOUND => Err(SpotifyError::NotFound(format!(
-                "Song with ID {artist_id} not found"
+                "Artist with ID {artist_id} not found"
             ))),
             reqwest::StatusCode::TOO_MANY_REQUESTS => {
                 Err(SpotifyError::RateLimit("Rate limit exceeded".to_string()))

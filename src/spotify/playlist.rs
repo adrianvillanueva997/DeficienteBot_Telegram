@@ -31,7 +31,7 @@ pub struct ExternalUrls {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Followers {
-    pub href: String,
+    pub href: Option<String>,
     pub total: i64,
 }
 
@@ -67,7 +67,7 @@ pub struct ExternalUrls2 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Followers2 {
-    pub href: String,
+    pub href: Option<String>,
     pub total: i64,
 }
 
@@ -76,9 +76,9 @@ pub struct Followers2 {
 pub struct Tracks {
     pub href: String,
     pub limit: i64,
-    pub next: String,
+    pub next: Option<String>,
     pub offset: i64,
-    pub previous: String,
+    pub previous: Option<String>,
     pub total: i64,
     pub items: Vec<Item>,
 }
@@ -117,7 +117,7 @@ pub struct ExternalUrls3 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Followers3 {
-    pub href: String,
+    pub href: Option<String>,
     pub total: i64,
 }
 
@@ -142,8 +142,8 @@ pub struct Track {
     #[serde(rename = "is_playable")]
     pub is_playable: bool,
     #[serde(rename = "linked_from")]
-    pub linked_from: LinkedFrom,
-    pub restrictions: Restrictions2,
+    pub linked_from: Option<LinkedFrom>,
+    pub restrictions: Option<Restrictions2>,
     pub name: String,
     pub popularity: i64,
     #[serde(rename = "preview_url")]
