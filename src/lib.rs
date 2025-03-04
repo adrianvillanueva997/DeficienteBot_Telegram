@@ -17,7 +17,6 @@ use rspotify::model::Market;
 use rspotify::prelude::BaseClient;
 use spotify::client::{Spotify, SpotifyKind};
 use std::error::Error;
-use teloxide::dispatching::dialogue::GetChatId;
 use teloxide::net::Download;
 use teloxide::payloads::{SendMessageSetters, SendPhotoSetters, SendVideoSetters};
 use teloxide::requests::Requester;
@@ -511,13 +510,13 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
                         prepare_album_content(spotify, bot, msg, id, &message).await?;
                     }
                     SpotifyKind::Artist => {
-                        prepare_artist_content(spotify, bot, msg, id, &message).await?
+                        prepare_artist_content(spotify, bot, msg, id, &message).await?;
                     }
                     SpotifyKind::Playlist => {
                         prepare_playlist_content(spotify, bot, msg, id, &message).await?;
                     }
                     SpotifyKind::Track => {
-                        prepare_track_content(spotify, bot, msg, id, &message).await?
+                        prepare_track_content(spotify, bot, msg, id, &message).await?;
                     }
                     SpotifyKind::Unknown => todo!(),
                 }
