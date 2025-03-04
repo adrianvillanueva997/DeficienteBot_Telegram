@@ -20,10 +20,6 @@ static IMAGES_MAP: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     map.insert("mario5.png", "Tienes fuego amigo? 🔥");
     map.insert("mario6.png", "Te gustan los platanos? 🍌");
 
-    // Verify files exist
-    debug_assert!(Asset::get("jaime2.png").is_some());
-    debug_assert!(Asset::get("mario2.png").is_some());
-    debug_assert!(Asset::get("mario3.png").is_some());
     map
 });
 

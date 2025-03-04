@@ -32,30 +32,11 @@ services:
 
       - "traefik.http.services.deficiente.loadbalancer.server.port=8080"
 
-    depends_on:
-      - redis
     environment:
       - TELOXIDE_TOKEN=${TELOXIDE_TOKEN}
       - URL=${URL}
-      - REDIS_URL=${REDIS_URL}
       - ENVIRONMENT=prod
 
-  redis:
-    image: redis:7.4.2@sha256:ca65ea36ae16e709b0f1c7534bc7e5b5ac2e5bb3c97236e4fec00e3625eb678d
-    container_name: telegrambot_deficiente_redis
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    volumes:
-      - /mnt/telegrambot_deficiente_redis:/data
-    labels:
-      - "traefik.enable=false"
-    networks:
-      - telegrambot_deficiente_network
 networks:
   proxy:
     external: true
