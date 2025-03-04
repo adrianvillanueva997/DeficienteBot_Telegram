@@ -506,7 +506,7 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
                     }
                     SpotifyKind::Artist => prepare_artist_content(spotify, bot, msg, url).await?,
                     SpotifyKind::Playlist => {
-                        prepare_playlist_content(spotify, bot, msg, url).await?
+                        prepare_playlist_content(spotify, bot, msg, url).await?;
                     }
                     SpotifyKind::Track => prepare_track_content(spotify, bot, msg, url).await?,
                     SpotifyKind::Unknown => todo!(),

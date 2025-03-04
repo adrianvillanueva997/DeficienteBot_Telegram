@@ -1,6 +1,4 @@
-use reqwest::Client;
 use rspotify::{ClientCredsSpotify, Credentials};
-use std::time::Duration;
 
 
 
@@ -27,8 +25,11 @@ impl Spotify {
         Credentials::from_env().expect("Failed to load Spotify credentials from environment")
     }
 
-    /// Creates a new [`Spotify`].
-    #[must_use]
+    /// .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if .
     pub async fn new() -> Result<Self, rspotify::ClientError> {
         let credentials = Self::load_credentials();
         let spotify = Self::create_token(credentials).await?;
@@ -42,19 +43,6 @@ impl Spotify {
         spotify.request_token().await?;
         Ok(spotify)
     }
-
-    /// Returns the create reqwest client of this [`Spotify`].
-    ///
-    /// # Panics
-    ///
-    /// Panics if .
-    fn create_reqwest_client() -> reqwest::Client {
-        reqwest::Client::builder()
-            .timeout(Duration::from_secs(10))
-            .build()
-            .expect("Failed to create client")
-    }
-
 
 
     /// Identifies the type of Spotify URL
