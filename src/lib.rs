@@ -102,6 +102,7 @@ async fn prepare_album_content(
     bot: &Bot,
     msg: &Message,
     album_id: String,
+    spotify_url: &String,
 ) -> Result<(), Box<dyn Error>> {
     let album = spotify_client
         .client
@@ -190,7 +191,7 @@ async fn prepare_album_content(
         escape_markdown(&genres),
         escape_markdown(&album.popularity.to_string()),
         escape_markdown(&tracks),
-        escape_markdown(&album.href)
+        escape_markdown(spotify_url)
     );
 
     bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
@@ -239,6 +240,7 @@ async fn prepare_artist_content(
     bot: &Bot,
     msg: &Message,
     artist_id: String,
+    spotify_url: &String,
 ) -> Result<(), Box<dyn Error>> {
     let artist_data = spotify_client
         .client
@@ -291,17 +293,17 @@ async fn prepare_artist_content(
         escape_markdown(&genres),
         escape_markdown(&followers),
         escape_markdown(&artist_data.popularity.to_string()),
-        escape_markdown(&artist_data.href)
+        escape_markdown(spotify_url)
     );
 
     bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
         .await?;
 
     bot.send_photo(msg.chat.id, InputFile::url(url::Url::parse(artist_image)?))
-        .reply_parameters(ReplyParameters::new(msg.id))
         .caption(content)
         .parse_mode(teloxide::types::ParseMode::MarkdownV2)
         .await?;
+    bot.delete_message(msg.chat.id, msg.id).await?;
 
     Ok(())
 }
@@ -312,6 +314,7 @@ async fn prepare_playlist_content(
     bot: &Bot,
     msg: &Message,
     playlist_id: String,
+    spotify_url: &String,
 ) -> Result<(), Box<dyn Error>> {
     let playlist_data = spotify_client
         .client
@@ -359,7 +362,7 @@ async fn prepare_playlist_content(
         escape_markdown(&playlist_data.tracks.total.to_string()),
         escape_markdown(&playlist_data.followers.total.to_string()),
         escape_markdown(&playlist_data.snapshot_id),
-        escape_markdown(&playlist_data.href)
+        escape_markdown(spotify_url)
     );
 
     bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
@@ -369,10 +372,10 @@ async fn prepare_playlist_content(
         msg.chat.id,
         InputFile::url(url::Url::parse(playlist_image)?),
     )
-    .reply_parameters(ReplyParameters::new(msg.id))
     .caption(content)
     .parse_mode(teloxide::types::ParseMode::MarkdownV2)
     .await?;
+    bot.delete_message(msg.chat.id, msg.id).await?;
 
     Ok(())
 }
@@ -382,6 +385,7 @@ async fn prepare_track_content(
     bot: &Bot,
     msg: &Message,
     track_id: String,
+    spotify_url: &String,
 ) -> Result<(), Box<dyn Error>> {
     let track_data = spotify_client
         .client
@@ -441,7 +445,7 @@ async fn prepare_track_content(
                 escape_markdown(&track.album.release_date.unwrap_or_default()),
                 escape_markdown(&track.track_number.to_string()),
                 escape_markdown(&track.popularity.to_string()),
-                escape_markdown(&track.href.unwrap_or_default()),
+                escape_markdown(spotify_url),
                 preview_section
             );
 
@@ -449,10 +453,11 @@ async fn prepare_track_content(
                 .await?;
 
             bot.send_photo(msg.chat.id, InputFile::url(url::Url::parse(track_image)?))
-                .reply_parameters(ReplyParameters::new(msg.id))
                 .caption(content)
                 .parse_mode(teloxide::types::ParseMode::MarkdownV2)
                 .await?;
+
+            bot.delete_message(msg.chat.id, msg.id).await?;
 
             Ok(())
         }
@@ -499,16 +504,20 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
         let spotify = Spotify::new().await?;
         let spotify_url = spotify.identify_spotify_url(&message);
         if spotify_url != SpotifyKind::Unknown {
-            if let Some(url) = spotify.extract_spotify_id(&message) {
+            if let Some(id) = spotify.extract_spotify_id(&message) {
                 match spotify_url {
                     SpotifyKind::Album => {
-                        prepare_album_content(spotify, bot, msg, url).await?;
+                        prepare_album_content(spotify, bot, msg, id, &message).await?;
                     }
-                    SpotifyKind::Artist => prepare_artist_content(spotify, bot, msg, url).await?,
+                    SpotifyKind::Artist => {
+                        prepare_artist_content(spotify, bot, msg, id, &message).await?;
+                    }
                     SpotifyKind::Playlist => {
-                        prepare_playlist_content(spotify, bot, msg, url).await?;
+                        prepare_playlist_content(spotify, bot, msg, id, &message).await?;
                     }
-                    SpotifyKind::Track => prepare_track_content(spotify, bot, msg, url).await?,
+                    SpotifyKind::Track => {
+                        prepare_track_content(spotify, bot, msg, id, &message).await?;
+                    }
                     SpotifyKind::Unknown => todo!(),
                 }
             }
