@@ -4,7 +4,6 @@ use std::convert::Infallible;
 
 use std::time::Duration;
 
-use chrono::format;
 use message_checks::friday::fetch_friday_video;
 use message_checks::tiktok::check_if_tiktok;
 
@@ -95,6 +94,7 @@ fn format_message_username(msg: &Message, content: &str) -> String {
     format!("@{user} \n{content} ")
 }
 
+#[instrument]
 async fn prepare_album_content(
     spotify_client: Spotify,
     bot: &Bot,
@@ -169,16 +169,25 @@ async fn prepare_album_content(
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
                 .await
                 .unwrap();
-            // Send photo immediately since we can't queue it
-            bot.send_photo(
+            // Send photo and delete original message only if successful
+            match bot.send_photo(
                 msg.chat.id,
                 InputFile::url(url::Url::parse(cover_url).unwrap()),
             )
             .reply_parameters(ReplyParameters::new(msg.id))
             .caption(content)
             .parse_mode(teloxide::types::ParseMode::MarkdownV2)
-            .await
-            .unwrap();
+            .await {
+                Ok(_) => {
+                    // Delete original message only after successful send
+                    if let Err(e) = bot.delete_message(msg.chat.id, msg.id).await {
+                        error!("Failed to delete original message: {}", e);
+                    }
+                }
+                Err(e) => {
+                    error!("Failed to send Spotify album content: {}", e);
+                }
+            }
         }
         Err(e) => {
             error!("Failed to fetch album data: {}", e);
@@ -200,6 +209,7 @@ fn escape_markdown(text: &str) -> String {
     result
 }
 
+#[instrument]
 async fn prepare_artist_content(
     spotify_client: Spotify,
     bot: &Bot,
@@ -252,6 +262,7 @@ async fn prepare_artist_content(
     }
 }
 
+#[instrument]
 async fn prepare_playlist_content(
     spotify_client: Spotify,
     bot: &Bot,
@@ -269,7 +280,7 @@ async fn prepare_playlist_content(
                 .enumerate()
                 .map(|(i, item)| {
                     let track = &item.track;
-                    let duration = Duration::from_millis(track.duration_ms as u64);
+                    let duration = Duration::from_millis(track.duration_ms.unsigned_abs());
                     let minutes = duration.as_secs() / 60;
                     let seconds = duration.as_secs() % 60;
                     let explicit_mark = if track.explicit { "🔞 " } else { "" };
@@ -307,7 +318,7 @@ async fn prepare_playlist_content(
                 escape_markdown(&get_telegram_username(msg)),
                 escape_markdown(&playlist.name),
                 escape_markdown(&playlist.owner.display_name),
-                escape_markdown(&playlist.description.unwrap_or_default()),
+                escape_markdown(&playlist.description.to_string()),
                 escape_markdown(&playlist.tracks.total.to_string()),
                 escape_markdown(&playlist.followers.total.to_string()),
                 escape_markdown(&tracks),
@@ -332,6 +343,7 @@ async fn prepare_playlist_content(
     }
 }
 
+#[instrument]
 async fn prepare_track_content(
     spotify_client: Spotify,
     bot: &Bot,
@@ -341,44 +353,33 @@ async fn prepare_track_content(
     let track_data = spotify_client.get_spotify_song(track_id).await;
     match track_data {
         Ok(track) => {
-            let duration = Duration::from_millis(track.duration_ms as u64);
-            let minutes = duration.as_secs() / 60;
-            let seconds = duration.as_secs() % 60;
+            // Format genres
+            let genres = if track.genres.is_empty() {
+                "N/A".to_string()
+            } else {
+                track.genres.join(", ")
+            };
 
-            let artists = track
-                .artists
-                .iter()
-                .map(|artist| artist.name.as_str())
-                .collect::<Vec<_>>()
-                .join(", ");
-
+            // Get track image
             let track_image = track
-                .album
                 .images
                 .first()
                 .map_or("", |img| img.url.as_str());
 
             let content = format!(
                 "*Sent by:* {}\n\
-🎵 *Track:* {}\n\
-👥 *Artists:* {}\n\
-💿 *Album:* {}\n\
-⏱️ *Duration:* {:02}:{:02}\n\
-🔞 *Explicit:* {}\n\
-⭐ *Popularity:* {}/100\n\
-🎼 *Key:* {}\n\
-🎭 *Available Markets:* {}\n\n\
-[🔗 Open in Spotify]({})",
+                🎵 *Track:* {}\n\
+                👥 *Followers:* {}\n\
+                🎭 *Genres:* {}\n\
+                ⭐ *Popularity:* {}/100\n\
+                🔗 *URI:* {}\n\n\
+                [🎧 Open in Spotify]({})",
                 escape_markdown(&get_telegram_username(msg)),
                 escape_markdown(&track.name),
-                escape_markdown(&artists),
-                escape_markdown(&track.album.name),
-                minutes,
-                seconds,
-                if track.explicit { "Yes" } else { "No" },
+                escape_markdown(&track.followers.total.to_string()),
+                escape_markdown(&genres),
                 escape_markdown(&track.popularity.to_string()),
-                escape_markdown(&track.key.to_string()),
-                escape_markdown(&track.available_markets.len().to_string()),
+                escape_markdown(&track.uri),
                 escape_markdown(&track.external_urls.spotify)
             );
 
@@ -389,6 +390,7 @@ async fn prepare_track_content(
                 msg.chat.id,
                 InputFile::url(url::Url::parse(track_image).unwrap()),
             )
+            .reply_parameters(ReplyParameters::new(msg.id))
             .caption(content)
             .parse_mode(teloxide::types::ParseMode::MarkdownV2)
             .await
@@ -479,7 +481,7 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
     let (_matching_words, copypastas) = message_checks::copypasta::find_copypasta(&message).await;
 
     for copypasta in copypastas {
-        if (copypasta == "viernes") {
+        if copypasta == "viernes" {
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                 .await?;
             bot.send_video(msg.chat.id, fetch_friday_video().unwrap())

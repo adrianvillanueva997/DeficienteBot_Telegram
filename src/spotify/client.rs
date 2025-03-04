@@ -74,14 +74,14 @@ impl std::fmt::Display for SpotifyError {
     }
 }
 
-#[derive()]
+#[derive(Debug)]
 pub struct Spotify {
     client_id: String,
     client_secret: String,
     token_cache: Cache<String, SpotifyAuthResponse>,
 }
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 struct SpotifyAuthResponse {
     access_token: String,
     token_type: String,
