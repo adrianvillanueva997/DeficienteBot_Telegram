@@ -36,6 +36,8 @@ services:
       - TELOXIDE_TOKEN=${TELOXIDE_TOKEN}
       - URL=${URL}
       - ENVIRONMENT=prod
+      - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
+      - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
 
 networks:
   proxy:
