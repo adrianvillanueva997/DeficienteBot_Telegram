@@ -210,6 +210,7 @@ fn escape_markdown(text: &str) -> String {
 }
 
 #[instrument]
+#[instrument]
 async fn prepare_artist_content(
     spotify_client: Spotify,
     bot: &Bot,
@@ -253,8 +254,8 @@ async fn prepare_artist_content(
             .reply_parameters(ReplyParameters::new(msg.id))
             .caption(content)
             .parse_mode(teloxide::types::ParseMode::MarkdownV2)
-            .await
-            .unwrap();
+                .await
+                .unwrap();
         }
         Err(e) => {
             error!("Failed to fetch artist data: {}", e);
@@ -318,7 +319,7 @@ async fn prepare_playlist_content(
                 escape_markdown(&get_telegram_username(msg)),
                 escape_markdown(&playlist.name),
                 escape_markdown(&playlist.owner.display_name),
-                escape_markdown(&playlist.description.to_string()),
+                escape_markdown(&playlist.description),
                 escape_markdown(&playlist.tracks.total.to_string()),
                 escape_markdown(&playlist.followers.total.to_string()),
                 escape_markdown(&tracks),
@@ -342,7 +343,6 @@ async fn prepare_playlist_content(
         }
     }
 }
-
 #[instrument]
 async fn prepare_track_content(
     spotify_client: Spotify,
@@ -353,34 +353,44 @@ async fn prepare_track_content(
     let track_data = spotify_client.get_spotify_song(track_id).await;
     match track_data {
         Ok(track) => {
-            // Format genres
-            let genres = if track.genres.is_empty() {
-                "N/A".to_string()
-            } else {
-                track.genres.join(", ")
-            };
+            // Format artists
+            let artists = track
+                .artists
+                .iter()
+                .map(|artist| artist.name.clone())
+                .collect::<Vec<String>>()
+                .join(", ");
 
-            // Get track image
+            // Get album image (if available)
             let track_image = track
+                .album
                 .images
                 .first()
                 .map_or("", |img| img.url.as_str());
 
+            // Optional: Show preview URL if available
+            let preview_section = if let Some(preview_url) = &track.preview_url {
+                format!("\n🔊 [Preview]({})", escape_markdown(preview_url))
+            } else {
+                String::new()
+            };
+
             let content = format!(
                 "*Sent by:* {}\n\
                 🎵 *Track:* {}\n\
-                👥 *Followers:* {}\n\
-                🎭 *Genres:* {}\n\
+                🎤 *Artists:* {}\n\
+                💽 *Album:* {}\n\
                 ⭐ *Popularity:* {}/100\n\
-                🔗 *URI:* {}\n\n\
-                [🎧 Open in Spotify]({})",
+                🔗 *URI:* {}\n\
+                [🎧 Open in Spotify]({}){}",
                 escape_markdown(&get_telegram_username(msg)),
                 escape_markdown(&track.name),
-                escape_markdown(&track.followers.total.to_string()),
-                escape_markdown(&genres),
+                escape_markdown(&artists),
+                escape_markdown(&track.album.name),
                 escape_markdown(&track.popularity.to_string()),
                 escape_markdown(&track.uri),
-                escape_markdown(&track.external_urls.spotify)
+                escape_markdown(&track.external_urls.spotify),
+                preview_section
             );
 
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
@@ -401,6 +411,7 @@ async fn prepare_track_content(
         }
     }
 }
+
 
 /// Bot logic goes here.
 ///
