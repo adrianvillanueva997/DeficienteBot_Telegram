@@ -573,6 +573,7 @@ pub async fn process_files(
 /// # Panics
 ///
 /// Panics if the bot fails to handle the messages.
+#[allow(clippy::match_same_arms)]
 pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn Error>> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
