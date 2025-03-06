@@ -1,4 +1,4 @@
-FROM rust:1.85.0-slim-bookworm@sha256:215987920101ed15967e9ab4bab3a20e1b71ab3c0551b5088b380e0d4e1758b1 AS build
+FROM rust:1.85.0-slim-bookworm@sha256:1b2d3c90bad6287266377cf9e7aa2c80001ae632dff3085284aee1db9a13ea2f AS build
 WORKDIR /build
 RUN apt-get update && \
     apt-get install -y apt-utils pkg-config libssl-dev --no-install-recommends  && \
