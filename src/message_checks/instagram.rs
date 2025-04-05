@@ -4,9 +4,9 @@ use tracing::instrument;
 /// for better accessibility without the Instagram app.
 #[instrument]
 pub async fn update_ddinstagram(url: &str) -> Option<String> {
+    let url = url.trim();
     if url.contains("instagram") {
         let new_url = url.replace("instagram", "ddinstagram");
-        let url = url.trim();
         if url.is_empty() {
             return None;
         }
