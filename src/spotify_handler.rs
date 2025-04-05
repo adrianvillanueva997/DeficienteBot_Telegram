@@ -49,19 +49,19 @@ impl<'a> SpotifyHandler<'a> {
             SpotifyKind::Album => self
                 .prepare_album_content(telegram_message, id, url)
                 .await
-                .map_err(|e| SpotifyError::ApiError(e.to_string())),
+                .map_err(|e| SpotifyError::Api(e.to_string())),
             SpotifyKind::Artist => self
                 .prepare_artist_content(telegram_message, id, url)
                 .await
-                .map_err(|e| SpotifyError::ApiError(e.to_string())),
+                .map_err(|e| SpotifyError::Api(e.to_string())),
             SpotifyKind::Playlist => self
                 .prepare_playlist_content(telegram_message, id, url)
                 .await
-                .map_err(|e| SpotifyError::ApiError(e.to_string())),
+                .map_err(|e| SpotifyError::Api(e.to_string())),
             SpotifyKind::Track => self
                 .prepare_track_content(telegram_message, id, url)
                 .await
-                .map_err(|e| SpotifyError::ApiError(e.to_string())),
+                .map_err(|e| SpotifyError::Api(e.to_string())),
             SpotifyKind::Unknown => Ok(()),
         };
 
@@ -74,7 +74,7 @@ impl<'a> SpotifyHandler<'a> {
                 )
                 .reply_parameters(ReplyParameters::new(telegram_message.id))
                 .await
-                .map_err(SpotifyError::TelegramError)?;
+                .map_err(SpotifyError::Telegram)?;
         }
 
         result

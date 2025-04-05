@@ -281,12 +281,12 @@ pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), BotError> {
         Some(msg) if msg.text().is_some() => {
             process_text_messages(bot, msg, msg.text().unwrap())
                 .await
-                .map_err(|e| BotError::ProcessingError(e.to_string()))?;
+                .map_err(|e| BotError::Processing(e.to_string()))?;
         }
         Some(msg) if msg.document().is_some() => {
             process_files(bot, msg, msg.document().unwrap())
                 .await
-                .map_err(|e| BotError::ProcessingError(e.to_string()))?;
+                .map_err(|e| BotError::Processing(e.to_string()))?;
         }
         Some(_) | None => (),
     }
