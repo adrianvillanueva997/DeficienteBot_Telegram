@@ -14,9 +14,8 @@ use prank::day_check::is_prank_day;
 use prank::randomizer::should_trigger;
 use prank::reverse_words::upside_down_string;
 use spotify::client::{Spotify, SpotifyKind};
-use spotify_handler::{
-    prepare_album_content, prepare_artist_content, prepare_playlist_content, prepare_track_content,
-};
+use spotify_handler::SpotifyHandler;
+
 use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{SendMessageSetters, SendPhotoSetters, SendVideoSetters};
@@ -34,6 +33,7 @@ pub mod online_downloads;
 pub mod prank;
 pub mod spotify;
 mod spotify_handler;
+mod utils;
 
 pub const PRANK_THRESHOLD: u32 = 30;
 
@@ -136,21 +136,30 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
             actions.push(bot.send_message(msg.chat.id, instagram_message));
         }
         let spotify = Spotify::new().await?;
+        let spotify_handler = SpotifyHandler::new(&spotify, bot);
         let spotify_url = spotify.identify_spotify_url(&message);
         if spotify_url != SpotifyKind::Unknown {
             if let Some(id) = spotify.extract_spotify_id(&message) {
                 match spotify_url {
                     SpotifyKind::Album => {
-                        prepare_album_content(spotify, bot, msg, id, &message).await?;
+                        spotify_handler
+                            .prepare_album_content(msg, id, &message)
+                            .await?;
                     }
                     SpotifyKind::Artist => {
-                        prepare_artist_content(spotify, bot, msg, id, &message).await?;
+                        spotify_handler
+                            .prepare_artist_content(msg, id, &message)
+                            .await?;
                     }
                     SpotifyKind::Playlist => {
-                        prepare_playlist_content(spotify, bot, msg, id, &message).await?;
+                        spotify_handler
+                            .prepare_playlist_content(msg, id, &message)
+                            .await?;
                     }
                     SpotifyKind::Track => {
-                        prepare_track_content(spotify, bot, msg, id, &message).await?;
+                        spotify_handler
+                            .prepare_track_content(msg, id, &message)
+                            .await?;
                     }
                     SpotifyKind::Unknown => todo!(),
                 }
