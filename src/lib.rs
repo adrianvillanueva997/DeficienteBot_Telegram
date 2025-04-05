@@ -109,10 +109,9 @@ fn format_message_username(msg: &Message, content: &str) -> String {
         .and_then(|user| user.username.as_ref())
         .map_or_else(
             || "👤 *Anonymous User*".to_string(),
-            |name| format!("👤 *@{name}* sent:"),
+            |name| format!("👤 @{name} sent:"),
         );
-    let formatted_content = format!("```\n{}\n```", content.trim());
-    format!("{username}\n\n{formatted_content}")
+    format!("{username}\n\n{content}")
 }
 
 /// Bot logic goes here.
