@@ -5,7 +5,7 @@ use tracing::instrument;
 #[instrument]
 pub async fn update_ddinstagram(url: &str) -> Option<String> {
     let url = url.trim();
-    if url.contains("instagram") {
+    if url.contains("instagram") && !url.contains("ddinstagram") {
         let new_url = url.replace("instagram", "ddinstagram");
         if url.is_empty() {
             return None;
