@@ -13,7 +13,7 @@ use online_downloads::video_downloader::{delete_file, download_video};
 use prank::day_check::is_prank_day;
 use prank::randomizer::should_trigger;
 use prank::reverse_words::upside_down_string;
-use spotify::client::{Spotify, SpotifyKind};
+use spotify::client::Spotify;
 use spotify_handler::SpotifyHandler;
 
 use std::error::Error;
@@ -28,6 +28,7 @@ use tokio::time::sleep;
 use tracing::{error, instrument};
 use uuid::Uuid;
 
+mod error;
 pub mod message_checks;
 pub mod online_downloads;
 pub mod prank;
@@ -43,15 +44,15 @@ fn get_telegram_username(msg: &Message) -> String {
 }
 
 #[instrument]
-async fn process_webm_urls(bot: Bot, msg: Message, url: String) {
-    if check_url_status_code(&url).await == Some(200) {
+async fn process_webm_urls(bot: &Bot, msg: &Message, url: &str) {
+    if check_url_status_code(url).await == Some(200) {
         let uuid = Uuid::new_v4();
         let webm_filename = format!("{uuid}.webm");
         let mp4_filename = format!("{uuid}.mp4");
         bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
             .await
             .unwrap();
-        download_video(&url, &webm_filename).await;
+        download_video(url, &webm_filename).await;
         webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
         bot.send_video(
             msg.chat.id,
@@ -69,14 +70,14 @@ async fn process_webm_urls(bot: Bot, msg: Message, url: String) {
 }
 
 #[instrument]
-async fn process_mp4_urls(bot: Bot, msg: Message, url: String) {
-    if check_url_status_code(&url).await == Some(200) {
+async fn process_mp4_urls(bot: &Bot, msg: &Message, url: &str) {
+    if check_url_status_code(url).await == Some(200) {
         let uuid = Uuid::new_v4();
         let mp4_filename = format!("{uuid}.mp4");
         bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
             .await
             .unwrap();
-        download_video(&url, &mp4_filename).await;
+        download_video(url, &mp4_filename).await;
         bot.send_video(
             msg.chat.id,
             teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
@@ -108,67 +109,41 @@ fn format_message_username(msg: &Message, content: &str) -> String {
 ///
 /// This function will return an error if the bot fails to run.
 #[allow(clippy::too_many_lines)]
-async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(), Box<dyn Error>> {
-    let message = text.to_string();
+async fn process_text_messages(
+    bot: &Bot,
+    msg: &Message,
+    text: &str,
+) -> Result<(), Box<dyn Error + Send + Sync>> {
     let mut actions: Vec<_> = Vec::new();
-    if message_checks::url::is_url(&message) {
-        let twitter = message_checks::twitter::update_vxtwitter(&message).await;
+    if message_checks::url::is_url(text) {
+        let twitter = message_checks::twitter::update_vxtwitter(text).await;
         if let Some(twitter) = twitter {
             let tweet = format_message_username(msg, &twitter);
             bot.delete_message(msg.chat.id, msg.id).await?;
             actions.push(bot.send_message(msg.chat.id, tweet));
-        } else if is_webm_url(&message) {
-            process_webm_urls(bot.clone(), msg.clone(), message.clone()).await;
-        } else if check_if_tiktok(&message) {
-            let tntok = message_checks::tiktok::updated_tiktok(&message).await;
+        } else if is_webm_url(text) {
+            process_webm_urls(bot, msg, text).await;
+        } else if check_if_tiktok(text) {
+            let tntok = message_checks::tiktok::updated_tiktok(text).await;
             if let Some(tntok) = tntok {
                 let tiktok = format_message_username(msg, &tntok);
                 bot.delete_message(msg.chat.id, msg.id).await?;
                 actions.push(bot.send_message(msg.chat.id, tiktok));
             }
-        } else if is_mp4_url(&message) {
-            process_mp4_urls(bot.clone(), msg.clone(), message.clone()).await;
-        } else if let Some(instagram) =
-            message_checks::instagram::update_ddinstagram(&message).await
-        {
+        } else if is_mp4_url(text) {
+            process_mp4_urls(bot, msg, text).await;
+        } else if let Some(instagram) = message_checks::instagram::update_ddinstagram(text).await {
             let instagram_message = format_message_username(msg, &instagram);
             bot.delete_message(msg.chat.id, msg.id).await?;
             actions.push(bot.send_message(msg.chat.id, instagram_message));
         }
-        let spotify = Spotify::new().await?;
-        let spotify_handler = SpotifyHandler::new(&spotify, bot);
-        let spotify_url = spotify.identify_spotify_url(&message);
-        if spotify_url != SpotifyKind::Unknown {
-            if let Some(id) = spotify.extract_spotify_id(&message) {
-                match spotify_url {
-                    SpotifyKind::Album => {
-                        spotify_handler
-                            .prepare_album_content(msg, id, &message)
-                            .await?;
-                    }
-                    SpotifyKind::Artist => {
-                        spotify_handler
-                            .prepare_artist_content(msg, id, &message)
-                            .await?;
-                    }
-                    SpotifyKind::Playlist => {
-                        spotify_handler
-                            .prepare_playlist_content(msg, id, &message)
-                            .await?;
-                    }
-                    SpotifyKind::Track => {
-                        spotify_handler
-                            .prepare_track_content(msg, id, &message)
-                            .await?;
-                    }
-                    SpotifyKind::Unknown => todo!(),
-                }
-            }
-        }
+        let spotify_client = Spotify::new().await?;
+        let spotify_handler = SpotifyHandler::new(&spotify_client, bot);
+        spotify_handler.process_spotify_url(msg, text).await?;
     }
     if is_prank_day() && should_trigger(PRANK_THRESHOLD) {
         if should_trigger(45) {
-            let reversed_message = upside_down_string(&message);
+            let reversed_message = upside_down_string(text);
             bot.delete_message(msg.chat.id, msg.id).await?;
             actions.push(bot.send_message(msg.chat.id, reversed_message));
         } else {
@@ -188,7 +163,7 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
             }
         }
     }
-    let message = message.to_lowercase();
+    let message = text.to_lowercase();
     if bad_words::find_bad_words(&message).await {
         actions.push(
             bot.send_message(msg.chat.id, "Deficiente")
@@ -252,7 +227,7 @@ pub async fn process_files(
     bot: &Bot,
     msg: &Message,
     file_to_read: &Document,
-) -> Result<(), Box<dyn Error>> {
+) -> Result<(), Box<dyn Error + Send + Sync>> {
     // Telegram max file size: 20 MB
     if file_to_read.clone().file_name.unwrap().contains("webm")
         && file_to_read.clone().file.size <= 20_000_000
@@ -290,14 +265,28 @@ pub async fn process_files(
 /// # Panics
 ///
 /// Panics if the bot fails to handle the messages.
-#[allow(clippy::match_same_arms)]
-pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn Error>> {
+use crate::error::BotError;
+
+/// Handles messages from the bot.
+///
+/// # Panics
+///
+/// Panics when unwrapping message text that is None.
+///
+/// # Errors
+///
+/// Returns a `BotError` if processing the message fails.
+pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), BotError> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
-            process_text_messages(bot, msg, msg.text().unwrap()).await?;
+            process_text_messages(bot, msg, msg.text().unwrap())
+                .await
+                .map_err(|e| BotError::ProcessingError(e.to_string()))?;
         }
         Some(msg) if msg.document().is_some() => {
-            process_files(bot, msg, msg.document().unwrap()).await?;
+            process_files(bot, msg, msg.document().unwrap())
+                .await
+                .map_err(|e| BotError::ProcessingError(e.to_string()))?;
         }
         Some(_) | None => (),
     }

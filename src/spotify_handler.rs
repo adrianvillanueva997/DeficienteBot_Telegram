@@ -1,4 +1,9 @@
-use crate::{get_telegram_username, spotify::client::Spotify, utils::escape_markdown};
+use crate::{
+    error::SpotifyError,
+    get_telegram_username,
+    spotify::client::{Spotify, SpotifyKind},
+    utils::escape_markdown,
+};
 use rspotify::{model::Market, prelude::BaseClient};
 use std::{error::Error, time::Duration};
 use teloxide::{
@@ -10,7 +15,7 @@ use teloxide::{
 use tracing::error;
 use tracing::instrument;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct SpotifyHandler<'a> {
     spotify_client: &'a Spotify,
     bot: &'a Bot,
@@ -23,12 +28,64 @@ impl<'a> SpotifyHandler<'a> {
             bot,
         }
     }
+
     #[instrument]
-    pub async fn prepare_album_content(
+    pub async fn process_spotify_url(
+        &self,
+        telegram_message: &Message,
+        url: &str,
+    ) -> Result<(), SpotifyError> {
+        let spotify_url = self.spotify_client.identify_spotify_url(url);
+
+        if spotify_url == SpotifyKind::Unknown {
+            return Ok(());
+        }
+
+        let Some(id) = self.spotify_client.extract_spotify_id(url) else {
+            return Ok(());
+        };
+
+        let result = match spotify_url {
+            SpotifyKind::Album => self
+                .prepare_album_content(telegram_message, id, url)
+                .await
+                .map_err(|e| SpotifyError::ApiError(e.to_string())),
+            SpotifyKind::Artist => self
+                .prepare_artist_content(telegram_message, id, url)
+                .await
+                .map_err(|e| SpotifyError::ApiError(e.to_string())),
+            SpotifyKind::Playlist => self
+                .prepare_playlist_content(telegram_message, id, url)
+                .await
+                .map_err(|e| SpotifyError::ApiError(e.to_string())),
+            SpotifyKind::Track => self
+                .prepare_track_content(telegram_message, id, url)
+                .await
+                .map_err(|e| SpotifyError::ApiError(e.to_string())),
+            SpotifyKind::Unknown => Ok(()),
+        };
+
+        if let Err(e) = &result {
+            error!("Failed to process Spotify content: {}", e);
+            self.bot
+                .send_message(
+                    telegram_message.chat.id,
+                    "Sorry, I couldn't process that Spotify link 😔",
+                )
+                .reply_parameters(ReplyParameters::new(telegram_message.id))
+                .await
+                .map_err(SpotifyError::TelegramError)?;
+        }
+
+        result
+    }
+
+    #[instrument]
+    async fn prepare_album_content(
         self,
         msg: &Message,
         album_id: String,
-        spotify_url: &String,
+        spotify_url: &str,
     ) -> Result<(), Box<dyn Error>> {
         let album = self
             .spotify_client
@@ -151,11 +208,11 @@ impl<'a> SpotifyHandler<'a> {
     }
 
     #[instrument]
-    pub async fn prepare_artist_content(
+    async fn prepare_artist_content(
         self,
         msg: &Message,
         artist_id: String,
-        spotify_url: &String,
+        spotify_url: &str,
     ) -> Result<(), Box<dyn Error>> {
         let artist_data = self
             .spotify_client
@@ -227,11 +284,11 @@ impl<'a> SpotifyHandler<'a> {
     }
 
     #[instrument]
-    pub async fn prepare_playlist_content(
+    async fn prepare_playlist_content(
         self,
         msg: &Message,
         playlist_id: String,
-        spotify_url: &String,
+        spotify_url: &str,
     ) -> Result<(), Box<dyn Error>> {
         let playlist_data = self
             .spotify_client
@@ -300,11 +357,11 @@ impl<'a> SpotifyHandler<'a> {
         Ok(())
     }
     #[instrument]
-    pub async fn prepare_track_content(
+    async fn prepare_track_content(
         self,
         msg: &Message,
         track_id: String,
-        spotify_url: &String,
+        spotify_url: &str,
     ) -> Result<(), Box<dyn Error>> {
         let track_data = self
             .spotify_client
