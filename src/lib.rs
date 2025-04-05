@@ -194,7 +194,7 @@ async fn process_text_messages(
         }
     }
     let thursday = ThursdayChecker::new();
-    if let Some(happy_thursday) = thursday.asuka(message) {
+    if let Some(happy_thursday) = thursday.asuka(&message) {
         actions.push(
             bot.send_message(msg.chat.id, happy_thursday)
                 .reply_parameters(ReplyParameters::new(msg.id)),
