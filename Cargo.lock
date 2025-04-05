@@ -380,7 +380,6 @@ dependencies = [
  "chrono",
  "color-eyre",
  "mimalloc",
- "once_cell",
  "pretty_env_logger",
  "rand 0.9.0",
  "rayon",
