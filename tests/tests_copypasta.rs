@@ -5,7 +5,7 @@ mod tests {
     #[tokio::test]
     async fn test_find_copypasta() {
         let copypasta = "amiga";
-        let (_, copypastas) = find_copypasta(copypasta).await;
-        assert_eq!(copypastas, (vec!["\"amiga\"".to_string()]));
+        let copypastas = find_copypasta(copypasta).await;
+        assert_eq!(copypastas.first().unwrap().response, "amiga");
     }
 }
