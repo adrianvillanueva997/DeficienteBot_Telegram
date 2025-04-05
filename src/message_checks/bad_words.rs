@@ -1,13 +1,10 @@
-use lazy_static::lazy_static;
 use regex::Regex;
+use std::sync::LazyLock;
 use tokio::task;
 use tracing::instrument;
-
 const BAD_WORDS: &str = r"\W*((?i)(uwu|:v|owo)(?-i))\W*";
 
-lazy_static! {
-    static ref BAD_WORD_REGEX: Regex = Regex::new(BAD_WORDS).unwrap();
-}
+static BAD_WORD_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(BAD_WORDS).unwrap());
 /// Find bad words in a string.
 ///
 /// # Panics

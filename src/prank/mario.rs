@@ -1,14 +1,13 @@
 use anyhow::{anyhow, Result};
-use once_cell::sync::Lazy;
 use rand::seq::IteratorRandom;
 use rust_embed::RustEmbed;
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::LazyLock};
 use teloxide::types::InputFile;
 #[derive(RustEmbed)]
 #[folder = "assets/images/"]
 struct Asset;
 
-static IMAGES_MAP: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
+static IMAGES_MAP: LazyLock<HashMap<&'static str, &'static str>> = LazyLock::new(|| {
     let mut map: HashMap<&'static str, &'static str> = HashMap::new();
 
     // Map jaime images to descriptions
