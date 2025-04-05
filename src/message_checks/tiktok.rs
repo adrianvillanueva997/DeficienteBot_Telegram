@@ -3,7 +3,7 @@ use std::sync::LazyLock;
 use tracing::instrument;
 
 static TIKTOK_PATTERN: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"https?://(?:www\.)?(?:vm\.)?tiktok\.com/(@?[^/\s]+/?)+").unwrap()
+    Regex::new(r"https?://(?:www\.)?(?:vm\.)?tiktok\.com(?:/(@?[^/\s]+/?)*)?").unwrap()
 });
 
 const TIKTOK_REPLACEMENT: &str = "tnktok";
@@ -74,19 +74,27 @@ mod tests {
         }
     }
 
+    async fn assert_tiktok_conversion(input: &str, expected: &str) {
+        let result = updated_tiktok(input).await;
+        assert!(result.is_some(), "Expected URL to be converted: {input}");
+        assert_eq!(
+            result.unwrap(),
+            expected,
+            "Incorrect conversion for {input}"
+        );
+    }
+
     #[tokio::test]
     async fn test_url_variants() {
-        let variants = vec![
-            "https://tiktok.com",
-            "http://tiktok.com",
-            "https://www.tiktok.com",
-            "https://vm.tiktok.com",
+        let test_cases = vec![
+            ("https://tiktok.com", "https://tnktok.com"),
+            ("http://tiktok.com", "http://tnktok.com"),
+            ("https://www.tiktok.com", "https://www.tnktok.com"),
+            ("https://vm.tiktok.com", "https://vm.tnktok.com"),
         ];
 
-        for url in variants {
-            let result = updated_tiktok(url).await;
-            assert!(result.is_some());
-            assert!(!result.unwrap().contains("tiktok"));
+        for (input, expected) in test_cases {
+            assert_tiktok_conversion(input, expected).await;
         }
     }
 }
