@@ -1,8 +1,7 @@
 use crate::{
     error::SpotifyError,
-    get_telegram_username,
     spotify::client::{Spotify, SpotifyKind},
-    utils::escape_markdown,
+    utils::{escape_markdown, get_telegram_username},
 };
 use rspotify::{model::Market, prelude::BaseClient};
 use std::{error::Error, time::Duration};
