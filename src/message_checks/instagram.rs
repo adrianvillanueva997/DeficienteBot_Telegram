@@ -6,6 +6,21 @@ use tracing::instrument;
 pub async fn update_ddinstagram(url: &str) -> Option<String> {
     if url.contains("instagram") {
         let new_url = url.replace("instagram", "ddinstagram");
+        let url = url.trim();
+        if url.is_empty() {
+            return None;
+        }
+        if let Ok(mut parsed_url) = url::Url::parse(url) {
+            if let Some(host) = parsed_url.host_str() {
+                if host.contains("instagram") {
+                    let new_host = host.replace("instagram", "ddinstagram");
+                    if parsed_url.set_host(Some(&new_host)).is_ok() {
+                        return Some(parsed_url.to_string());
+                    }
+                }
+            }
+            return None;
+        }
         Some(new_url)
     } else {
         None
