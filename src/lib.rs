@@ -7,7 +7,6 @@ use std::time::Duration;
 
 use message_checks::friday::fetch_friday_video;
 use message_checks::thursday::ThursdayChecker;
-use message_checks::tiktok::check_if_tiktok;
 
 use message_checks::{bad_words, webm};
 use online_downloads::url_checker::{check_url_status_code, is_mp4_url, is_webm_url};
@@ -15,8 +14,7 @@ use online_downloads::video_downloader::{delete_file, download_video};
 use prank::day_check::is_prank_day;
 use prank::randomizer::should_trigger;
 use prank::reverse_words::upside_down_string;
-use spotify::client::Spotify;
-use spotify_handler::SpotifyHandler;
+use social_media_handler::SocialMediaHandler;
 
 use std::error::Error;
 use teloxide::net::Download;
@@ -34,16 +32,12 @@ mod error;
 pub mod message_checks;
 pub mod online_downloads;
 pub mod prank;
+mod social_media_handler;
 pub mod spotify;
 mod spotify_handler;
 mod utils;
 
 pub const PRANK_THRESHOLD: u32 = 30;
-
-fn get_telegram_username(msg: &Message) -> String {
-    let user = msg.from.as_ref().unwrap().username.as_ref().unwrap();
-    format!("@{user}")
-}
 
 #[instrument]
 async fn process_webm_urls(bot: &Bot, msg: &Message, url: &str) {
@@ -102,18 +96,6 @@ async fn process_mp4_urls(bot: &Bot, msg: &Message, url: &str) {
     }
 }
 
-fn format_message_username(msg: &Message, content: &str) -> String {
-    let username = msg
-        .from
-        .as_ref()
-        .and_then(|user| user.username.as_ref())
-        .map_or_else(
-            || "👤 *Anonymous User*".to_string(),
-            |name| format!("👤 @{name} sent:"),
-        );
-    format!("{username}\n\n{content}")
-}
-
 /// Bot logic goes here.
 ///
 /// # Panics
@@ -131,33 +113,17 @@ async fn process_text_messages(
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
     let mut actions: Vec<_> = Vec::new();
     if message_checks::url::is_url(text) {
-        let twitter = message_checks::twitter::update_vxtwitter(text).await;
-        if let Some(twitter) = twitter {
-            let tweet = format_message_username(msg, &twitter);
-            bot.delete_message(msg.chat.id, msg.id).await?;
-            actions.push(bot.send_message(msg.chat.id, tweet));
-        } else if is_webm_url(text) {
+        let social_media_handler = SocialMediaHandler::new(bot, msg);
+        social_media_handler.process(text).await?;
+        if is_webm_url(text) {
             process_webm_urls(bot, msg, text).await;
-        } else if check_if_tiktok(text) {
-            let tntok = message_checks::tiktok::updated_tiktok(text).await;
-            if let Some(tntok) = tntok {
-                let tiktok = format_message_username(msg, &tntok);
-                bot.delete_message(msg.chat.id, msg.id).await?;
-                actions.push(bot.send_message(msg.chat.id, tiktok));
-            }
-        } else if is_mp4_url(text) {
-            process_mp4_urls(bot, msg, text).await;
-        } else if let Some(instagram) = message_checks::instagram::update_ddinstagram(text).await {
-            let instagram_message = format_message_username(msg, &instagram);
-            bot.delete_message(msg.chat.id, msg.id).await?;
-            actions.push(bot.send_message(msg.chat.id, instagram_message));
         }
-        let spotify_client = Spotify::new().await?;
-        let spotify_handler = SpotifyHandler::new(&spotify_client, bot);
-        spotify_handler.process_spotify_url(msg, text).await?;
+        if is_mp4_url(text) {
+            process_mp4_urls(bot, msg, text).await;
+        }
     }
     if is_prank_day() && should_trigger(PRANK_THRESHOLD) {
-        if should_trigger(45) {
+        if should_trigger(25) {
             let reversed_message = upside_down_string(text);
             bot.delete_message(msg.chat.id, msg.id).await?;
             actions.push(bot.send_message(msg.chat.id, reversed_message));
