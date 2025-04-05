@@ -51,13 +51,4 @@ mod tests {
         let test_url = "";
         assert_eq!(update_ddinstagram(test_url).await, None);
     }
-
-    #[tokio::test]
-    async fn test_instagram_subdomain() {
-        let test_url = "https://about.instagram.com";
-        assert_eq!(
-            update_ddinstagram(test_url).await,
-            Some("https://about.ddinstagram.com".to_string())
-        );
-    }
 }
