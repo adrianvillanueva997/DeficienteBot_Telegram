@@ -6,9 +6,10 @@ use crate::error::BotError;
 use std::time::Duration;
 
 use message_checks::friday::fetch_friday_video;
+use message_checks::thursday::ThursdayChecker;
 use message_checks::tiktok::check_if_tiktok;
 
-use message_checks::{bad_words, thursday, webm};
+use message_checks::{bad_words, webm};
 use online_downloads::url_checker::{check_url_status_code, is_mp4_url, is_webm_url};
 use online_downloads::video_downloader::{delete_file, download_video};
 use prank::day_check::is_prank_day;
@@ -177,33 +178,25 @@ async fn process_text_messages(
                 .reply_parameters(ReplyParameters::new(msg.id)),
         );
     }
-    let (_matching_words, copypastas) = message_checks::copypasta::find_copypasta(&message).await;
-
+    let copypastas = message_checks::copypasta::find_copypasta(&message).await;
     for copypasta in copypastas {
-        if copypasta == "viernes" {
+        if copypasta.trigger == "viernes" {
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                 .await?;
             bot.send_video(msg.chat.id, fetch_friday_video().unwrap())
                 .reply_parameters(ReplyParameters::new(msg.id))
                 .await?;
-            // bot.send_audio(
-            //     msg.chat.id,
-            //     // TODO: Move this to embedded in the binary
-            //     teloxide::types::InputFile::file(std::path::Path::new("viernes.ogg")),
-            // )
-            // .reply_parameters(ReplyParameters::new(msg.id))
-            // .await?;
         } else {
             actions.push(
-                bot.send_message(msg.chat.id, copypasta)
+                bot.send_message(msg.chat.id, copypasta.response)
                     .reply_parameters(ReplyParameters::new(msg.id)),
             );
         }
     }
-
-    if thursday::is_thursday().await && thursday::check_asuka(&message).await {
+    let thursday = ThursdayChecker::new();
+    if let Some(happy_thursday) = thursday.asuka(&message) {
         actions.push(
-            bot.send_message(msg.chat.id, thursday::random_message().await)
+            bot.send_message(msg.chat.id, happy_thursday)
                 .reply_parameters(ReplyParameters::new(msg.id)),
         );
     }

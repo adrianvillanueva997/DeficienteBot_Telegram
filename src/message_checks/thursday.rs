@@ -1,8 +1,7 @@
-use chrono::Datelike;
+use chrono::{Datelike, Local};
 use rand::Rng;
-use tracing::instrument;
 
-const THURSDAY_GREETINGS: [&str; 10] = [
+static THURSDAY_GREETINGS: &[&str] = &[
     "De nada maquina, que tengas un feliz jueves",
     "De nada mi amor",
     "De nada fiera",
@@ -15,24 +14,34 @@ const THURSDAY_GREETINGS: [&str; 10] = [
     "las que tu tienes, fiera, crack, maquina, mastodonte",
 ];
 
-const ASUKA: &str = "gracias asuka";
+const TRIGGER_PHRASE: &str = "gracias asuka";
 
-/// Check if today is Thursday.
-#[instrument]
-pub async fn is_thursday() -> bool {
-    let now = chrono::offset::Local::now();
-    now.date_naive().weekday() == chrono::Weekday::Thu
+#[derive(Debug)]
+pub struct ThursdayChecker {}
+
+impl ThursdayChecker {
+    #[must_use]
+    pub fn new() -> Self {
+        Self {}
+    }
+    fn contains_trigger(message: &str) -> bool {
+        message.contains(TRIGGER_PHRASE)
+    }
+    fn is_thursday() -> bool {
+        Local::now().date_naive().weekday() == chrono::Weekday::Thu
+    }
+    #[must_use]
+    pub fn asuka(&self, message: &str) -> Option<&str> {
+        if Self::contains_trigger(message) && Self::is_thursday() {
+            let rng = rand::rng().random_range(0..THURSDAY_GREETINGS.len());
+            return Some(THURSDAY_GREETINGS[rng]);
+        }
+        None
+    }
 }
 
-/// Check if the message contains "gracias asuka"
-#[instrument]
-pub async fn check_asuka(message: &str) -> bool {
-    message.contains(ASUKA)
-}
-
-/// Return a random message from the THURSDAY_GREETINGS array.
-#[instrument]
-pub async fn random_message() -> String {
-    let rng = rand::rng().random_range(0..THURSDAY_GREETINGS.len());
-    THURSDAY_GREETINGS[rng].to_string()
+impl Default for ThursdayChecker {
+    fn default() -> Self {
+        Self::new()
+    }
 }
