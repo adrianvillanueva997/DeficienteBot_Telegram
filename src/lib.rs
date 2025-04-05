@@ -103,8 +103,16 @@ async fn process_mp4_urls(bot: &Bot, msg: &Message, url: &str) {
 }
 
 fn format_message_username(msg: &Message, content: &str) -> String {
-    let user = msg.from.as_ref().unwrap().username.as_ref().unwrap();
-    format!("@{user} \n{content} ")
+    let username = msg
+        .from
+        .as_ref()
+        .and_then(|user| user.username.as_ref())
+        .map_or_else(
+            || "👤 *Anonymous User*".to_string(),
+            |name| format!("👤 *@{name}* sent:"),
+        );
+    let formatted_content = format!("```\n{}\n```", content.trim());
+    format!("{username}\n\n{formatted_content}")
 }
 
 /// Bot logic goes here.
