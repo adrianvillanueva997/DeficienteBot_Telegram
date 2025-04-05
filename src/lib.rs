@@ -500,6 +500,12 @@ async fn process_text_messages(bot: &Bot, msg: &Message, text: &str) -> Result<(
             }
         } else if is_mp4_url(&message) {
             process_mp4_urls(bot.clone(), msg.clone(), message.clone()).await;
+        } else if let Some(instagram) =
+            message_checks::instagram::update_ddinstagram(&message).await
+        {
+            let instagram_message = format_message_username(msg, &instagram);
+            bot.delete_message(msg.chat.id, msg.id).await?;
+            actions.push(bot.send_message(msg.chat.id, instagram_message));
         }
         let spotify = Spotify::new().await?;
         let spotify_url = spotify.identify_spotify_url(&message);
