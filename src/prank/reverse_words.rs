@@ -1,8 +1,6 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::LazyLock};
 
-use once_cell::sync::Lazy;
-
-pub static UPSIDE_DOWN_MAP: Lazy<HashMap<char, char>> = Lazy::new(|| {
+pub static UPSIDE_DOWN_MAP: LazyLock<HashMap<char, char>> = LazyLock::new(|| {
     let mut map = HashMap::new();
 
     // Uppercase letters

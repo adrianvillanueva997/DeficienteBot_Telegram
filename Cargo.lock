@@ -379,7 +379,6 @@ dependencies = [
  "anyhow",
  "chrono",
  "color-eyre",
- "lazy_static",
  "mimalloc",
  "once_cell",
  "pretty_env_logger",

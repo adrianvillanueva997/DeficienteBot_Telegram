@@ -1,8 +1,5 @@
 use rspotify::{ClientCredsSpotify, Credentials};
 
-
-
-
 #[derive(Debug, Clone, PartialEq)]
 pub enum SpotifyKind {
     Album,
@@ -12,11 +9,9 @@ pub enum SpotifyKind {
     Unknown,
 }
 
-
-
 #[derive(Debug)]
 pub struct Spotify {
-    pub client : ClientCredsSpotify
+    pub client: ClientCredsSpotify,
 }
 
 impl Spotify {
@@ -33,17 +28,16 @@ impl Spotify {
     pub async fn new() -> Result<Self, rspotify::ClientError> {
         let credentials = Self::load_credentials();
         let spotify = Self::create_token(credentials).await?;
-        Ok(Spotify {
-            client: spotify
-        })
+        Ok(Spotify { client: spotify })
     }
 
-    async fn create_token(credentials:Credentials) -> Result<ClientCredsSpotify, rspotify::ClientError> {
+    async fn create_token(
+        credentials: Credentials,
+    ) -> Result<ClientCredsSpotify, rspotify::ClientError> {
         let spotify = ClientCredsSpotify::new(credentials);
         spotify.request_token().await?;
         Ok(spotify)
     }
-
 
     /// Identifies the type of Spotify URL
     ///
@@ -103,7 +97,7 @@ impl Spotify {
         // Split URL into parts and get the ID
         let id = url
             .split('/')
-            .last()
+            .next_back()
             .and_then(|id| id.split('?').next())
             .filter(|&id| !id.is_empty()) // Filter out empty strings
             .map(String::from);

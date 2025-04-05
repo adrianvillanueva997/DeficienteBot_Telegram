@@ -657,7 +657,7 @@ pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), Box<dyn Err
             process_files(bot, msg, msg.document().unwrap()).await?;
         }
         Some(_) | None => (),
-    };
+    }
     Ok(())
 }
 
