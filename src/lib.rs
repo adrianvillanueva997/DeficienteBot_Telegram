@@ -2,6 +2,7 @@
 
 use std::convert::Infallible;
 
+use crate::error::BotError;
 use std::time::Duration;
 
 use message_checks::friday::fetch_friday_video;
@@ -45,52 +46,58 @@ fn get_telegram_username(msg: &Message) -> String {
 
 #[instrument]
 async fn process_webm_urls(bot: &Bot, msg: &Message, url: &str) {
-    if check_url_status_code(url).await == Some(200) {
-        let uuid = Uuid::new_v4();
-        let webm_filename = format!("{uuid}.webm");
-        let mp4_filename = format!("{uuid}.mp4");
-        bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
-            .await
-            .unwrap();
-        download_video(url, &webm_filename).await;
-        webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
-        bot.send_video(
-            msg.chat.id,
-            teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
-        )
-        .reply_parameters(ReplyParameters::new(msg.id))
-        .await
-        .unwrap();
-    } else {
-        bot.send_message(msg.chat.id, "El video no existe 😭")
+    match check_url_status_code(url).await {
+        Some(status) if (200..=299).contains(&status) => {
+            let uuid = Uuid::new_v4();
+            let webm_filename = format!("{uuid}.webm");
+            let mp4_filename = format!("{uuid}.mp4");
+            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
+                .await
+                .unwrap();
+            download_video(url, &webm_filename).await;
+            webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
+            bot.send_video(
+                msg.chat.id,
+                teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
+            )
             .reply_parameters(ReplyParameters::new(msg.id))
             .await
             .unwrap();
+        }
+        _ => {
+            bot.send_message(msg.chat.id, "El video no existe o no está disponible 😭")
+                .reply_parameters(ReplyParameters::new(msg.id))
+                .await
+                .unwrap();
+        }
     }
 }
 
 #[instrument]
 async fn process_mp4_urls(bot: &Bot, msg: &Message, url: &str) {
-    if check_url_status_code(url).await == Some(200) {
-        let uuid = Uuid::new_v4();
-        let mp4_filename = format!("{uuid}.mp4");
-        bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
-            .await
-            .unwrap();
-        download_video(url, &mp4_filename).await;
-        bot.send_video(
-            msg.chat.id,
-            teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
-        )
-        .reply_parameters(ReplyParameters::new(msg.id))
-        .await
-        .unwrap();
-        delete_file(&mp4_filename).await;
-    } else {
-        bot.send_message(msg.chat.id, "El video no existe 😭")
+    match check_url_status_code(url).await {
+        Some(status) if (200..=299).contains(&status) => {
+            let uuid = Uuid::new_v4();
+            let mp4_filename = format!("{uuid}.mp4");
+            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
+                .await
+                .unwrap();
+            download_video(url, &mp4_filename).await;
+            bot.send_video(
+                msg.chat.id,
+                teloxide::types::InputFile::file(std::path::Path::new(&mp4_filename)),
+            )
             .reply_parameters(ReplyParameters::new(msg.id))
             .await
             .unwrap();
+            delete_file(&mp4_filename).await;
+        }
+        _ => {
+            bot.send_message(msg.chat.id, "El video no existe o no está disponible 😭")
+                .reply_parameters(ReplyParameters::new(msg.id))
+                .await
+                .unwrap();
+        }
     }
 }
 
@@ -265,17 +272,6 @@ pub async fn process_files(
 /// # Panics
 ///
 /// Panics if the bot fails to handle the messages.
-use crate::error::BotError;
-
-/// Handles messages from the bot.
-///
-/// # Panics
-///
-/// Panics when unwrapping message text that is None.
-///
-/// # Errors
-///
-/// Returns a `BotError` if processing the message fails.
 pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), BotError> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
