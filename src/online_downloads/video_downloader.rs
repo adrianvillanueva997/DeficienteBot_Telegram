@@ -2,6 +2,11 @@ use tokio::{fs::File, io::AsyncWriteExt};
 use tokio_stream::StreamExt;
 use tracing::instrument;
 
+/// .
+///
+/// # Panics
+///
+/// Panics if .
 #[instrument]
 pub async fn download_video(url: &str, output_filename: &str) {
     let request = reqwest::get(url);
@@ -19,6 +24,11 @@ pub async fn download_video(url: &str, output_filename: &str) {
     }
 }
 
+/// .
+///
+/// # Panics
+///
+/// Panics if .
 #[instrument]
 pub async fn delete_file(filename: &str) {
     std::fs::remove_file(filename).expect("Failed to delete mp4");

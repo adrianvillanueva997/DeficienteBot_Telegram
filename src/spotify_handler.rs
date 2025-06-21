@@ -79,7 +79,17 @@ impl<'a> SpotifyHandler<'a> {
         result
     }
 
+    /// .
+    ///
+    /// # Panics
+    ///
+    /// Panics if .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if .
     #[instrument]
+    #[allow(clippy::too_many_lines)]
     async fn prepare_album_content(
         self,
         msg: &Message,
