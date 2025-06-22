@@ -1,9 +1,7 @@
 use std::time::Duration;
 
 use opentelemetry::{
-    global::{self, tracer},
-    logs::LoggerProvider,
-    trace::FutureExt,
+    global::{self},
     KeyValue,
 };
 use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
@@ -12,12 +10,11 @@ use opentelemetry_otlp::{
     WithExportConfig, WithTonicConfig,
 };
 use opentelemetry_sdk::{
-    logs::{LogProcessor, LoggerProviderBuilder, SdkLoggerProvider},
+    logs::SdkLoggerProvider,
     metrics::SdkMeterProvider,
     trace::{RandomIdGenerator, Sampler, SdkTracerProvider},
     Resource,
 };
-use tracing_subscriber::EnvFilter;
 
 const SERVICE_NAME: &str = "telegrambot_deficiente";
 
@@ -81,8 +78,12 @@ pub fn setup_opentelemetry() -> Result<(), Box<dyn std::error::Error + Send + Sy
     let tracer_provider = setup_tracer_provider()?;
     let metric_exporter = setup_metric_exporter()?;
     let logger_provider = setup_logger_provider();
+    let meter_provider = setup_meter_provider(metric_exporter);
 
-    let otel_layer = OpenTelemetryTracingBridge::new(&logger_provider);
+    global::set_tracer_provider(tracer_provider);
+    global::set_meter_provider(meter_provider);
+
+    OpenTelemetryTracingBridge::new(&logger_provider);
 
     Ok(())
 }

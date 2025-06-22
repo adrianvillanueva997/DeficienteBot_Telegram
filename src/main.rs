@@ -43,4 +43,3 @@ async fn main() {
     let (bot, listener) = set_up_bot().await;
     Box::pin(deficiente_telegram_bot::parse_messages(bot, listener)).await;
 }
-// redis url = redis://localhost:6379
