@@ -7,7 +7,6 @@ use std::time::Duration;
 
 use message_checks::friday::fetch_friday_video;
 use message_checks::thursday::ThursdayChecker;
-
 use message_checks::{bad_words, webm};
 use online_downloads::url_checker::{check_url_status_code, is_mp4_url, is_webm_url};
 use online_downloads::video_downloader::{delete_file, download_video};
@@ -238,6 +237,7 @@ pub async fn process_files(
 /// # Panics
 ///
 /// Panics if the bot fails to handle the messages.
+#[instrument]
 pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), BotError> {
     match Some(msg) {
         Some(msg) if msg.text().is_some() => {
