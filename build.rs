@@ -10,16 +10,20 @@ struct AssetValidator {
 
 impl AssetValidator {
     fn new() -> Self {
-        let images = ["jaime1.png", "mario1.png", "mario2.png", "mario3.png",
-                     "mario4.png", "mario5.png", "mario6.png"]
-            .iter()
-            .map(|s| s.to_string())
-            .collect();
+        let images = [
+            "jaime1.png",
+            "mario1.png",
+            "mario2.png",
+            "mario3.png",
+            "mario4.png",
+            "mario5.png",
+            "mario6.png",
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
 
-        let videos = ["viernes.mp4"]
-            .iter()
-            .map(|s| s.to_string())
-            .collect();
+        let videos = ["viernes.mp4"].iter().map(|s| s.to_string()).collect();
 
         Self {
             images,
@@ -48,12 +52,10 @@ impl AssetValidator {
             .filter_map(|e| e.file_name().to_str().map(String::from))
             .collect();
 
-        let missing: Vec<_> = required
-            .difference(&found_files)
-            .collect();
+        let missing: Vec<_> = required.difference(&found_files).collect();
 
         if !missing.is_empty() {
-            return Err(format!("Missing {} files: {:?}", dir_name, missing));
+            return Err(format!("Missing {dir_name} files: {missing:?}",));
         }
 
         Ok(())
@@ -63,7 +65,7 @@ impl AssetValidator {
 fn main() {
     let validator = AssetValidator::new();
     if let Err(e) = validator.validate() {
-        panic!("Asset validation failed: {}", e);
+        panic!("Asset validation failed: {e}",);
     }
     println!("cargo:rerun-if-changed=assets/");
 }
