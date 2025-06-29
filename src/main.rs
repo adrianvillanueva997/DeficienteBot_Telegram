@@ -6,7 +6,7 @@ use teloxide::{
     update_listeners::{webhooks, UpdateListener},
     Bot,
 };
-use tracing::info;
+use tracing::{info, instrument};
 use url::Url;
 
 use crate::telemetry::Telemetry;
@@ -16,6 +16,7 @@ mod telemetry;
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
+#[instrument]
 async fn set_up_bot() -> (Bot, impl UpdateListener<Err = Infallible>) {
     let bot: Bot = Bot::from_env();
     let addr = ([0, 0, 0, 0], 8080).into();
@@ -43,4 +44,5 @@ async fn main() {
     }
     let (bot, listener) = set_up_bot().await;
     Box::pin(deficiente_telegram_bot::parse_messages(bot, listener)).await;
+    info!("Bot started");
 }
