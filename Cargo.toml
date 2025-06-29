@@ -48,12 +48,9 @@ tokio = { version = "1.37", default-features = false, features = [
 tokio-stream = "0.1.15"
 teloxide = { version = "0.16.0", features = ["macros", "webhooks-axum"] }
 tracing = "0.1.40"
-tracing-subscriber = { version = "0.3.19", features = [
-    "env-filter",
-    "registry",
-] }
 url = "2.5.0"
 uuid = "1.8.0"
+tracing-subscriber = "0.3.19"
 
 [profile.release]
 lto = true        # Already enabled

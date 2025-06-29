@@ -5,6 +5,7 @@ services:
     networks:
       - proxy
       - telegrambot_deficiente_network
+      - otlp
     restart: unless-stopped
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
@@ -38,9 +39,12 @@ services:
       - ENVIRONMENT=prod
       - RSPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
       - RSPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
+      - OTLP_ADDRESS=${OTLP_ADDRESS}
 
 networks:
   proxy:
     external: true
   telegrambot_deficiente_network:
     driver: bridge
+  otlp:
+    external: true

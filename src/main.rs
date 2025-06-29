@@ -9,7 +9,7 @@ use teloxide::{
 use tracing::info;
 use url::Url;
 
-use crate::telemetry::setup_opentelemetry;
+use crate::telemetry::Telemetry;
 
 mod telemetry;
 
@@ -37,7 +37,8 @@ async fn set_up_bot() -> (Bot, impl UpdateListener<Err = Infallible>) {
 async fn main() {
     pretty_env_logger::init();
     color_eyre::install().unwrap();
-    if let Err(e) = setup_opentelemetry() {
+    let telemetry = Telemetry::new();
+    if let Err(e) = telemetry.setup_opentelemetry() {
         eprintln!("Failed to set up OpenTelemetry: {e}");
     }
     let (bot, listener) = set_up_bot().await;
