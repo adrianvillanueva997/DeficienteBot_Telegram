@@ -9,6 +9,10 @@ use teloxide::{
 use tracing::info;
 use url::Url;
 
+use crate::telemetry::Telemetry;
+
+mod telemetry;
+
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
@@ -33,8 +37,10 @@ async fn set_up_bot() -> (Bot, impl UpdateListener<Err = Infallible>) {
 async fn main() {
     pretty_env_logger::init();
     color_eyre::install().unwrap();
-    // env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    let telemetry = Telemetry::new();
+    if let Err(e) = telemetry.setup_opentelemetry() {
+        eprintln!("Failed to set up OpenTelemetry: {e}");
+    }
     let (bot, listener) = set_up_bot().await;
     Box::pin(deficiente_telegram_bot::parse_messages(bot, listener)).await;
 }
-// redis url = redis://localhost:6379
