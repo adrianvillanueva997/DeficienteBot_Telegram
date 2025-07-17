@@ -1,7 +1,7 @@
 version: "3.0"
 services:
   redis:
-    image: redis:alpine@sha256:48501c5ad00d5563bc30c075c7bcef41d7d98de3e9a1e6c752068c66f0a8463b
+    image: redis:alpine@sha256:25c0ae32c6c2301798579f5944af53729766a18eff5660bbef196fc2e6214a9c
     container_name: deficiente-redis
     restart: unless-stopped
     ports:
