@@ -8,7 +8,7 @@ on:
 jobs:
   Hadolint:
     runs-on: ubuntu-latest
-    container: hadolint/hadolint:latest-alpine@sha256:93df61346192ffbbd07389f1afbb932da0b614f62fa3307f1ff70e3944086d90
+    container: hadolint/hadolint:latest-alpine@sha256:d02f8512ac8bf166cc93a43cfa56c22cdb1afe7ef173dc390878348e4a269bb8
     strategy:
       matrix:
         architectures:
