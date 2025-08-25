@@ -8,14 +8,14 @@ static TIKTOK_PATTERN: LazyLock<Regex> = LazyLock::new(|| {
 
 const TIKTOK_REPLACEMENT: &str = "tnktok";
 
-/// Converts TikTok URLs to their alternative viewer-friendly format.
+/// Converts `TikTok` URLs to their alternative viewer-friendly format.
 ///
 /// # Arguments
-/// * `message` - Text that may contain TikTok URLs
+/// * `message` - Text that may contain `TikTok` URLs
 ///
 /// # Returns
-/// * `Some(String)` - If TikTok URLs were found and converted
-/// * `None` - If no TikTok URLs were found
+/// * `Some(String)` - If `TikTok` URLs were found and converted
+/// * `None` - If no `TikTok` URLs were found
 ///
 /// # Example
 /// ```
