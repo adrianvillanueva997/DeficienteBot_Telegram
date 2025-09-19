@@ -1,4 +1,4 @@
-FROM rust:1.89.0-slim-bookworm@sha256:02ac2815c6454ab8f290abedd41c80cac0644e893064791a314b649d4d7534d9 AS build
+FROM rust:1.90.0-slim-bookworm@sha256:0a694b60da1de10034671091330d628c88af06f9ea0cc87c654d5bc4b6c7e538 AS build
 WORKDIR /build
 RUN apt-get update && \
     apt-get install -y apt-utils pkg-config libssl-dev --no-install-recommends  && \
@@ -10,7 +10,7 @@ COPY src ./src
 COPY assets ./assets
 RUN cargo build --release
 
-FROM ubuntu:noble-20250805@sha256:9cbed754112939e914291337b5e554b07ad7c392491dba6daf25eef1332a22e8 AS prod
+FROM ubuntu:noble-20250910@sha256:353675e2a41babd526e2b837d7ec780c2a05bca0164f7ea5dbbd433d21d166fc AS prod
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list
 RUN apt-get update && \
