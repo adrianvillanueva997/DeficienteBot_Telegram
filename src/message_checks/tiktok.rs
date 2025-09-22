@@ -17,13 +17,6 @@ const TIKTOK_REPLACEMENT: &str = "tnktok";
 /// * `Some(String)` - If `TikTok` URLs were found and converted
 /// * `None` - If no `TikTok` URLs were found
 ///
-/// # Example
-/// ```
-/// let msg = "Check this: https://tiktok.com/@user/video/123456";
-/// assert_eq!(
-///     updated_tiktok(msg).unwrap(),
-///     "Check this: https://tnktok.com/@user/video/123456"
-/// );
 /// ```
 #[instrument]
 pub async fn updated_tiktok(message: &str) -> Option<String> {

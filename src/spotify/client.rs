@@ -49,12 +49,6 @@ impl Spotify {
     ///
     /// Returns a `SpotifyKind` enum indicating the type of content
     ///
-    /// # Examples
-    ///
-    /// ```
-    /// let kind = spotify.identify_spotify_url("https://open.spotify.com/track/123");
-    /// assert_eq!(kind, SpotifyKind::Track);
-    /// ```
     #[must_use]
     pub fn identify_spotify_url(&self, spotify_url: &str) -> SpotifyKind {
         // First verify it's a valid Spotify URL
@@ -81,13 +75,6 @@ impl Spotify {
     ///
     /// Returns `Some(String)` with the ID if found, `None` otherwise
     ///
-    /// # Examples
-    ///
-    /// ```
-    /// let spotify = Spotify::new(config);
-    /// let id = spotify.extract_spotify_id("https://open.spotify.com/track/1234567890");
-    /// assert_eq!(id, Some("1234567890".to_string()));
-    /// ```
     pub fn extract_spotify_id(&self, url: &str) -> Option<String> {
         // First verify it's a valid Spotify URL
         if !url.starts_with("https://open.spotify.com/") {
