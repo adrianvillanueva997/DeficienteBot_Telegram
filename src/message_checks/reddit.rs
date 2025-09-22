@@ -69,7 +69,7 @@ mod tests {
     #[tokio::test]
     async fn test_mobile_reddit_url() {
         let message = "Mobile: https://m.reddit.com/r/learnrust";
-        let expected = "Mobile: https://old.reddit.com/r/learnrust"; // drop m.
+        let expected = "Mobile: https://old.reddit.com/r/learnrust";
         assert_eq!(updated_reddit(message).await, Some(expected.to_string()));
     }
 
