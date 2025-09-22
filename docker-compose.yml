@@ -1,7 +1,7 @@
 name: telegrambot_deficiente
 services:
   bot:
-    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.12.2
+    image: ghcr.io/adrianvillanueva997/deficientebot_telegram:v8.13.0
     networks:
       - proxy
       - telegrambot_deficiente_network
