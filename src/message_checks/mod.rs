@@ -1,7 +1,8 @@
 pub mod bad_words;
 pub mod copypasta;
 pub mod friday;
-pub mod instagram;
+// pub mod instagram;
+pub mod reddit;
 pub mod thursday;
 pub mod tiktok;
 pub mod twitter;

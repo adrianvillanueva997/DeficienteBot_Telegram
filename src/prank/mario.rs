@@ -33,7 +33,7 @@ pub fn fetch_random_image() -> Result<(&'static str, InputFile)> {
         .choose(&mut rand::rng())
         .ok_or_else(|| anyhow!("No images available"))?;
 
-    let file = Asset::get(image).ok_or_else(|| anyhow!("Failed to load image: {}", image))?;
+    let file = Asset::get(image).ok_or_else(|| anyhow!("Failed to load image: {image}"))?;
 
     Ok((description, InputFile::memory(file.data.into_owned())))
 }

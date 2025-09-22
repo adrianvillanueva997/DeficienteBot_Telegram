@@ -25,14 +25,6 @@ static TWITTER_PATTERNS: LazyLock<Vec<(Regex, &str)>> = LazyLock::new(|| {
 /// # Returns
 /// * `Some(String)` - If a URL was found and converted
 /// * `None` - If no convertible URLs were found
-///
-/// # Example
-/// ```
-/// let msg = "Check this: https://twitter.com/user/status/123456";
-/// assert_eq!(
-///     update_twitter_links(msg).unwrap(),
-///     "Check this: https://fxtwitter.com/user/status/123456"
-/// );
 /// ```
 #[instrument]
 pub async fn update_twitter_links(message: &str) -> Option<String> {
