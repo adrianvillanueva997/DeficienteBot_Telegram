@@ -201,8 +201,11 @@ pub async fn process_files(
     file_to_read: &Document,
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
     // Telegram max file size: 20 MB
-    if file_to_read.clone().file_name.unwrap().contains("webm")
-        && file_to_read.clone().file.size <= 20_000_000
+    if file_to_read
+        .file_name
+        .as_deref()
+        .is_some_and(|name| name.contains("webm"))
+        && file_to_read.file.size <= 20_000_000
     {
         let uuid = Uuid::new_v4();
         let webm_filename = format!("{uuid}.webm,");
@@ -210,7 +213,7 @@ pub async fn process_files(
         bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
             .await
             .unwrap();
-        let file = bot.get_file(file_to_read.file.clone().id).await.unwrap();
+        let file = bot.get_file(file_to_read.file.id.clone()).await.unwrap();
         let mut dst = fs::File::create(format!("{webm_filename}.webm"))
             .await
             .unwrap();
