@@ -27,16 +27,7 @@ pub async fn updated_reddit(message: &str) -> Option<String> {
 
     let updated = REDDIT_PATTERN.replace_all(message, |caps: &Captures| {
         let path = caps.name("path").map_or("", |m| m.as_str());
-
-        if caps.name("m").is_some() {
-            // Drop "m." → old.reddit.com
-            format!("{REDDIT_REPLACEMENT}.com{path}")
-        } else if caps.name("www").is_some() {
-            // Keep "www."
-            format!("www.{REDDIT_REPLACEMENT}.com{path}")
-        } else {
-            format!("{REDDIT_REPLACEMENT}.com{path}")
-        }
+        format!("{REDDIT_REPLACEMENT}.com{path}")
     });
 
     Some(updated.into_owned())
@@ -55,7 +46,7 @@ mod tests {
     #[tokio::test]
     async fn test_reddit_url_with_www() {
         let message = "Check https://www.reddit.com/r/rust";
-        let expected = "Check https://www.old.reddit.com/r/rust";
+        let expected = "Check https://old.reddit.com/r/rust";
         assert_eq!(updated_reddit(message).await, Some(expected.to_string()));
     }
 
@@ -83,14 +74,14 @@ mod tests {
     #[tokio::test]
     async fn test_http_reddit_url() {
         let message = "HTTP version: http://www.reddit.com/r/test";
-        let expected = "HTTP version: http://www.old.reddit.com/r/test";
+        let expected = "HTTP version: http://old.reddit.com/r/test";
         assert_eq!(updated_reddit(message).await, Some(expected.to_string()));
     }
 
     #[tokio::test]
     async fn test_multiple_replacements_in_message() {
-        let message = "First https://reddit.com/r/a and second https://www.reddit.com/r/b and mobile https://m.reddit.com/r/c";
-        let expected = "First https://old.reddit.com/r/a and second https://www.old.reddit.com/r/b and mobile https://old.reddit.com/r/c";
+        let message = "First https://reddit.com/r/a and second https://reddit.com/r/b and mobile https://m.reddit.com/r/c";
+        let expected = "First https://old.reddit.com/r/a and second https://old.reddit.com/r/b and mobile https://old.reddit.com/r/c";
         assert_eq!(updated_reddit(message).await, Some(expected.to_string()));
     }
 
