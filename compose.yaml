@@ -6,10 +6,19 @@ services:
       - proxy
       - telegrambot_deficiente_network
       - otlp
-    restart: unless-stopped
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - target: 8080
+        mode: ingress
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
     labels:
       # Enable Traefik
