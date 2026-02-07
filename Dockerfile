@@ -22,7 +22,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY --from=build /build/target/release/deficiente_telegram_bot ./bot
-RUN chown appuser:appuser /app
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
 USER appuser
 ENV RUST_LOG=info
 EXPOSE 8080
