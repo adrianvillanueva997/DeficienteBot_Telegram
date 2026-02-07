@@ -11,7 +11,7 @@ COPY src ./src
 COPY assets ./assets
 RUN cargo build --release --locked
 
-FROM debian:bookworm-slim AS  prod
+FROM debian:bookworm-slim AS prod
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /app
