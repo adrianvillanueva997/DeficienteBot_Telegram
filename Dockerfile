@@ -1,4 +1,4 @@
-FROM rust:1.93.0-bookworm AS build 
+FROM rust:1.93.0-bookworm AS build
 
 WORKDIR /build
 RUN apt-get update && \
@@ -19,7 +19,7 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates libssl3 && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY --from=build /build/target/release/deficiente_telegram_bot ./bot
 RUN chown appuser:appuser /app
