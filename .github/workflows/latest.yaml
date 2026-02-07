@@ -52,5 +52,5 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/adrianvillanueva997/telegrambot-deficiente:latest,
+          tags: ghcr.io/adrianvillanueva997/telegrambot-deficiente:latest
           labels: ${{ steps.meta.outputs.labels }}
