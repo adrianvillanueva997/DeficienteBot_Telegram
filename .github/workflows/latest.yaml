@@ -1,7 +1,7 @@
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - main
 
 jobs:
   build-docker:
@@ -52,5 +52,5 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/adrianvillanueva997/telegrambot-deficiente:latest, ${{ steps.meta.outputs.tags }}
+          tags: ghcr.io/adrianvillanueva997/telegrambot-deficiente:latest,
           labels: ${{ steps.meta.outputs.labels }}
