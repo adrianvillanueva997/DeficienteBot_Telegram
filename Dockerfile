@@ -1,4 +1,4 @@
-FROM rust:1.93.0-bookworm
+FROM rust:1.93.0-bookworm AS build 
 
 WORKDIR /build
 RUN apt-get update && \
@@ -11,7 +11,7 @@ COPY src ./src
 COPY assets ./assets
 RUN cargo build --release --locked
 
-FROM debian:bookwork-slim as PROD
+FROM debian:bookwork-slim AS  prod
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /app
