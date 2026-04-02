@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 #[must_use]
 pub fn should_trigger(threshold_percent: u32) -> bool {

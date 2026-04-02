@@ -167,9 +167,7 @@ impl<'a> SpotifyHandler<'a> {
         📅 *Release Date:* {}\n\
         🎵 *Total Tracks:* {}\n\
         ⏱️ *Duration:* {}h {}m\n\
-        🏷️ *Label:* {}\n\
-        🎭 *Genres:* {}\n\
-        ⭐ *Popularity:* {}/100\n\n\
+        🎭 *Genres:* {}\n\n\
         *Tracks:*\n\
         {}\n\n\
         [🔗 Open in Spotify]({})",
@@ -181,9 +179,7 @@ impl<'a> SpotifyHandler<'a> {
             escape_markdown(&album.tracks.total.to_string()),
             escape_markdown(&hours.to_string()),
             escape_markdown(&minutes.to_string()),
-            escape_markdown(album.label.as_deref().unwrap_or("N/A")),
             escape_markdown(&genres),
-            escape_markdown(&album.popularity.to_string()),
             escape_markdown(&tracks),
             escape_markdown(spotify_url)
         );
@@ -247,34 +243,14 @@ impl<'a> SpotifyHandler<'a> {
             artist_data.genres.join(", ")
         };
 
-        // Format follower count with thousand separators
-        let followers = artist_data
-            .followers
-            .total
-            .to_string()
-            .chars()
-            .rev()
-            .collect::<Vec<_>>()
-            .chunks(3)
-            .map(|chunk| chunk.iter().collect::<String>())
-            .collect::<Vec<_>>()
-            .join("'")
-            .chars()
-            .rev()
-            .collect::<String>();
-
         let content = format!(
             "*Sent by:* {}\n\
-👤 *Artist:* {}\n\
-🎭 *Genres:* {}\n\
-👥 *Followers:* {}\n\
-⭐ *Popularity:* {}/100\n\
-[🔗 Open in Spotify]({})",
+ 👤 *Artist:* {}\n\
+ 🎭 *Genres:* {}\n\
+ [🔗 Open in Spotify]({})",
             escape_markdown(&get_telegram_username(msg)),
             escape_markdown(&artist_data.name),
             escape_markdown(&genres),
-            escape_markdown(&followers),
-            escape_markdown(&artist_data.popularity.to_string()),
             escape_markdown(spotify_url)
         );
 
@@ -343,7 +319,7 @@ impl<'a> SpotifyHandler<'a> {
             escape_markdown(&playlist_data.name),
             escape_markdown(&playlist_data.owner.display_name.unwrap_or_default()),
             escape_markdown(&playlist_data.description.unwrap_or_default()),
-            escape_markdown(&playlist_data.tracks.total.to_string()),
+            escape_markdown(&playlist_data.items.total.to_string()),
             escape_markdown(&playlist_data.followers.total.to_string()),
             escape_markdown(&playlist_data.snapshot_id),
             escape_markdown(spotify_url)
@@ -414,14 +390,13 @@ impl<'a> SpotifyHandler<'a> {
 
                 let content = format!(
                     "*Sent by:* {}\n\
-🎵 *Track:* {}{}\n\
-🎤 *Artists:* {}\n\
-💽 *Album:* {}\n\
-⏱️ *Duration:* {:02}:{:02}\n\
-📅 *Release Date:* {}\n\
-🔢 *Track Number:* {}\n\
-⭐ *Popularity:* {}/100\n\
-[🎧 Open in Spotify]({}){}",
+ 🎵 *Track:* {}{}\n\
+ 🎤 *Artists:* {}\n\
+ 💽 *Album:* {}\n\
+ ⏱️ *Duration:* {:02}:{:02}\n\
+ 📅 *Release Date:* {}\n\
+ 🔢 *Track Number:* {}\n\
+ [🎧 Open in Spotify]({}){}",
                     escape_markdown(&get_telegram_username(msg)),
                     explicit_mark,
                     escape_markdown(&track.name),
@@ -431,7 +406,6 @@ impl<'a> SpotifyHandler<'a> {
                     seconds,
                     escape_markdown(&track.album.release_date.unwrap_or_default()),
                     escape_markdown(&track.track_number.to_string()),
-                    escape_markdown(&track.popularity.to_string()),
                     escape_markdown(spotify_url),
                     preview_section
                 );
