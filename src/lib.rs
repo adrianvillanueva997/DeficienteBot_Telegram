@@ -13,6 +13,7 @@ use online_downloads::video_downloader::{delete_file, download_video};
 use prank::day_check::is_prank_day;
 use prank::randomizer::should_trigger;
 use prank::reverse_words::upside_down_string;
+use prank::sarcastic_agree::random_sarcastic_reply;
 use social_media_handler::SocialMediaHandler;
 
 use std::error::Error;
@@ -36,7 +37,7 @@ pub mod spotify;
 mod spotify_handler;
 mod utils;
 
-pub const PRANK_THRESHOLD: u32 = 30;
+pub const PRANK_THRESHOLD: u32 = 10;
 
 #[instrument]
 async fn process_webm_urls(bot: &Bot, msg: &Message, url: &str) {
@@ -122,16 +123,23 @@ async fn process_text_messages(
         }
     }
     if is_prank_day() && should_trigger(PRANK_THRESHOLD) {
-        if should_trigger(25) {
+        if should_trigger(15) {
             let reversed_message = upside_down_string(text);
-            bot.delete_message(msg.chat.id, msg.id).await?;
-            actions.push(bot.send_message(msg.chat.id, reversed_message));
+            actions.push(
+                bot.send_message(msg.chat.id, reversed_message)
+                    .reply_parameters(ReplyParameters::new(msg.id)),
+            );
+        } else if should_trigger(70) {
+            let reply = random_sarcastic_reply();
+            actions.push(
+                bot.send_message(msg.chat.id, reply)
+                    .reply_parameters(ReplyParameters::new(msg.id)),
+            );
         } else {
             match prank::mario::fetch_random_image() {
                 Ok((caption, image)) => {
                     bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
                         .await?;
-                    // Send photo immediately since we can't queue it
                     bot.send_photo(msg.chat.id, image)
                         .reply_parameters(ReplyParameters::new(msg.id))
                         .caption(caption)
