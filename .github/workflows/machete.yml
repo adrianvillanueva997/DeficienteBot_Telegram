@@ -21,4 +21,4 @@ jobs:
           toolchain: stable
           override: true
       - name: Machete
-        uses: bnjbvr/cargo-machete@main
+        uses: bnjbvr/cargo-machete@b81ce1560c5fbd0210cb66d88bf210329ff04266 # main
