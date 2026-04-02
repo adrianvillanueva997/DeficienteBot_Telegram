@@ -25,7 +25,7 @@ jobs:
           override: true
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - name: Setup nextest
-        uses: taiki-e/install-action@nextest
+        uses: taiki-e/install-action@14665fb5d86e659e14b25b659957a06ea5b6912c # nextest
       - uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
       - name: List tests
         run: cargo nextest list
