@@ -1,5 +1,5 @@
 use chrono::{Datelike, Local};
-use rand::Rng;
+use rand::RngExt;
 
 static THURSDAY_GREETINGS: &[&str] = &[
     "De nada maquina, que tengas un feliz jueves",
