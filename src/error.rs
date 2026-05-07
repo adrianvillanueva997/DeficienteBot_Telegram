@@ -8,8 +8,6 @@ pub enum BotError {
     Parse(String),
 }
 
-impl std::error::Error for BotError {}
-
 impl fmt::Display for BotError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -20,23 +18,4 @@ impl fmt::Display for BotError {
     }
 }
 
-#[derive(Debug)]
-pub enum SpotifyError {
-    Api(String),
-    // Network(String),
-    Telegram(teloxide::RequestError),
-    // Parse(String),
-}
-
-impl std::fmt::Display for SpotifyError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Api(msg) => write!(f, "Spotify API error: {msg}"),
-            // Self::Network(msg) => write!(f, "Network error: {msg}"),
-            Self::Telegram(e) => write!(f, "Telegram error: {e}"),
-            // Self::Parse(msg) => write!(f, "Parse error: {msg}"),
-        }
-    }
-}
-
-impl std::error::Error for SpotifyError {}
+impl std::error::Error for BotError {}

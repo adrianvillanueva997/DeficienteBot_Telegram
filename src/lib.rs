@@ -33,8 +33,6 @@ pub mod message_checks;
 pub mod online_downloads;
 pub mod prank;
 mod social_media_handler;
-pub mod spotify;
-mod spotify_handler;
 mod utils;
 
 pub const PRANK_THRESHOLD: u32 = 10;
