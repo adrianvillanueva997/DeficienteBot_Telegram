@@ -2,8 +2,6 @@ use teloxide::{prelude::Requester, types::Message, Bot};
 
 use crate::{
     message_checks::{reddit, tiktok, twitter},
-    spotify::client::Spotify,
-    spotify_handler::SpotifyHandler,
     utils::format_message_username,
 };
 
@@ -28,13 +26,6 @@ impl<'a> SocialMediaHandler<'a> {
         } else if let Some(reddit) = reddit::updated_reddit(text).await {
             self.format_social_media_message(&reddit).await?;
         }
-        // else if let Some(instagram) = instagram::update_ddinstagram(text).await {
-        // self.format_social_media_message(&instagram).await?;
-        // }
-        let spotify_client = Spotify::new().await?;
-        let spotify_handler = SpotifyHandler::new(&spotify_client, self.bot);
-        spotify_handler.process_spotify_url(self.msg, text).await?;
-
         Ok(())
     }
 
