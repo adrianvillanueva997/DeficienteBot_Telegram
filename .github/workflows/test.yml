@@ -26,7 +26,7 @@ jobs:
       - uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3
       - name: Setup nextest
         uses: taiki-e/install-action@14665fb5d86e659e14b25b659957a06ea5b6912c # nextest
-      - uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
       - name: List tests
         run: cargo nextest list
       - name: Install ffmpeg
