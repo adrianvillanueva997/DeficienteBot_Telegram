@@ -1,34 +1,21 @@
-use tokio::{fs::File, io::AsyncWriteExt};
-use tokio_stream::StreamExt;
+use tokio::io::AsyncWriteExt;
 use tracing::instrument;
 
-/// .
-///
-/// # Panics
-///
-/// Panics if .
+#[allow(clippy::missing_panics_doc)]
 #[instrument]
 pub async fn download_video(url: &str, output_filename: &str) {
-    let request = reqwest::get(url);
-    if let Ok(response) = request.await {
-        let mut file = File::create(output_filename)
+    if let Ok(response) = reqwest::get(url).await {
+        let bytes = response.bytes().await.expect("Failed to read response");
+        let mut file = tokio::fs::File::create(output_filename)
             .await
             .expect("Failed to create file");
-        let mut stream = response.bytes_stream();
-        while let Some(item) = stream.next().await {
-            let item = item.expect("Failed to get item");
-            file.write_all(&item)
-                .await
-                .expect("Failed to write to file");
-        }
+        file.write_all(&bytes)
+            .await
+            .expect("Failed to write to file");
     }
 }
 
-/// .
-///
-/// # Panics
-///
-/// Panics if .
+#[allow(clippy::missing_panics_doc)]
 #[instrument]
 pub async fn delete_file(filename: &str) {
     std::fs::remove_file(filename).expect("Failed to delete mp4");
