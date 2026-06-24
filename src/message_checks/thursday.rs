@@ -16,32 +16,12 @@ static THURSDAY_GREETINGS: &[&str] = &[
 
 const TRIGGER_PHRASE: &str = "gracias asuka";
 
-#[derive(Debug)]
-pub struct ThursdayChecker {}
-
-impl ThursdayChecker {
-    #[must_use]
-    pub fn new() -> Self {
-        Self {}
+#[must_use]
+pub fn check_thursday(message: &str) -> Option<&'static str> {
+    if message.contains(TRIGGER_PHRASE) && Local::now().date_naive().weekday() == chrono::Weekday::Thu
+    {
+        let rng = rand::rng().random_range(0..THURSDAY_GREETINGS.len());
+        return Some(THURSDAY_GREETINGS[rng]);
     }
-    fn contains_trigger(message: &str) -> bool {
-        message.contains(TRIGGER_PHRASE)
-    }
-    fn is_thursday() -> bool {
-        Local::now().date_naive().weekday() == chrono::Weekday::Thu
-    }
-    #[must_use]
-    pub fn asuka(&self, message: &str) -> Option<&str> {
-        if Self::contains_trigger(message) && Self::is_thursday() {
-            let rng = rand::rng().random_range(0..THURSDAY_GREETINGS.len());
-            return Some(THURSDAY_GREETINGS[rng]);
-        }
-        None
-    }
-}
-
-impl Default for ThursdayChecker {
-    fn default() -> Self {
-        Self::new()
-    }
+    None
 }

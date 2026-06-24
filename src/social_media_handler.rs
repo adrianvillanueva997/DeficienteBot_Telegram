@@ -1,43 +1,24 @@
 use teloxide::{prelude::Requester, types::Message, Bot};
 
-use crate::{
-    message_checks::{reddit, tiktok, twitter},
-    utils::format_message_username,
-};
+use crate::{message_checks::{reddit, tiktok, twitter}, utils::format_message_username};
 
-#[derive(Debug)]
-pub struct SocialMediaHandler<'a> {
-    bot: &'a Bot,
-    msg: &'a Message,
-}
+pub async fn process(
+    bot: &Bot,
+    msg: &Message,
+    text: &str,
+) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    let content = if let Some(twitter) = twitter::update_twitter_links(text).await {
+        Some(twitter)
+    } else if let Some(tiktok) = tiktok::updated_tiktok(text).await {
+        Some(tiktok)
+    } else {
+        reddit::updated_reddit(text).await
+    };
 
-impl<'a> SocialMediaHandler<'a> {
-    pub fn new(bot: &'a Bot, msg: &'a Message) -> Self {
-        SocialMediaHandler { bot, msg }
+    if let Some(content) = content {
+        let formatted = format_message_username(msg, &content);
+        bot.delete_message(msg.chat.id, msg.id).await?;
+        bot.send_message(msg.chat.id, formatted).await?;
     }
-    pub async fn process(
-        &self,
-        text: &str,
-    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        if let Some(twitter) = twitter::update_twitter_links(text).await {
-            self.format_social_media_message(&twitter).await?;
-        } else if let Some(tiktok) = tiktok::updated_tiktok(text).await {
-            self.format_social_media_message(&tiktok).await?;
-        } else if let Some(reddit) = reddit::updated_reddit(text).await {
-            self.format_social_media_message(&reddit).await?;
-        }
-        Ok(())
-    }
-
-    async fn format_social_media_message(
-        &self,
-        content: &str,
-    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        let formatted = format_message_username(self.msg, content);
-        self.bot
-            .delete_message(self.msg.chat.id, self.msg.id)
-            .await?;
-        self.bot.send_message(self.msg.chat.id, formatted).await?;
-        Ok(())
-    }
+    Ok(())
 }

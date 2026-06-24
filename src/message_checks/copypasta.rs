@@ -1,6 +1,5 @@
 use std::{collections::HashMap, sync::LazyLock};
 
-use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use tracing::instrument;
 
 static COPYPASTA_MAP: LazyLock<HashMap<&'static str, &'static str>> = LazyLock::new(|| {
@@ -126,7 +125,7 @@ pub struct CopyPastaMatch {
 #[instrument]
 pub async fn find_copypasta(input: &str) -> Vec<CopyPastaMatch> {
     COPYPASTA_MAP
-        .par_iter()
+        .iter()
         .filter_map(|(&trigger, &response)| {
             if input.contains(trigger) {
                 Some(CopyPastaMatch {

@@ -1,12 +1,10 @@
 #![warn(clippy::pedantic)]
 
 use std::convert::Infallible;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use crate::error::BotError;
-use std::time::Duration;
-
 use message_checks::friday::fetch_friday_video;
-use message_checks::thursday::ThursdayChecker;
 use message_checks::{bad_words, webm};
 use online_downloads::url_checker::{check_url_status_code, is_mp4_url, is_webm_url};
 use online_downloads::video_downloader::{delete_file, download_video};
@@ -14,8 +12,6 @@ use prank::day_check::is_prank_day;
 use prank::randomizer::should_trigger;
 use prank::reverse_words::upside_down_string;
 use prank::sarcastic_agree::random_sarcastic_reply;
-use social_media_handler::SocialMediaHandler;
-
 use std::error::Error;
 use teloxide::net::Download;
 use teloxide::payloads::{SendMessageSetters, SendPhotoSetters, SendVideoSetters};
@@ -26,7 +22,6 @@ use teloxide::Bot;
 use tokio::fs;
 use tokio::time::sleep;
 use tracing::{error, instrument};
-use uuid::Uuid;
 
 mod error;
 pub mod message_checks;
@@ -37,13 +32,20 @@ mod utils;
 
 pub const PRANK_THRESHOLD: u32 = 10;
 
+fn unique_filename(ext: &str) -> String {
+    let ts = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_nanos();
+    format!("{ts}.{ext}")
+}
+
 #[instrument]
 async fn process_webm_urls(bot: &Bot, msg: &Message, url: &str) {
     match check_url_status_code(url).await {
         Some(status) if (200..=299).contains(&status) => {
-            let uuid = Uuid::new_v4();
-            let webm_filename = format!("{uuid}.webm");
-            let mp4_filename = format!("{uuid}.mp4");
+            let webm_filename = unique_filename("webm");
+            let mp4_filename = unique_filename("mp4");
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                 .await
                 .unwrap();
@@ -70,8 +72,7 @@ async fn process_webm_urls(bot: &Bot, msg: &Message, url: &str) {
 async fn process_mp4_urls(bot: &Bot, msg: &Message, url: &str) {
     match check_url_status_code(url).await {
         Some(status) if (200..=299).contains(&status) => {
-            let uuid = Uuid::new_v4();
-            let mp4_filename = format!("{uuid}.mp4");
+            let mp4_filename = unique_filename("mp4");
             bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
                 .await
                 .unwrap();
@@ -94,15 +95,6 @@ async fn process_mp4_urls(bot: &Bot, msg: &Message, url: &str) {
     }
 }
 
-/// Bot logic goes here.
-///
-/// # Panics
-///
-/// Panics if the bot fails to run.
-///
-/// # Errors
-///
-/// This function will return an error if the bot fails to run.
 #[allow(clippy::too_many_lines)]
 async fn process_text_messages(
     bot: &Bot,
@@ -111,8 +103,7 @@ async fn process_text_messages(
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
     let mut actions: Vec<_> = Vec::new();
     if message_checks::url::is_url(text) {
-        let social_media_handler = SocialMediaHandler::new(bot, msg);
-        social_media_handler.process(text).await?;
+        social_media_handler::process(bot, msg, text).await?;
         if is_webm_url(text) {
             process_webm_urls(bot, msg, text).await;
         }
@@ -133,20 +124,13 @@ async fn process_text_messages(
                 bot.send_message(msg.chat.id, reply)
                     .reply_parameters(ReplyParameters::new(msg.id)),
             );
-        } else {
-            match prank::mario::fetch_random_image() {
-                Ok((caption, image)) => {
-                    bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
-                        .await?;
-                    bot.send_photo(msg.chat.id, image)
-                        .reply_parameters(ReplyParameters::new(msg.id))
-                        .caption(caption)
-                        .await?;
-                }
-                Err(e) => {
-                    tracing::error!("Failed to fetch random image: {}", e);
-                }
-            }
+        } else if let Some((caption, image)) = prank::mario::fetch_random_image() {
+            bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadPhoto)
+                .await?;
+            bot.send_photo(msg.chat.id, image)
+                .reply_parameters(ReplyParameters::new(msg.id))
+                .caption(caption)
+                .await?;
         }
     }
     let message = text.to_lowercase();
@@ -171,8 +155,7 @@ async fn process_text_messages(
             );
         }
     }
-    let thursday = ThursdayChecker::new();
-    if let Some(happy_thursday) = thursday.asuka(&message) {
+    if let Some(happy_thursday) = message_checks::thursday::check_thursday(&message) {
         actions.push(
             bot.send_message(msg.chat.id, happy_thursday)
                 .reply_parameters(ReplyParameters::new(msg.id)),
@@ -191,38 +174,26 @@ async fn process_text_messages(
     Ok(())
 }
 
-/// Checks if the file is a webm and converts it to mp4 and sends it.
-///
-/// # Panics
-///
-/// Panics if the bot fails to download the file or convert it.
-///
-/// # Errors
-///
-/// This function will return an error if the bot fails to download the file or convert it.
+#[allow(clippy::missing_panics_doc, clippy::missing_errors_doc)]
 #[instrument]
 pub async fn process_files(
     bot: &Bot,
     msg: &Message,
     file_to_read: &Document,
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
-    // Telegram max file size: 20 MB
     if file_to_read
         .file_name
         .as_deref()
         .is_some_and(|name| name.contains("webm"))
         && file_to_read.file.size <= 20_000_000
     {
-        let uuid = Uuid::new_v4();
-        let webm_filename = format!("{uuid}.webm,");
-        let mp4_filename = format!("{uuid}.mp4");
+        let webm_filename = unique_filename("webm");
+        let mp4_filename = unique_filename("mp4");
         bot.send_chat_action(msg.chat.id, teloxide::types::ChatAction::UploadVideo)
             .await
             .unwrap();
         let file = bot.get_file(file_to_read.file.id.clone()).await.unwrap();
-        let mut dst = fs::File::create(format!("{webm_filename}.webm"))
-            .await
-            .unwrap();
+        let mut dst = fs::File::create(&webm_filename).await.unwrap();
         bot.download_file(&file.path, &mut dst).await.unwrap();
         webm::convert_webm_to_mp4(&webm_filename, &mp4_filename).await;
         bot.send_video(
@@ -237,38 +208,21 @@ pub async fn process_files(
     Ok(())
 }
 
-/// Handles messages from the bot.
-///
-/// # Errors
-///
-/// This function will return an error if the bot fails to handle the messages.
-///
-/// # Panics
-///
-/// Panics if the bot fails to handle the messages.
+#[allow(clippy::missing_errors_doc)]
 #[instrument]
 pub async fn handle_messages(bot: &Bot, msg: &Message) -> Result<(), BotError> {
-    match Some(msg) {
-        Some(msg) if msg.text().is_some() => {
-            process_text_messages(bot, msg, msg.text().unwrap())
-                .await
-                .map_err(|e| BotError::Processing(e.to_string()))?;
-        }
-        Some(msg) if msg.document().is_some() => {
-            process_files(bot, msg, msg.document().unwrap())
-                .await
-                .map_err(|e| BotError::Processing(e.to_string()))?;
-        }
-        Some(_) | None => (),
+    if let Some(text) = msg.text() {
+        process_text_messages(bot, msg, text)
+            .await
+            .map_err(|e| BotError::Processing(e.to_string()))?;
+    } else if let Some(doc) = msg.document() {
+        process_files(bot, msg, doc)
+            .await
+            .map_err(|e| BotError::Processing(e.to_string()))?;
     }
     Ok(())
 }
 
-/// Parse messages from the bot.
-///
-/// # Panics
-///
-/// Panics if the bot fails to parse the messages.
 pub async fn parse_messages(bot: Bot, listener: impl UpdateListener<Err = Infallible> + Send) {
     teloxide::repl_with_listener(
         bot,
