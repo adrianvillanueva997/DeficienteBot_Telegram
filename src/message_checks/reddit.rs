@@ -8,8 +8,8 @@ use tracing::instrument;
 /// with old.reddit equivalents to avoid modern Reddit's interface.
 static REDDIT_PATTERN: LazyLock<Regex> = LazyLock::new(|| {
     // Matches: https://reddit.com, https://www.reddit.com, https://m.reddit.com (and http)
-    // Captures scheme, optional www/m subdomain, and the rest of the path.
-    Regex::new(r"(?:(?P<www>www)\.|(?P<m>m)\.)?reddit\.com(?P<path>/\S*)?").unwrap()
+    // Captures optional www/m/old subdomain and the rest of the path.
+    Regex::new(r"(?:(?P<www>www)\.|(?P<m>m)\.|(?P<old>old)\.)?reddit\.com(?P<path>/\S*)?").unwrap()
 });
 
 const REDDIT_REPLACEMENT: &str = "old.reddit";
@@ -26,6 +26,10 @@ pub async fn updated_reddit(message: &str) -> Option<String> {
     }
 
     let updated = REDDIT_PATTERN.replace_all(message, |caps: &Captures| {
+        if caps.name("old").is_some() {
+            return caps.get(0).unwrap().as_str().to_string();
+        }
+
         let path = caps.name("path").map_or("", |m| m.as_str());
         format!("{REDDIT_REPLACEMENT}.com{path}")
     });
@@ -55,6 +59,12 @@ mod tests {
         let message = "Visit https://reddit.com/r/programming";
         let expected = "Visit https://old.reddit.com/r/programming";
         assert_eq!(updated_reddit(message).await, Some(expected.to_string()));
+    }
+
+    #[tokio::test]
+    async fn test_existing_old_reddit_url_is_unchanged() {
+        let message = "Already old: https://old.reddit.com/r/rust";
+        assert_eq!(updated_reddit(message).await, Some(message.to_string()));
     }
 
     #[tokio::test]
