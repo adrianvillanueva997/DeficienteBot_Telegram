@@ -27,7 +27,9 @@ pub async fn updated_reddit(message: &str) -> Option<String> {
 
     let updated = REDDIT_PATTERN.replace_all(message, |caps: &Captures| {
         if caps.name("old").is_some() {
-            return caps.get(0).unwrap().as_str().to_string();
+            return caps
+                .get(0)
+                .map_or_else(String::new, |matched| matched.as_str().to_string());
         }
 
         let path = caps.name("path").map_or("", |m| m.as_str());
