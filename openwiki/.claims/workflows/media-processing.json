@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:438c95c9b2b31274ca29c66ce1eb59dd208f6a388314165ff79bf8754d45fd1b",
+  "claims": [
+    {
+      "id": "claim_543868bd2e2b4026aa2d2c5ae102cdd9",
+      "statement": "Text-message media processing requires the full text to parse as a URL, checks remote status for a 2xx response, and handles URL extensions identified as webm or mp4.",
+      "evidence": [
+        {
+          "resource": "repo://src/lib.rs#L86-L101",
+          "version": "repo-lines-v1:sha256:be57f14af373c41e91c70996215997369b852e311545cac2b2c4b9b8498ae545:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljNmZmZWY4YjFkNGI2NDYwMzU1OWRlYmRiNDA2MTNmNzUzOThiZGRmOGEwYjRlMmUwMDRkMTU3MjI0MmY2ZTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM3MjhkMjZiNTIyNmY5NzUzOGE3ODZkMGNkNmM5ZDUxMmRiNzlkNThhODE3ZGIzYTJhOTY2NTY0OWMzMmFmNWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI2NzE4YjVkZDIzNTg5NjExNGRlMjM1YTQzODQ5ZDM2NmY0Zjg0M2U3MDJmZjAwMzhmOGMxZWI0Zjg5OTc2ZGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImEyM2Y1ZTA5ODlkMjczM2NjYzI4ZjVkZGQ0NWEzYjNlNjI5NjU5ZDQ4MmUxZjMzNmIxMDI2YTBmMDk5M2I5MjMifQ"
+        },
+        {
+          "resource": "repo://src/message_checks/url.rs",
+          "version": "repo-file-v1:sha256:d9caf59fd5c9658c25c92a4081fd9999291c117ed19ed049a756883a72824fb1"
+        },
+        {
+          "resource": "repo://src/online_downloads/url_checker.rs",
+          "version": "repo-file-v1:sha256:1258cc1a4dc8412f8c112ed315115db874d31c84a4fee79fdb584903a7a5a76e"
+        }
+      ]
+    },
+    {
+      "id": "claim_f643cbac129a40d0a1ad9d7a748992f6",
+      "statement": "The direct webm flow downloads to generated working-directory files, runs ffmpeg conversion, uploads an MP4 reply, and does not delete those files afterward.",
+      "evidence": [
+        {
+          "resource": "repo://src/lib.rs#L32-L61",
+          "version": "repo-lines-v1:sha256:c06d97df44d4a9860b8b024339f018aa7285ca1f07f8e9dbaca44140dc6e5a29:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRkNTkyOWEyOWYwNTA5YWMzYjZiZjc0MGZiOTMzNzViYjg3ZjE4Mzc0OWE0OTBkNzc0OWQxNWY3ZTQ0MDAyYWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZjMTBhZDk5MzE0N2IxZDViMzA2Mzc1NDcwYTBjYzQ3ZDc1YTA1Y2Y4NGNiMDVjOTVhOWRhMGQwZjZkNGZjOTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_7b7fae2805934a40872d54cf7ac62e38",
+      "statement": "Eligible Telegram documents have a filename containing webm and a reported size no larger than 20,000,000 bytes; after conversion and upload the document flow deletes both temporary files.",
+      "evidence": [
+        {
+          "resource": "repo://src/lib.rs#L179-L208",
+          "version": "repo-lines-v1:sha256:91f5a5b18de13023404bdd27126362ecd6fce5c708a18b47d1e25aeabd0030ae:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwNGY2OTljNDJjODRlNzlkZGQ0MWVmNWNhOTY2Mjc4Mjg5NTMyNGY5M2EyY2VjNDhhNzdkNDg0OTNhYTQ0OWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ4OTc3MWZlMWI2NjI4ODc1YWEyM2U3ZGJlNGFhNzE0NjFkMDBjZGZiNjZkZGYxMWI5ZDgyMGFjNTg5N2ZkZjYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk3NGQ5YTZlZDYwYmI4MDc2ZTE3ZTE2Y2FmZmFkOTAxNTg2ZWZhOWRmNGNhNTkyMTE0YzFkMzE4N2ZhZjRhM2UiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYzQzMjlmODM5MWM3ZTZmNDI1ZWVmYTdhNTZjOGVlMGNkN2Q0ZTRiMjc1MGM4NWU4M2VlOTEzMTgwYzQ1YzQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9a4ad77af25f42dab3c1a0ab7012395c",
+      "statement": "The conversion helper invokes the ffmpeg executable without checking its exit status.",
+      "evidence": [
+        {
+          "resource": "repo://src/message_checks/webm.rs",
+          "version": "repo-file-v1:sha256:6a27704db0cbe67d3414199345c3aa5e5b9e6c10879cf58cbf02cc5b61211dcb"
+        }
+      ]
+    },
+    {
+      "id": "claim_d9778349266549bb8fa8f4cae8c2b371",
+      "statement": "The production Dockerfile does not install ffmpeg in its runtime stage.",
+      "evidence": [
+        {
+          "resource": "repo://Dockerfile",
+          "version": "repo-file-v1:sha256:5300541dfe0936fb8f791e6ea43896c1180e4a15dfa086eb1ff860e90e8b1319"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-06T08:17:09.762Z"
+  }
+}
