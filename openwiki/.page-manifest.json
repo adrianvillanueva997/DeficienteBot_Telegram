@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "pages": {
+    "/openwiki/architecture/runtime.md": {
+      "pageVersion": "sha256:594adf27037e7fcd72578df57134d17091d1710b39d82b820aa86a6686eda517",
+      "completedBy": "pi",
+      "completedRunId": "d07dd7ea-a33f-4719-a37c-db66549983ec",
+      "gitHead": "18b1f8c7f730991c485ce7838d5db03d54771858",
+      "sourceFingerprint": "sha256:55ca4253b75bddc8b7dedd3678c72b8fd1a42c197d6b4d70a5e8bf4b12bf3a04"
+    },
+    "/openwiki/quickstart.md": {
+      "pageVersion": "sha256:b36df166809c4aece432adb420bb96ac51329c010c96cb9fb2a441065a03575f",
+      "completedBy": "pi",
+      "completedRunId": "d07dd7ea-a33f-4719-a37c-db66549983ec",
+      "gitHead": "18b1f8c7f730991c485ce7838d5db03d54771858",
+      "sourceFingerprint": "sha256:55ca4253b75bddc8b7dedd3678c72b8fd1a42c197d6b4d70a5e8bf4b12bf3a04"
+    },
+    "/openwiki/workflows/media-processing.md": {
+      "pageVersion": "sha256:438c95c9b2b31274ca29c66ce1eb59dd208f6a388314165ff79bf8754d45fd1b",
+      "completedBy": "pi",
+      "completedRunId": "d07dd7ea-a33f-4719-a37c-db66549983ec",
+      "gitHead": "18b1f8c7f730991c485ce7838d5db03d54771858",
+      "sourceFingerprint": "sha256:55ca4253b75bddc8b7dedd3678c72b8fd1a42c197d6b4d70a5e8bf4b12bf3a04"
+    },
+    "/openwiki/workflows/message-handling.md": {
+      "pageVersion": "sha256:4e2a47b81a7d5670895d382b98aae8f00fe473781345851b366272027e049377",
+      "completedBy": "pi",
+      "completedRunId": "d07dd7ea-a33f-4719-a37c-db66549983ec",
+      "gitHead": "18b1f8c7f730991c485ce7838d5db03d54771858",
+      "sourceFingerprint": "sha256:55ca4253b75bddc8b7dedd3678c72b8fd1a42c197d6b4d70a5e8bf4b12bf3a04"
+    }
+  }
+}

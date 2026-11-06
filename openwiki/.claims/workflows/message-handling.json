@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:4e2a47b81a7d5670895d382b98aae8f00fe473781345851b366272027e049377",
+  "claims": [
+    {
+      "id": "claim_fcac53467a574bbc83dcc3528ca306a5",
+      "statement": "The text pipeline performs URL-related processing before prank checks, bad-word detection, copypasta responses, and the Thursday greeting; queued replies are sent with a typing action and one-second intervals.",
+      "evidence": [
+        {
+          "resource": "repo://src/lib.rs#L86-L172",
+          "version": "repo-lines-v1:sha256:613f2e3bcefa627bf3e4fa0ef9343f48fb1c04f642710c2372e72f62c9b7a48a:eyJzZWxlY3RlZExpbmVDb3VudCI6ODcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljNmZmZWY4YjFkNGI2NDYwMzU1OWRlYmRiNDA2MTNmNzUzOThiZGRmOGEwYjRlMmUwMDRkMTU3MjI0MmY2ZTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5YzEzNTkwNjY1NjMyM2QxYzVlYTQxNjU0ZWU2NmFmYjU4NWFjZGNmYWVhY2ExMjFkNWUzMGJmMTkzZWVkZDciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI2NzE4YjVkZDIzNTg5NjExNGRlMjM1YTQzODQ5ZDM2NmY0Zjg0M2U3MDJmZjAwMzhmOGMxZWI0Zjg5OTc2ZGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU1YWI3YjZkOWI2ZTE5NTY1M2ZjOGI1NWY2M2YzNjQ2MDY4NTVjNDU0ZmM1NjU4NTFmMzFhMmYwOTQ1ZGE3NDIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_96b7251996cc4dc993c795ceccd55ae3",
+      "statement": "Pranks are enabled only on December 28 or April 1 when a 10% random gate succeeds, with subsequent probabilistic selection between upside-down text, sarcastic text, and an embedded image.",
+      "evidence": [
+        {
+          "resource": "repo://src/lib.rs#L101-L125",
+          "version": "repo-lines-v1:sha256:63a8f41c756f5658e20dd337e527f12e130662030d31fdb8fcb091f6f3cc77db:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM3MjhkMjZiNTIyNmY5NzUzOGE3ODZkMGNkNmM5ZDUxMmRiNzlkNThhODE3ZGIzYTJhOTY2NTY0OWMzMmFmNWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ0OWRlNWRjMGRmZDQ5MTgzNjBmZWViNzg2OWJlNGFlMDEwZTkyOGE0NGE4N2UyODc1MzIyMjM3MjcxZDkwNTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEyMmRjYmI3N2MwNTRjNzk1ZWUxOTYxZTZhZjVmNzgzZTU5MTIwM2VmOGYzYmM4YjkzNjhiNWMzNDgxZjQ2YzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ0ZTdkY2RkMDAwNzAyYzI0YWFhYTUxMWU0NTkzYzYzNzA4MjdjNGNkMzA0ZjA5MWZhOGMzZWY4ODlkYTc2YzkifQ"
+        },
+        {
+          "resource": "repo://src/prank/day_check.rs",
+          "version": "repo-file-v1:sha256:d505f6696b402643c4c36726ed338a2a9598ed49398ac29b51f630ce80ffe4be"
+        },
+        {
+          "resource": "repo://src/prank/randomizer.rs",
+          "version": "repo-file-v1:sha256:383cc0cedf506c619d71ee0f301312015d014d468d4099154e6032e6db350721"
+        }
+      ]
+    },
+    {
+      "id": "claim_76847c91f9e84138b10014d781ad45da",
+      "statement": "Social-link rewriting prioritizes Twitter/X, then TikTok, then Reddit; a successful rewrite deletes the source message and sends formatted replacement text attributed to the sender when possible.",
+      "evidence": [
+        {
+          "resource": "repo://src/social_media_handler.rs",
+          "version": "repo-file-v1:sha256:102ead09e3396eb7d09556f42783f413a77563cc3e0e565152b6a54e1ff5d149"
+        },
+        {
+          "resource": "repo://src/utils.rs",
+          "version": "repo-file-v1:sha256:f02fca6c810a5fa944ef56b9ddc0b167868285bc5f0e2553062f8ae3e5c9b225"
+        }
+      ]
+    },
+    {
+      "id": "claim_e74976e5a5b149c380d43b937ecc995f",
+      "statement": "Bad-word detection uses a lazily compiled case-insensitive regular expression for uwu, :v, and owo.",
+      "evidence": [
+        {
+          "resource": "repo://src/message_checks/bad_words.rs",
+          "version": "repo-file-v1:sha256:b2d95912c348f2d70fe28c9ffbd47d30d82e2982693974553a4f909dd5297e24"
+        }
+      ]
+    },
+    {
+      "id": "claim_82621a4b7bd74a3ab3b474dff2452cd7",
+      "statement": "The repository tests URL recognition, social-link rewriting, and bad-word matching, including an integration test for the three configured bad-word tokens and a non-match.",
+      "evidence": [
+        {
+          "resource": "repo://src/message_checks/reddit.rs",
+          "version": "repo-file-v1:sha256:af0bbcd7ec66c1be7c3f89c72044c5b13bcebb0ac225787018c6fa5bd95e5931"
+        },
+        {
+          "resource": "repo://src/message_checks/tiktok.rs",
+          "version": "repo-file-v1:sha256:8b377f9a93ea048bb5a30cf817c75c47d2e7d3dcd10137422f3d13f55540f38a"
+        },
+        {
+          "resource": "repo://src/message_checks/twitter.rs",
+          "version": "repo-file-v1:sha256:c81fb98e27feb2de4938fd4ec61d72525081157ffe90438cf2cc43f7da51e384"
+        },
+        {
+          "resource": "repo://src/message_checks/url.rs",
+          "version": "repo-file-v1:sha256:d9caf59fd5c9658c25c92a4081fd9999291c117ed19ed049a756883a72824fb1"
+        },
+        {
+          "resource": "repo://tests/tests_bad_words.rs",
+          "version": "repo-file-v1:sha256:bb25b3c0cf65f86b709c48881db0cc3643f4542129606b7d92367287fff926fe"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-06T08:17:09.762Z"
+  }
+}
