@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:b36df166809c4aece432adb420bb96ac51329c010c96cb9fb2a441065a03575f",
+  "claims": [
+    {
+      "id": "claim_d293e426fd1c41f5bf74284d927bb902",
+      "statement": "The bot requires TELOXIDE_TOKEN through Teloxide's environment-based bot construction and requires URL for its webhook listener.",
+      "evidence": [
+        {
+          "resource": "repo://src/main.rs#L13-L20",
+          "version": "repo-lines-v1:sha256:e24de978f06cdaf9199062fdcdb632b60a618486daaf766446559a20038760fd:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmY1NThlNzVhYmJjMzE3ZTE2NDFjNjhmMjI5ZGI5NzRmMzQzY2UyOTMwNmJiZWVhNjJjMTA1MTIwOTkyMzEyMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDgzZTRhZjdjY2ZiYjI1OGZkNjIyMDQ2ZTI2NmQ2ZmQ5OGUwOWExYTkzZTY0YzEzYjRiMjZjOWVkOWUzMmUxMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTAwODRiYmQ4ZjFlMWJhMjY3YTcwMmE2MDViMDJmNGY5Y2ZjZTMwYzQ3ZDRhNmFmN2ZiOWM5MDIyM2I5YmZlNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2NkZTRjMmRjYzc0N2JjNWFjZDM2NmI4NmI0NTlkMzMxYmFjZDM1YTAwOTUyYjhkNjdlZWE3NzM2M2IwYTM1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f3d1f76990734cbfaed8fd8b2d952071",
+      "statement": "The Justfile provides development, test, release build, audit, clippy, Docker build, and Dockerfile-lint commands; its test command runs cargo nextest.",
+      "evidence": [
+        {
+          "resource": "repo://Justfile",
+          "version": "repo-file-v1:sha256:1250bbdaade25135b3c0b6f990445edfecdb82e7a889e931c55344e11cae656f"
+        }
+      ]
+    },
+    {
+      "id": "claim_ba7d345fef194983813335281239744b",
+      "statement": "The CI test workflow installs ffmpeg before it runs the Justfile test command.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/test.yml",
+          "version": "repo-file-v1:sha256:140365a7a14910c7c52cef687094d484beca74967c8359f5350faf371dd58845"
+        }
+      ]
+    },
+    {
+      "id": "claim_bd0d0560c7cc4a82abf5215c4db24978",
+      "statement": "The root Compose file relies on external proxy and otlp networks and supplies runtime configuration through environment-variable interpolation.",
+      "evidence": [
+        {
+          "resource": "repo://compose.yaml",
+          "version": "repo-file-v1:sha256:d4b4a337a40609da9a8abf02fe73ae76b7e22638570e12ce75bc5b97dd050cd1"
+        }
+      ]
+    },
+    {
+      "id": "claim_b881ef70a2e24fcb85bddbac1c34c682",
+      "statement": "The tagged-release workflow builds and pushes a linux/amd64 container image to GitHub Container Registry.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/main.yaml",
+          "version": "repo-file-v1:sha256:8a02ea5f1f33e20a202c9e47acd2bd8583796c34944fc27394b7d5f1a0c912cd"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-06T08:17:09.762Z"
+  }
+}

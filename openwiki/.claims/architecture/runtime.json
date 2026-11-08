@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:594adf27037e7fcd72578df57134d17091d1710b39d82b820aa86a6686eda517",
+  "claims": [
+    {
+      "id": "claim_5ac7d4b7215c4669bfa03d3f1b644800",
+      "statement": "The binary initializes tracing, creates a Teloxide bot and Axum webhook listener on 0.0.0.0:8080, then runs the library dispatcher with that listener.",
+      "evidence": [
+        {
+          "resource": "repo://src/main.rs#L13-L29",
+          "version": "repo-lines-v1:sha256:9e71ffc6694669d8a8655b73459e27e9c72493fa494e21fc1230dc467df1e1e1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmNTU4ZTc1YWJiYzMxN2UxNjQxYzY4ZjIyOWRiOTc0ZjM0M2NlMjkzMDZiYmVlYTYyYzEwNTEyMDk5MjMxMjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM3N2M5MmI0ZjhhNTNiMmIyZjhlODkzMGE1M2I2NjE5YzIzZmY2Zjg0MTcwYzc2M2I5MTU5OGE1MmQ5ZGJiN2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEwMDg0YmJkOGYxZTFiYTI2N2E3MDJhNjA1YjAyZjRmOWNmY2UzMGM0N2Q0YTZhZjdmYjljOTAyMjNiOWJmZTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1c5edbcc0fb04fafb34cf699c6ff29f2",
+      "statement": "The dispatcher logs handler errors while continuing Teloxide's listener loop, and it routes only text and document messages to processing functions.",
+      "evidence": [
+        {
+          "resource": "repo://src/lib.rs#L213-L237",
+          "version": "repo-lines-v1:sha256:2c124381def2f1a251bae38f922f46035ad54e1e83cfe438c3bcfc9c422cf963:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYyMzVkYjA1YWI4Yzk2ZGUzNmZkOTA2OGUxOWVlNmUzMGNmYjIwNDNlYmMzMTFhYjk1YjczZTdhODRlZTIzNjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBiMjU5MTBiODgxMThkYjRlYTlkN2NiYzA2YTA3YzY0YmNhMTVlODZkNWZkMmFiMmZjOTI2Y2E3OWNlNGViMzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBiNjQ0MTUwOThjNTlkZTI4NDBkYWZlYmI2NGVmOTZiOGQ4YWE0ZDcxODVhODAyYzY0ZmM3YjIyMjhmMmE1MGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e71d73b639e84e629ec2e908eb335e31",
+      "statement": "Telemetry uses the RUST_LOG environment filter when valid and defaults to an info-level filter otherwise.",
+      "evidence": [
+        {
+          "resource": "repo://src/telemetry.rs",
+          "version": "repo-file-v1:sha256:da27b4188815a4cb5047292daa36e6048e5be094709e089d70ccf5823e29823a"
+        }
+      ]
+    },
+    {
+      "id": "claim_cc0bbc8669994014bd9eb99b431574a8",
+      "statement": "The production image runs the release binary as a non-root appuser, exposes port 8080, and installs CA certificates and OpenSSL but not ffmpeg.",
+      "evidence": [
+        {
+          "resource": "repo://Dockerfile",
+          "version": "repo-file-v1:sha256:5300541dfe0936fb8f791e6ea43896c1180e4a15dfa086eb1ff860e90e8b1319"
+        }
+      ]
+    },
+    {
+      "id": "claim_3bd167a6fcf546509812404211624a66",
+      "statement": "The production Compose service injects Telegram and webhook configuration from environment variables and configures Traefik to route TLS traffic to port 8080.",
+      "evidence": [
+        {
+          "resource": "repo://compose.yaml",
+          "version": "repo-file-v1:sha256:d4b4a337a40609da9a8abf02fe73ae76b7e22638570e12ce75bc5b97dd050cd1"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-06T08:17:09.762Z"
+  }
+}
